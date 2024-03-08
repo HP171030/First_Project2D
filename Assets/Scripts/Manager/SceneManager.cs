@@ -55,14 +55,16 @@ public class SceneManager : Singleton<SceneManager>
         }
 
         Manager.UI.EnsureEventSystem();
-
         BaseScene curScene = GetCurScene();
-        yield return curScene.LoadingRoutine();
+        Debug.Log(curScene.name);
+        yield return curScene.LoadingRoutine();     //해당 씬에서 추가적인 로딩
 
         loadingBar.gameObject.SetActive(false);
         Time.timeScale = 1f;
 
         yield return FadeIn();
+
+        yield return curScene.OnStartScene();
     }
 
     IEnumerator FadeOut()
@@ -91,5 +93,6 @@ public class SceneManager : Singleton<SceneManager>
             fade.color = Color.Lerp(fadeOutColor, fadeInColor, rate);
             yield return null;
         }
+
     }
 }
