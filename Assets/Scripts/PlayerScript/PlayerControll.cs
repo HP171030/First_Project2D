@@ -30,6 +30,7 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] Image skillCoolTime;
     TrailRenderer dashTrailInstance;
     [SerializeField] LayerMask monster;
+    bool die;
 
     [SerializeField] Animator animator;
     [SerializeField] protected float range;
@@ -49,8 +50,12 @@ public class PlayerControll : MonoBehaviour
 
     private void Update()
     {
-        Move();
-        PlayerDir();
+        if ( !die )
+        {
+            Move();
+            PlayerDir();
+        }
+        
 
     }
 
@@ -102,6 +107,17 @@ public class PlayerControll : MonoBehaviour
         dashOn = false;
 
     }
+    public void Die()
+    {
+        animator.SetBool("Die", true);
+        die = true;
+      
+    }
+    public void DieOff()
+    {
+        die = false;
+        animator.SetBool("Die", false) ;
+    }
     public void Dash()
     {
         
@@ -130,7 +146,7 @@ public class PlayerControll : MonoBehaviour
          Xdir = moveDir.x;
          Ydir = moveDir.y;
 
-        if(moveDir.magnitude > 0)
+        if(moveDir.magnitude > 0 &&!die)
         {
             animator.SetBool("isMove", true);
             animator.SetFloat("Xdir", Xdir);
@@ -178,7 +194,7 @@ public class PlayerControll : MonoBehaviour
                         {
                             Vector2 AttackedDir = ( colliders [i].transform.position - skillEffectLocation.position ).normalized;
                             Rigidbody2D rb = colliders [i].GetComponent<Rigidbody2D>();
-
+                            Manager.Game.HpEvent -= 30 ;
                             monster.TakeDamage(power);
                             StartCoroutine(MonsterDamaged(0.2f, rb, AttackedDir));
                         }
@@ -203,7 +219,7 @@ public class PlayerControll : MonoBehaviour
     }
     public void OnAttack(InputValue value)
     {
-       if( value.isPressed&&!atkOn )
+       if( value.isPressed&&!atkOn&&!die )
         {
             Attack();
             DashOff();
@@ -213,7 +229,7 @@ public class PlayerControll : MonoBehaviour
         }
        else if ( atkOn )
         {
-            Debug.Log("WaitAtk");
+          
         }
 
     }
