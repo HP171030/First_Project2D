@@ -6,12 +6,13 @@ using TMPro;
 
 public class TitleUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [SerializeField] AudioClip enterSound;
     [SerializeField] TMP_Text titleSelect;
     Color baseFontColor;
     float fontSize;
 
 
-
+    
     private void Start()
     {
         baseFontColor = titleSelect.color;
@@ -19,7 +20,7 @@ public class TitleUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     public void OnPointerEnter( PointerEventData eventData )
     {
-        
+        Manager.Sound.PlaySFX( enterSound );
         titleSelect.color = Color.white;
         titleSelect.fontSize = 65f;
     }

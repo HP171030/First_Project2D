@@ -23,7 +23,7 @@ public class FOV : MonoBehaviour
         colliders = new Collider2D [20];
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-    private void Update()
+    public void ChasePattern()
     {
         Targeting();
         Moving();
@@ -44,8 +44,6 @@ public class FOV : MonoBehaviour
         }
         if ( size > 0 && !CRSwitch )
         {
-            Debug.Log("Find");
-
             for ( int i = 0; i < size; i++ )
             {
                 if ( playerLayer.Contain(colliders [i].gameObject.layer) )
@@ -56,13 +54,7 @@ public class FOV : MonoBehaviour
                     return;
                 }
             }
-
         }
-        else
-        {
-            Debug.Log("No");
-        }
-
     }
 
     public IEnumerator MoveMonster()
@@ -70,12 +62,8 @@ public class FOV : MonoBehaviour
         Animator animator = GetComponent<Animator>();
         CRSwitch = true;
         animator.Play("Move");
-        
         yield return new WaitForSeconds(2f);
         CRSwitch = false;
-
-
-
     }
 
     public void Moving()

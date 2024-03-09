@@ -15,6 +15,8 @@ public class TitlePressAnyButton : MonoBehaviour
     [SerializeField] Image SetUpMenu;
     [SerializeField] GameObject CursorIcon;
     [SerializeField] GameObject Menu;
+    [SerializeField] AudioClip pressButton;
+    [SerializeField] AudioClip titleBGM;
 
     float time = 0f;
 
@@ -25,6 +27,8 @@ public class TitlePressAnyButton : MonoBehaviour
         Instantiate(CursorIcon, transform.position, Quaternion.identity);
         text.color = Color.white;
         StartCoroutine(TextColor());
+        Manager.Sound.PlayBGM(titleBGM);
+        
     }
 
     private IEnumerator TextColor()
@@ -65,11 +69,12 @@ public class TitlePressAnyButton : MonoBehaviour
         float time = 0;
         
         Vector3 titlePos = titleLogo.transform.position;
+        Manager.Sound.PlaySFX(pressButton);
         while (true)
         {
             float t = time / titleTargetTime;
             time += Time.deltaTime;
-            titleLogo.transform.position = Vector3.Lerp(titlePos, titlePos + new Vector3(0, 100, 0), t);
+            titleLogo.transform.position = Vector3.Lerp(titlePos, titlePos + new Vector3(0, 200, 0), t);
            
             
             if(t >=1f )

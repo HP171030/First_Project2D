@@ -175,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396dc2103174433478b6e1ea3e29a657, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectButton: {fileID: 8300000, guid: edae0830f2c4d614a81992ce235681c5, type: 3}
 --- !u!1 &218067119
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,6 +245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e684fed1e02e548b4f89d73415b947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterSound: {fileID: 0}
   titleSelect: {fileID: 218067124}
 --- !u!223 &218067123
 Canvas:
@@ -634,6 +636,8 @@ MonoBehaviour:
   SetUpMenu: {fileID: 1794914440}
   CursorIcon: {fileID: 4107754999681912090, guid: 34b578023f7f0544e930a0c0c1d01e56, type: 3}
   Menu: {fileID: 75297988}
+  pressButton: {fileID: 8300000, guid: 4dc780d3b319e5c42b0a832fa3955d80, type: 3}
+  titleBGM: {fileID: 8300000, guid: e53a8995dfd103246a78e698df830a0e, type: 3}
 --- !u!114 &440751558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e684fed1e02e548b4f89d73415b947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterSound: {fileID: 0}
   titleSelect: {fileID: 581098367}
 --- !u!223 &581098366
 Canvas:
@@ -1266,6 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e684fed1e02e548b4f89d73415b947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterSound: {fileID: 8300000, guid: fc91a01f555d7ee47be09ec67b56bfcc, type: 3}
   titleSelect: {fileID: 915561507}
 --- !u!114 &915561513
 MonoBehaviour:
@@ -1835,7 +1841,7 @@ GameObject:
   - component: {fileID: 1796210314}
   - component: {fileID: 1796210313}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1997,6 +2003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e684fed1e02e548b4f89d73415b947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enterSound: {fileID: 0}
   titleSelect: {fileID: 1904770541}
 --- !u!223 &1904770540
 Canvas:

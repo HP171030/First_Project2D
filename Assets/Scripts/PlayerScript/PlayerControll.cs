@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,38 +11,52 @@ using UnityEngine.UI;
 
 public class PlayerControll : MonoBehaviour
 {
-   [SerializeField] SpriteRenderer sprite;
-
+    [Header("Character Setting")]
     [SerializeField] int power;
     [SerializeField] float moveSpeed;
     [SerializeField] float dashSpeed;
+
+
+    [Header("In Game Element")]
+    [SerializeField] SpriteRenderer sprite;
     [SerializeField] float Xdir;
     [SerializeField] float Ydir;
     [SerializeField] bool up;
     [SerializeField] bool left;
     [SerializeField] bool right;
     [SerializeField] bool down;
-    [SerializeField] Rigidbody2D rb;
-    [SerializeField] bool dashOn;
-    [SerializeField] bool atkOn = false;
     [SerializeField] TrailRenderer dashTrail;
     [SerializeField] Animator skillEffect;
     [SerializeField] Transform skillEffectLocation;
     [SerializeField] Image skillCoolTime;
     TrailRenderer dashTrailInstance;
-    [SerializeField] LayerMask monster;
-    bool die;
-
-    [SerializeField] Animator animator;
     [SerializeField] protected float range;
     [SerializeField] Collider2D [] colliders = new Collider2D [5];
-    [SerializeField] LayerMask targetLayer;
     [SerializeField] Transform effectDir;
     Vector2 lastMoveDirection;
 
+    [Header("Character Sound")]
+
+    [SerializeField] AudioClip soundAtk;
+    [SerializeField] AudioClip soundDash;
+    [SerializeField] AudioClip soundHit;
+    [SerializeField] AudioClip soundHit2;
+    [SerializeField] AudioClip soundHit3;
+    [SerializeField] AudioClip soundDie;    
+
+
+    [Header("Script Element")]
+    [SerializeField] LayerMask monster;
+    [SerializeField] Rigidbody2D rb;
+    [SerializeField] bool dashOn;
+    [SerializeField] bool atkOn = false;
+    bool die;
+    [SerializeField] Animator animator;
+    [SerializeField] LayerMask targetLayer;
     protected Coroutine coolDown;
     protected bool CoolChecker = false;
-    float curMoveMag;
+
+   
 
 
 
@@ -110,6 +125,7 @@ public class PlayerControll : MonoBehaviour
     public void Die()
     {
         animator.SetBool("Die", true);
+        Manager.Sound.PlaySFX(soundDie);
         die = true;
       
     }
@@ -124,6 +140,7 @@ public class PlayerControll : MonoBehaviour
         Vector2 moveDir = new Vector2(Xdir, Ydir);
         if(moveDir.magnitude > 0)
         {
+            Manager.Sound.PlaySFX(soundDash);
             dashTrailInstance = Instantiate(dashTrail,transform.position,transform.rotation,transform);
             dashTrailInstance.enabled = true;
             dashOn = true;
@@ -194,9 +211,25 @@ public class PlayerControll : MonoBehaviour
                         {
                             Vector2 AttackedDir = ( colliders [i].transform.position - skillEffectLocation.position ).normalized;
                             Rigidbody2D rb = colliders [i].GetComponent<Rigidbody2D>();
-                            Manager.Game.HpEvent -= 30 ;
+                            
                             monster.TakeDamage(power);
+                            #region 피격음 1,2 랜덤생성
+                            int soundIndex = Random.Range(1, 4);
+                            switch(soundIndex)
+                            {
+                                case 1: Manager.Sound.PlaySFX(soundHit);
+                                    break;
+                                case 2: Manager.Sound.PlaySFX(soundHit2);
+                                    break;
+                                case 3:Manager.Sound.PlaySFX(soundHit3);
+                                    break;
+                            }
+                            #endregion
+                            if ( monster.curState !=Monster.MonsterState.Dead)
+                            {
                             StartCoroutine(MonsterDamaged(0.2f, rb, AttackedDir));
+
+                            }
                         }
                     }
                 }
@@ -221,6 +254,7 @@ public class PlayerControll : MonoBehaviour
     {
        if( value.isPressed&&!atkOn&&!die )
         {
+            Manager.Sound.PlaySFX(soundAtk);
             Attack();
             DashOff();
          
