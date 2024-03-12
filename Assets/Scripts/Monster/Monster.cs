@@ -2,47 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem.XR.Haptics;
 
 public class Monster : MonoBehaviour, Idamagable
 {
-    
-    [SerializeField] string Name;
-    [SerializeField] int atk;
-    [SerializeField] int def;
-    [SerializeField] int hp;
-    bool dead;
-    Rigidbody2D rb;
    Animator animator;
-    FOV fov;
-    [SerializeField] float Range;
-    [SerializeField] Collider2D [] colliders;
-    [SerializeField] LayerMask playerLayer;
-    [SerializeField] Vector3 playerPos;
-    [SerializeField] float speed;
-    [SerializeField] SpriteRenderer spriteRenderer;
-    [SerializeField] Vector2 moveDir;
-    [SerializeField] public bool MoveOn;
-    [SerializeField] bool CRSwitch;
-    [SerializeField] Collider2D thisCollider;
-    [SerializeField] float attackRange;
-    [SerializeField] Vector2 atkDir;
-    [SerializeField] float atkDelay;
-    [SerializeField] bool atkDelayOn;
-    [SerializeField] PooledObject monsterPool;
-  
+    Collider2D [] colliders;
+    LayerMask playerLayer;
+    Vector3 playerPos;
+    SpriteRenderer spriteRenderer;
+     Vector2 moveDir;
+     public bool MoveOn;
+     bool CRSwitch;
+     Collider2D thisCollider;
+     Vector2 atkDir;
+     bool atkDelayOn;
 
-    [Header("Sound Clip")]
-    [SerializeField] AudioClip soundPlayerDamaged;
-    [SerializeField] AudioClip soundMonsterDamaged;
-    [SerializeField] AudioClip soundAttack;
-    [SerializeField] AudioClip soundMonsterDead;
+
+    [SerializeField] PooledObject monsterPool;
+    [SerializeField] MonsterData monsterData;    
+
+
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        fov = GetComponent<FOV>();
-        rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         curState = MonsterState.Idle;
         colliders = new Collider2D [20];
@@ -57,7 +42,7 @@ public class Monster : MonoBehaviour, Idamagable
 
     public void Targeting()
     {
-        int size = Physics2D.OverlapCircleNonAlloc(transform.position, Range, colliders, playerLayer);
+        int size = Physics2D.OverlapCircleNonAlloc(transform.position, monsterData.range, colliders, playerLayer);
 
         if ( size > 0 && !CRSwitch )
         {
@@ -105,7 +90,7 @@ public class Monster : MonoBehaviour, Idamagable
     {
         if ( MoveOn )
         {
-            transform.Translate(moveDir * speed/100);
+            transform.Translate(moveDir * monsterData.speed/100);
         }
     }
     public void MoveSwitch()
@@ -127,7 +112,7 @@ public class Monster : MonoBehaviour, Idamagable
         switch ( curState )
         {
             case MonsterState.Idle:
-                int size = Physics2D.OverlapCircleNonAlloc(transform.position, Range, colliders, playerLayer);
+                int size = Physics2D.OverlapCircleNonAlloc(transform.position, monsterData.range, colliders, playerLayer);
                
                 if ( size > 0 )
                 {
@@ -144,7 +129,7 @@ public class Monster : MonoBehaviour, Idamagable
 
             case MonsterState.Chase:
                 ChasePlayer();
-                Collider2D player  = Physics2D.OverlapCircle(transform.position, attackRange, playerLayer);
+                Collider2D player  = Physics2D.OverlapCircle(transform.position, monsterData.attackRange, playerLayer);
                 if( player != null )
                 {
                     atkDir =( player.transform.position - transform.position).normalized;
@@ -176,9 +161,9 @@ public class Monster : MonoBehaviour, Idamagable
             Vector2 targetPos = ( Vector2 )transform.position + atkDir * 2f;                
             float t = 0;
             float duration = 0.5f;
-           Collider2D player =  Physics2D.OverlapCircle(transform.position, attackRange, playerLayer);
+           Collider2D player =  Physics2D.OverlapCircle(transform.position, monsterData.attackRange, playerLayer);
             atkDelayOn = true;
-            Manager.Sound.PlaySFX(soundAttack);
+            Manager.Sound.PlaySFX(monsterData.soundAttack);
             animator.Play("AttackMimic");
             while ( t < 1f )
             {
@@ -191,14 +176,14 @@ public class Monster : MonoBehaviour, Idamagable
             {
                 SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
                 spriteRenderer.material.color = Color.red;
-                Manager.Sound.PlaySFX(soundPlayerDamaged);
+                Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
                 yield return new WaitForSeconds(0.5f);
-                Manager.Game.HpEvent -= atk;
+                Manager.Game.HpEvent -= monsterData.atk;
                 spriteRenderer.material.color = Color.white;
             }
            
             ChangeState(MonsterState.Idle);
-            yield return new WaitForSeconds(atkDelay);
+            yield return new WaitForSeconds(monsterData.atkDelay);
             atkDelayOn = false;
             ChangeState(MonsterState.Chase);
         }
@@ -218,8 +203,8 @@ public class Monster : MonoBehaviour, Idamagable
     public void TakeDamage( int damage )
     {
         if ( curState != MonsterState.Dead ) {
-            hp -= damage;
-            if ( hp <= 0 )
+            monsterData.hp -= damage;
+            if ( monsterData.hp <= 0 )
             {
                 ChangeState(MonsterState.Dead);
                 animator.Play("Dead");
@@ -242,9 +227,10 @@ public class Monster : MonoBehaviour, Idamagable
     public IEnumerator ThisDestroy()
     {
         MoveOn = false;
-        Manager.Sound.PlaySFX(soundMonsterDead);
+        Manager.Sound.PlaySFX(monsterData.soundMonsterDead);
         yield return new WaitForSeconds(1f);
         monsterPool.Release();
+        monsterData.OnDiedEvent();
         
        
 

@@ -182,34 +182,6 @@
             ]
         },
         {
-            "name": "NPC",
-            "id": "db0424d1-c7b4-4fe7-a34a-ba962a1ac022",
-            "actions": [
-                {
-                    "name": "Spc",
-                    "type": "Value",
-                    "id": "2584f91c-a117-4924-a484-577d4916bf40",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "d581a62d-3f2f-4170-a20a-c88296d2b3ed",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Spc",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
             "name": "Option",
             "id": "0516cadd-989d-4254-84ce-b4b3b0f4e396",
             "actions": [
@@ -232,6 +204,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Option",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "NPC",
+            "id": "64b3d46c-4514-4c6b-b35d-09969312b4f8",
+            "actions": [
+                {
+                    "name": "Spc",
+                    "type": "Value",
+                    "id": "175fbcf2-717d-44d2-8476-06ee3f73e563",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a1c30df0-9e7d-4623-bfff-172190663eb2",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spc",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

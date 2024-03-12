@@ -10,17 +10,23 @@ using Unity.VisualScripting;
 
 public class NPCScript : MonoBehaviour
 {
-    [SerializeField] SpriteRenderer tryEnter;
-    [SerializeField] Image dialogueOn;
+    [SerializeField]protected SpriteRenderer tryEnter;
+    [SerializeField]protected Image dialogueOn;
     [SerializeField] string [] dialogueLine;
-    bool enterNPC = false;
-  
-    [SerializeField] TMP_Text text;
-    private void Start()
+   protected bool enterNPC = false;
+    [SerializeField] protected TMP_Text text;
+   
+
+    [Header("Quest")]
+    protected Dictionary<int, string []> quests = new Dictionary<int, string []> ();
+
+
+    protected virtual void Start()
     {
         tryEnter.enabled = false;
         text.enabled = false;
         dialogueOn.enabled = false;
+        
     }
     private void OnTriggerEnter2D( Collider2D collision )
     {
@@ -35,17 +41,25 @@ public class NPCScript : MonoBehaviour
         enterNPC = false;
     }
 
-    private void OnSpc(InputValue value )
+    protected virtual void OnSpc(InputValue value )
     {
-        if(enterNPC )
+        if(enterNPC)
         {
             tryEnter.enabled = false;
-        ShowDialogue();
+            if( quests.Count > 0 )
+            {
+                StartQuest();
+            }
+            else
+            {
+                ShowDialogue();
+            }
+        
         }
         
     }
 
-    private void ShowDialogue()
+    protected virtual void ShowDialogue()
     {
         dialogueOn.enabled = true;
        PlayerControll playerCon = FindObjectOfType<PlayerControll>();
@@ -59,6 +73,7 @@ public class NPCScript : MonoBehaviour
            
             strings.Enqueue(dialogueLine [i]);
         }
+
         StartCoroutine(WaitSpace());
         text.text = strings.Dequeue();
         IEnumerator WaitSpace()
@@ -80,7 +95,7 @@ public class NPCScript : MonoBehaviour
                 if ( Input.GetKeyDown(KeyCode.Space) )
                 {
                     text.text = strings.Dequeue();
-                    Debug.Log(strings.Count); 
+                    Debug.Log(strings.Count);   
                 StartCoroutine(WaitSpace());
                 }
             }
@@ -94,6 +109,10 @@ public class NPCScript : MonoBehaviour
                 }
         }
     }
+        protected virtual void StartQuest()
+        {
+
+        }
     
 
 }

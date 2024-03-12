@@ -12284,8 +12284,6 @@ MonoBehaviour:
   particlePrefab: {fileID: 6715441279464377331, guid: b83e429a3ee3f2041abf4901ab4d4f07, type: 3}
   monsterMimic: {fileID: -2638430739128470967, guid: 944bcc2c4620d9c4194431bac08d5599, type: 3}
   mimicRegen1: {fileID: 4398426}
-  mimicRegen2: {fileID: 1329141359}
-  mimicSpawnInterval: 10
   dialogOff: {fileID: 1573778935}
   uiManager: {fileID: 0}
 --- !u!4 &216676881
@@ -13263,6 +13261,14 @@ PrefabInstance:
       propertyPath: dialogueLine.Array.data[5]
       value: Bye
       objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.4375
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 2.25
+      objectReference: {fileID: 0}
     - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
       propertyPath: m_LocalScale.x
       value: 3
@@ -13283,11 +13289,44 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuestNPC
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 705237190}
   m_SourcePrefab: {fileID: 100100000, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+--- !u!1 &705237189 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+  m_PrefabInstance: {fileID: 705237188}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &705237190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705237189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afadcf8ee3575804dac76a1d7ce8f7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tryEnter: {fileID: 1499481093}
+  dialogueOn: {fileID: 1573778935}
+  dialogueLine:
+  - i'm tutorial npc.
+  - This dialogue is shown when you've completed all the quests.
+  - i cant sure my script is right
+  - seeya
+  text: {fileID: 1668547328}
+  mimicRegen2: {fileID: 1329141359}
+  mimicSpawnInterval: 10
+  monsterMimic: {fileID: -2638430739128470967, guid: 944bcc2c4620d9c4194431bac08d5599, type: 3}
+  curQuestNum: 0
 --- !u!1 &733246420
 GameObject:
   m_ObjectHideFlags: 0
@@ -16374,6 +16413,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!212 &1499481093 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 973031685995150528, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+  m_PrefabInstance: {fileID: 705237188}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1507837344
 GameObject:
   m_ObjectHideFlags: 0
@@ -28339,6 +28383,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5677451479395921110, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
+      propertyPath: m_Name
+      value: DirPos
+      objectReference: {fileID: 0}
     - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
       propertyPath: pauseUI
       value: 
@@ -28458,9 +28506,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1668547328}
     - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
       propertyPath: dialogueOn
       value: 
       objectReference: {fileID: 1573778935}
+    - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: QuestNumber.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
       propertyPath: dialogueLine.Array.size
       value: 6
@@ -28475,7 +28531,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
       propertyPath: m_Name
-      value: NPC
+      value: FirstNPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -28497,6 +28553,10 @@ PrefabInstance:
     - target: {fileID: 4341830095349195750, guid: f27f62ad0f982de4d9f05c4f3f5e1241, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211063320583469003, guid: f27f62ad0f982de4d9f05c4f3f5e1241, type: 3}
+      propertyPath: m_Name
+      value: DialogText
       objectReference: {fileID: 0}
     - target: {fileID: 7412380049881392462, guid: f27f62ad0f982de4d9f05c4f3f5e1241, type: 3}
       propertyPath: m_Pivot.x

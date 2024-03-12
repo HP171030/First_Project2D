@@ -272,7 +272,10 @@ public class PlayerControll : MonoBehaviour
         }
 
     }
+    public void OnSpc(InputValue value )
+    {
 
+    }
     public void OnDash(InputValue value)
     {
         if ( value.isPressed&&!dashOn )
