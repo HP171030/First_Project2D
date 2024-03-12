@@ -183,6 +183,7 @@ MonoBehaviour:
   atkDir: {x: 0, y: 0}
   atkDelay: 2
   atkDelayOn: 0
+  monsterPool: {fileID: -2638430739128470967}
   soundPlayerDamaged: {fileID: 8300000, guid: 848a956bf2173af47a5f15c6b9e24f9b, type: 3}
   soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}
   soundAttack: {fileID: 8300000, guid: edd73e3973a792d4ca342f322b8cbef3, type: 3}

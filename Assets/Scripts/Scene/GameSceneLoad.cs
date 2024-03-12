@@ -13,8 +13,7 @@ public class GameSceneLoad : BaseScene
     [SerializeField] ParticleSystem particlePrefab;
     [SerializeField] PooledObject monsterMimic;
     [SerializeField] Transform mimicRegen1;
-    [SerializeField] Transform mimicRegen2;
-    [SerializeField] float mimicSpawnInterval;
+
     [SerializeField] Image dialogOff;
     [SerializeField] UIManager uiManager;
 
@@ -30,7 +29,7 @@ public class GameSceneLoad : BaseScene
             uiManager.playerInput = player.GetComponent<PlayerInput>();
         }
         Manager.Pool.CreatePool(monsterMimic, 20, 20);
-        int ranSize = Random.Range(2, 6);
+        int ranSize = Random.Range(1, 4);
         
         for(int i = 0; i < ranSize; i++ )
         {
@@ -53,36 +52,12 @@ public class GameSceneLoad : BaseScene
         player.SetActive(true);
         yield return new WaitForSeconds(0.6f);
         animator.gameObject.SetActive(false);
-        StartCoroutine(SpawnMimicsRoutine());
+       
 
         
         
 
     }
-    private IEnumerator SpawnMimicsRoutine()
-    {
-        int limit = 0;
-        while ( true )
-        {
-            yield return new WaitForSeconds(mimicSpawnInterval);
 
-            if ( monsterMimic != null && mimicRegen2 != null && limit < 10)
-            {
-                int ranSize = Random.Range(1, 4);
-                limit += ranSize;
-                for ( int i = 0; i < ranSize; i++ )
-                {
-                    Vector2 newPosition = mimicRegen2.position + Random.insideUnitSphere * 5f;
-                    Manager.Pool.GetPool(monsterMimic, newPosition, Quaternion.identity);
-
-                }
-            }
-            else if (limit >= 11 )
-            {
-                StopCoroutine("SpawnMimicsRoutine");
-                Debug.Log("CheckStopCo");
-            }
-        }
-    }
 
 }

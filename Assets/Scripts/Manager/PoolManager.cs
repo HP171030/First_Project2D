@@ -38,4 +38,8 @@ public class PoolManager : Singleton<PoolManager>
     {
         return poolDic[prefab.GetInstanceID()].GetPool(position, rotation);
     }
+    public void ReturnPool(PooledObject prefab )
+    {
+        poolDic [prefab.GetInstanceID()].ReturnPool(prefab);
+    }
 }

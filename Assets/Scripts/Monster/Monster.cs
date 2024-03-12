@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem.XR.Haptics;
 
-public class Monster : PooledObject, Idamagable
+public class Monster : MonoBehaviour, Idamagable
 {
     
     [SerializeField] string Name;
@@ -29,7 +29,8 @@ public class Monster : PooledObject, Idamagable
     [SerializeField] Vector2 atkDir;
     [SerializeField] float atkDelay;
     [SerializeField] bool atkDelayOn;
-    [SerializeField] ObjectPool pool;
+    [SerializeField] PooledObject monsterPool;
+  
 
     [Header("Sound Clip")]
     [SerializeField] AudioClip soundPlayerDamaged;
@@ -243,7 +244,7 @@ public class Monster : PooledObject, Idamagable
         MoveOn = false;
         Manager.Sound.PlaySFX(soundMonsterDead);
         yield return new WaitForSeconds(1f);
-        pool.ReturnPool(this);
+        monsterPool.Release();
         
        
 
