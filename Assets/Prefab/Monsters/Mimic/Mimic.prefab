@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 97776202823047831}
   - component: {fileID: 6975648076172837875}
   - component: {fileID: 447919135614299130}
+  - component: {fileID: -2638430739128470967}
   m_Layer: 8
   m_Name: Mimic
   m_TagString: Untagged
@@ -163,7 +164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: 
-  atk: 0
+  atk: 10
   def: 0
   hp: 10
   Range: 5
@@ -182,6 +183,10 @@ MonoBehaviour:
   atkDir: {x: 0, y: 0}
   atkDelay: 2
   atkDelayOn: 0
+  soundPlayerDamaged: {fileID: 8300000, guid: 848a956bf2173af47a5f15c6b9e24f9b, type: 3}
+  soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}
+  soundAttack: {fileID: 8300000, guid: edd73e3973a792d4ca342f322b8cbef3, type: 3}
+  soundMonsterDead: {fileID: 8300000, guid: dd8149c4fbb5a1a439b4a0851934fa66, type: 3}
   curState: 0
 --- !u!95 &447919135614299130
 Animator:
@@ -204,3 +209,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-2638430739128470967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6379233055840216801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 481092cc15e545d48820e7d078f98942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoRelease: 0
+  releaseTime: 0

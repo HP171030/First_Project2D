@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
@@ -15,9 +17,17 @@ public class UIManager : Singleton<UIManager>
     private Stack<PopUpUI> popUpStack = new Stack<PopUpUI>();
     private float prevTimeScale;
     private InGameUI curInGameUI;
+    PlayerControll playerCon;
+    public PlayerInput playerInput;
+ 
+ 
 
     private void Start()
     {
+
+        playerInput ??= GameObject.FindObjectOfType<PlayerControll>()?.GetComponent<PlayerInput>();
+
+
         EnsureEventSystem();
     }
 
@@ -42,6 +52,13 @@ public class UIManager : Singleton<UIManager>
             popUpBlocker.gameObject.SetActive(true);
             prevTimeScale = Time.timeScale;
             Time.timeScale = 0f;
+            if ( playerInput != null )
+            {
+
+            playerInput.enabled = false;
+            }
+           
+
         }
 
         T ui = Instantiate(popUpUI, popUpCanvas.transform);
@@ -63,6 +80,18 @@ public class UIManager : Singleton<UIManager>
         {
             popUpBlocker.gameObject.SetActive(false);
             Time.timeScale = prevTimeScale;
+            if(playerInput != null )
+            {
+
+            playerInput.enabled = true;
+            }
+            if ( Manager.Game.title )
+            {
+                Manager.Game.title = false;
+                Manager.Game.titleOption();
+               
+            }
+                 
         }
     }
 

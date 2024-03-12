@@ -180,6 +180,62 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "NPC",
+            "id": "db0424d1-c7b4-4fe7-a34a-ba962a1ac022",
+            "actions": [
+                {
+                    "name": "Spc",
+                    "type": "Value",
+                    "id": "2584f91c-a117-4924-a484-577d4916bf40",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d581a62d-3f2f-4170-a20a-c88296d2b3ed",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Spc",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Option",
+            "id": "0516cadd-989d-4254-84ce-b4b3b0f4e396",
+            "actions": [
+                {
+                    "name": "Option",
+                    "type": "Value",
+                    "id": "cd97cc43-0ce4-4009-848f-403b34e838aa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "725839ad-2410-4157-a5ae-3268e407b4a1",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Option",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

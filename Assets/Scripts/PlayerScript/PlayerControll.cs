@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEditor.Build;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -34,6 +35,7 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] Collider2D [] colliders = new Collider2D [5];
     [SerializeField] Transform effectDir;
     Vector2 lastMoveDirection;
+    [SerializeField] PauseUI pauseUI;
 
     [Header("Character Sound")]
 
@@ -51,16 +53,19 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] bool dashOn;
     [SerializeField] bool atkOn = false;
     bool die;
+ 
     [SerializeField] Animator animator;
     [SerializeField] LayerMask targetLayer;
     protected Coroutine coolDown;
     protected bool CoolChecker = false;
+    
 
    
 
 
 
 
+  
 
 
     private void Update()
@@ -279,10 +284,12 @@ public class PlayerControll : MonoBehaviour
         {
             Debug.Log("WaitCool");
         }
-
+    }
+    public void OnMouseOver()
+    {
+            
 
     }
-
     protected IEnumerator CoolDown(float coolTime)
     {
         CoolChecker = true;
