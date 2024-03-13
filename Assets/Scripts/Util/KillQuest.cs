@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class KillQuest : MonoBehaviour
+public class KillQuest
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int monsterId;
+    public int targetCount;
+    public string questName;
+    public bool isCompleted; 
 
-    // Update is called once per frame
-    void Update()
+    public KillQuest(string questName,int monsterId, int targetCount )
     {
-        
+        this.questName = questName;
+        this.monsterId = monsterId;
+        this.targetCount = targetCount;
+        this.isCompleted = false;
     }
 }

@@ -135,27 +135,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eecd3d56b03ed914c8f6587943f4ded0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 3941626407867355231}
   power: 1
   moveSpeed: 10
   dashSpeed: 20
+  sprite: {fileID: 3941626407867355231}
   Xdir: 0
   Ydir: 0
   up: 0
   left: 0
   right: 0
   down: 0
-  rb: {fileID: 3274519082594045821}
-  dashOn: 0
-  atkOn: 0
   dashTrail: {fileID: 5131462656197016813, guid: a693ddb6e3ce98a49a12338ab6b5ea2d, type: 3}
   skillEffect: {fileID: 5723702106371360345}
   skillEffectLocation: {fileID: 1228226595629928531}
   skillCoolTime: {fileID: 0}
-  monster:
-    serializedVersion: 2
-    m_Bits: 256
-  animator: {fileID: 4492340121305364852}
   range: 1
   colliders:
   - {fileID: 0}
@@ -163,10 +156,24 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  effectDir: {fileID: 2755471958827590572}
+  pauseUI: {fileID: 2111280174689593511, guid: 433f6dff57c943842b371b2226faf8da, type: 3}
+  soundAtk: {fileID: 8300000, guid: 6b594e0b2b80db14b9ff8e68b1b50f1d, type: 3}
+  soundDash: {fileID: 8300000, guid: 7756a544d93c02040ace7ab722576ff5, type: 3}
+  soundHit: {fileID: 8300000, guid: 04d294ee3dc27db458512e937aad4943, type: 3}
+  soundHit2: {fileID: 8300000, guid: cc14918ecadd80a40b2b36c495aeea14, type: 3}
+  soundHit3: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
+  soundDie: {fileID: 8300000, guid: 64d10c533a1aece448f41daabff6833b, type: 3}
+  monster:
+    serializedVersion: 2
+    m_Bits: 256
+  rb: {fileID: 3274519082594045821}
+  dashOn: 0
+  atkOn: 0
+  animator: {fileID: 4492340121305364852}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  effectDir: {fileID: 2755471958827590572}
 --- !u!95 &4492340121305364852
 Animator:
   serializedVersion: 5
@@ -349,7 +356,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2882713960372184508, guid: 6d9df4d6e01eb2e4ca02a241b90d2fa4, type: 3}
       propertyPath: m_Name
-      value: SlashEffect
+      value: DirPos
       objectReference: {fileID: 0}
     - target: {fileID: 2882713960372184508, guid: 6d9df4d6e01eb2e4ca02a241b90d2fa4, type: 3}
       propertyPath: m_Layer

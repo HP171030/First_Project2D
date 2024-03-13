@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -8,21 +9,23 @@ public class TutorialQuestNPC : NPCScript
 {
     [SerializeField] Transform mimicRegen2;
     [SerializeField] float mimicSpawnInterval;
-    [SerializeField] PooledObject monsterMimic;
+    [SerializeField] GameObject monsterMimic;
     [SerializeField] int curQuestNum = 0;
- 
+    [SerializeField] KillQuest mimicQuest;
+
+
 
 
     protected override void Start()
     {
         base.Start();
-     //   StartCoroutine(SpawnMimicsRoutine());
+      
         AddQuest();
     }
     public void AddQuest()
     {
         quests.Add(0, new string [] { "please Kill the Mimic", "u can find them","Kill 5 mimics","Script is done" });
-        quests.Add(1,new string[] {"Come on","you must kill them" });
+        quests.Add(1,new string[] {"Come on","you must kill them" });   
         quests.Add(2, new string [] { "you did it!", "i can help you something" });
     }
     private IEnumerator SpawnMimicsRoutine()
@@ -39,7 +42,7 @@ public class TutorialQuestNPC : NPCScript
                 for ( int i = 0; i < ranSize; i++ )
                 {
                     Vector2 newPosition = mimicRegen2.position + Random.insideUnitSphere * 5f;
-                    Manager.Pool.GetPool(monsterMimic, newPosition, Quaternion.identity);
+                    Instantiate(monsterMimic, newPosition, Quaternion.identity);
 
                 }
             }
@@ -119,9 +122,17 @@ public class TutorialQuestNPC : NPCScript
         switch ( curQuestNum )
         {
             case 0: curQuestNum++;
-                break;
+                    StartCoroutine(SpawnMimicsRoutine());
+                    mimicQuest = new KillQuest("mimicQuest",1, 5); 
+                    Manager.Quest.AddKillQuest(mimicQuest);
+
+                    break;
             case 1:
-              //조건 충족시 올리기
+                    if (  mimicQuest.isCompleted)
+                    {
+                        curQuestNum++;
+                    }
+                    
                 
                 break;
             case 2:

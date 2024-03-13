@@ -15,6 +15,7 @@ public class DataManager : Singleton<DataManager>
 
     public void NewData()
     {
+        
         gameData = new GameData();
     }
 

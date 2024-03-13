@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f6b3908a783b204ab014ff7080c3ee1, type: 3}
   m_Name: mimic
   m_EditorClassIdentifier: 
+  id: 1
   name: Mimic
   hp: 10
-  range: 3
+  range: 4
   atk: 10
   speed: 3
-  attackRange: 2
+  attackRange: 1
   atkDelay: 3
   soundPlayerDamaged: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
   soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}

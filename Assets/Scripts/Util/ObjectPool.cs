@@ -34,6 +34,12 @@ public class ObjectPool : MonoBehaviour
             instance.transform.position = position;
             instance.transform.rotation = rotation;
             instance.gameObject.SetActive(true);
+
+            //if PooledObject is Monster
+            Monster monster = instance.GetComponent<Monster>();
+            if ( monster != null )
+                monster.MonsterReset();
+
             return instance;
         }
         else

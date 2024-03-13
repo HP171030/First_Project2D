@@ -7,9 +7,10 @@ using UnityEngine.InputSystem.XR.Haptics;
 
 public class Monster : MonoBehaviour, Idamagable
 {
+    
    Animator animator;
     Collider2D [] colliders;
-    LayerMask playerLayer;
+  
     Vector3 playerPos;
     SpriteRenderer spriteRenderer;
      Vector2 moveDir;
@@ -20,19 +21,28 @@ public class Monster : MonoBehaviour, Idamagable
      bool atkDelayOn;
 
 
+   [SerializeField] LayerMask playerLayer;
     [SerializeField] PooledObject monsterPool;
-    [SerializeField] MonsterData monsterData;    
+    public MonsterData monsterData;
 
-
-
+    public float thisMonsterHP;
     private void Start()
     {
+        ChangeState(MonsterState.Idle);
+        thisMonsterHP = monsterData.hp;
+        colliders = new Collider2D [20];
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        curState = MonsterState.Idle;
-        colliders = new Collider2D [20];
-        spriteRenderer = GetComponent<SpriteRenderer>();
         thisCollider = GetComponent<Collider2D>();
+        thisCollider.enabled = true;
+        MoveOn = false;
+        
+    }
+
+    public void MonsterReset()
+    {
+       
+      
     }
     public void ChasePattern()
     {
@@ -108,7 +118,7 @@ public class Monster : MonoBehaviour, Idamagable
  
     private void Update()
     {
-        Debug.Log(curState);
+        
         switch ( curState )
         {
             case MonsterState.Idle:
@@ -145,6 +155,7 @@ public class Monster : MonoBehaviour, Idamagable
                 
 
                 break;
+
             case MonsterState.Dead:
                 
                 thisCollider.enabled = false;
@@ -165,22 +176,31 @@ public class Monster : MonoBehaviour, Idamagable
             atkDelayOn = true;
             Manager.Sound.PlaySFX(monsterData.soundAttack);
             animator.Play("AttackMimic");
+            
             while ( t < 1f )
             {
 
                 transform.position = Vector2.Lerp(prePos, targetPos, t);
                 t += Time.deltaTime / duration;
+
+
+                if ( player != null )
+                {
+                    SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
+                    spriteRenderer.material.color = Color.red;
+                    Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
+
+                }
                 yield return null;
+
             }
-            if ( player != null )
-            {
+                if( player != null )
+                {
                 SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
-                spriteRenderer.material.color = Color.red;
-                Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
-                yield return new WaitForSeconds(0.5f);
-                Manager.Game.HpEvent -= monsterData.atk;
                 spriteRenderer.material.color = Color.white;
-            }
+                    Manager.Game.HpEvent -= monsterData.atk;
+                }
+            
            
             ChangeState(MonsterState.Idle);
             yield return new WaitForSeconds(monsterData.atkDelay);
@@ -188,7 +208,6 @@ public class Monster : MonoBehaviour, Idamagable
             ChangeState(MonsterState.Chase);
         }
     }
-
     private void ChasePlayer()
     {
         ChasePattern();
@@ -203,8 +222,8 @@ public class Monster : MonoBehaviour, Idamagable
     public void TakeDamage( int damage )
     {
         if ( curState != MonsterState.Dead ) {
-            monsterData.hp -= damage;
-            if ( monsterData.hp <= 0 )
+            thisMonsterHP -= damage;
+            if ( thisMonsterHP <= 0 )
             {
                 ChangeState(MonsterState.Dead);
                 animator.Play("Dead");
@@ -229,8 +248,8 @@ public class Monster : MonoBehaviour, Idamagable
         MoveOn = false;
         Manager.Sound.PlaySFX(monsterData.soundMonsterDead);
         yield return new WaitForSeconds(1f);
-        monsterPool.Release();
-        monsterData.OnDiedEvent();
+        Manager.Quest.HandleMonsterDied(monsterData.id);
+        Destroy(gameObject);
         
        
 

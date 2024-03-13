@@ -5,7 +5,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "Monster", menuName = "monsterData/data")]
 public class MonsterData : ScriptableObject
 {
-   
+    public int id;
     public new string name;
     public int hp;
     public int range;
@@ -13,7 +13,7 @@ public class MonsterData : ScriptableObject
     public float speed;
     public float attackRange;
     public float atkDelay;
-    public event UnityAction monsterOnDied;
+    public event UnityAction<string> monsterOnDied;
 
     [Header("Sound Clip")]
     public AudioClip soundPlayerDamaged;
@@ -21,9 +21,9 @@ public class MonsterData : ScriptableObject
     public AudioClip soundAttack;
     public AudioClip soundMonsterDead;
 
-    public void OnDiedEvent()
+    public void OnDiedEvent(string name)
     {
-        monsterOnDied?.Invoke();
+        monsterOnDied?.Invoke(name);
     }
 
 }

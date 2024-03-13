@@ -272,9 +272,16 @@ public class PlayerControll : MonoBehaviour
         }
 
     }
-    public void OnSpc(InputValue value )
+    public void OnQuestWindow(InputValue value )
     {
+        
+        Debug.Log("Current kill quests:");
 
+        foreach ( KillQuest quest in Manager.Quest.killQuests)
+        {
+            string status = quest.isCompleted ? "Completed" : "Incomplete";
+            Debug.Log("QuestName : " + quest.questName + ", Monster ID: " + quest.monsterId + ", Target Count: " + quest.targetCount + ", Status: " + status);
+        }
     }
     public void OnDash(InputValue value)
     {

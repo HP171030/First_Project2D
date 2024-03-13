@@ -163,31 +163,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e15fdfd6ed876a4c86e0ba06df29296, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
-  atk: 10
-  def: 0
-  hp: 10
-  Range: 5
-  colliders: []
   playerLayer:
     serializedVersion: 2
     m_Bits: 128
-  playerPos: {x: 0, y: 0, z: 0}
-  speed: 2
-  spriteRenderer: {fileID: 0}
-  moveDir: {x: 0, y: 0}
   MoveOn: 0
-  CRSwitch: 0
-  thisCollider: {fileID: 0}
-  attackRange: 1
-  atkDir: {x: 0, y: 0}
-  atkDelay: 2
-  atkDelayOn: 0
   monsterPool: {fileID: -2638430739128470967}
-  soundPlayerDamaged: {fileID: 8300000, guid: 848a956bf2173af47a5f15c6b9e24f9b, type: 3}
-  soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}
-  soundAttack: {fileID: 8300000, guid: edd73e3973a792d4ca342f322b8cbef3, type: 3}
-  soundMonsterDead: {fileID: 8300000, guid: dd8149c4fbb5a1a439b4a0851934fa66, type: 3}
+  monsterData: {fileID: 11400000, guid: 1acfee2e44633944fa8bcd71c265560f, type: 2}
   curState: 0
 --- !u!95 &447919135614299130
 Animator:

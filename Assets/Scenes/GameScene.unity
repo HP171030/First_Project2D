@@ -28383,46 +28383,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5677451479395921110, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: m_Name
-      value: DirPos
-      objectReference: {fileID: 0}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: pauseUI
-      value: 
-      objectReference: {fileID: 2111280174689593511, guid: 433f6dff57c943842b371b2226faf8da, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundAtk
-      value: 
-      objectReference: {fileID: 8300000, guid: 6b594e0b2b80db14b9ff8e68b1b50f1d, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundDie
-      value: 
-      objectReference: {fileID: 8300000, guid: 64d10c533a1aece448f41daabff6833b, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundHit
-      value: 
-      objectReference: {fileID: 8300000, guid: 04d294ee3dc27db458512e937aad4943, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundDash
-      value: 
-      objectReference: {fileID: 8300000, guid: 7756a544d93c02040ace7ab722576ff5, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundHit2
-      value: 
-      objectReference: {fileID: 8300000, guid: cc14918ecadd80a40b2b36c495aeea14, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundHit3
-      value: 
-      objectReference: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: pauseImage
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
-      propertyPath: soundDamaged
-      value: 
-      objectReference: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
     - target: {fileID: 7898724058455034989, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
       propertyPath: skillCoolTime
       value: 
