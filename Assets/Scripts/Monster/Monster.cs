@@ -19,9 +19,12 @@ public class Monster : MonoBehaviour, Idamagable
      Collider2D thisCollider;
      Vector2 atkDir;
      bool atkDelayOn;
+    Rigidbody2D rb;
+    [SerializeField] Animator damagedEffect;
+    [SerializeField] Transform damagedEffectPos;
 
 
-   [SerializeField] LayerMask playerLayer;
+    [SerializeField] LayerMask playerLayer;
     [SerializeField] PooledObject monsterPool;
     public MonsterData monsterData;
 
@@ -34,16 +37,12 @@ public class Monster : MonoBehaviour, Idamagable
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         thisCollider = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
         thisCollider.enabled = true;
         MoveOn = false;
         
     }
 
-    public void MonsterReset()
-    {
-       
-      
-    }
     public void ChasePattern()
     {
         Targeting();
@@ -135,6 +134,8 @@ public class Monster : MonoBehaviour, Idamagable
                         }
                     }
                 }
+                rb.velocity = Vector2.zero;
+                
                 break;
 
             case MonsterState.Chase:
@@ -188,13 +189,14 @@ public class Monster : MonoBehaviour, Idamagable
                 {
                     SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
                     spriteRenderer.material.color = Color.red;
-                    Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
+                    
 
                 }
                 yield return null;
 
             }
-                if( player != null )
+            Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
+            if ( player != null )
                 {
                 SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
                 spriteRenderer.material.color = Color.white;
@@ -223,6 +225,13 @@ public class Monster : MonoBehaviour, Idamagable
     {
         if ( curState != MonsterState.Dead ) {
             thisMonsterHP -= damage;
+
+
+            damagedEffectPos.position = transform.position + Random.insideUnitSphere * 1f;
+            Animator Effector = damagedEffect.GetComponent<Animator>();
+            Debug.Log(Effector.name);
+            Effector.SetTrigger("Hit");
+            
             if ( thisMonsterHP <= 0 )
             {
                 ChangeState(MonsterState.Dead);
@@ -237,6 +246,7 @@ public class Monster : MonoBehaviour, Idamagable
                 if (!MoveOn&&curState !=MonsterState.Attack )
                 {
                     animator.Play("Damaged");
+                    
                 }
 
             }

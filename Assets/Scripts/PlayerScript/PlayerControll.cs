@@ -159,7 +159,7 @@ public class PlayerControll : MonoBehaviour
     }
     public IEnumerator DashOn()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
         DashOff();
     }
     public void OnMove(InputValue value)
