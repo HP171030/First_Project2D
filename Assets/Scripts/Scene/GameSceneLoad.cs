@@ -28,7 +28,7 @@ public class GameSceneLoad : BaseScene
         {
             uiManager.playerInput = player.GetComponent<PlayerInput>();
         }
-        
+       
         int ranSize = Random.Range(1, 4);
         
         for(int i = 0; i < ranSize; i++ )
@@ -37,6 +37,8 @@ public class GameSceneLoad : BaseScene
             Instantiate(monsterMimic, newPosition, Quaternion.identity);
 
         }
+        
+        dialogOff.gameObject.SetActive(true);
         dialogOff.enabled = false;
         Manager.Game.titleOff = false;
         yield return null;

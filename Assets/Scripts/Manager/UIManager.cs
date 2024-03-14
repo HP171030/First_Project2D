@@ -11,6 +11,7 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] Canvas windowCanvas;
     [SerializeField] Canvas inGameCanvas;
 
+
     [SerializeField] Image popUpBlocker;
     [SerializeField] Button inGameBlocker;
 
@@ -19,6 +20,8 @@ public class UIManager : Singleton<UIManager>
     private InGameUI curInGameUI;
     PlayerControll playerCon;
     public PlayerInput playerInput;
+
+    
  
  
 
@@ -135,7 +138,7 @@ public class UIManager : Singleton<UIManager>
 
         T ui = Instantiate(inGameUI, inGameCanvas.transform);
         curInGameUI = ui;
-        inGameBlocker.gameObject.SetActive(true);
+        
         return ui;
     }
 
@@ -144,7 +147,7 @@ public class UIManager : Singleton<UIManager>
         if (curInGameUI == null)
             return;
 
-        inGameBlocker.gameObject.SetActive(false);
+       
         Destroy(curInGameUI.gameObject);
         curInGameUI = null;
     }

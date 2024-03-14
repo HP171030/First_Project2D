@@ -43,12 +43,18 @@ public class PlayerStatus : MonoBehaviour
     {
         Text.text = $"{curValue}/{maxHpValue}".ToString();
         HpGauge.fillAmount =(float) curValue / maxHpValue;
-        Debug.Log(Manager.Game.HpEvent);
+       
         if ( Manager.Game.HpEvent <= 0 )
         {
             Text.text = $"0/{maxHpValue}".ToString();
             Die.Invoke();
            
+        }
+        if ( Manager.Game.HpEvent > Manager.Game.MaxHpEvent )
+        {
+            Text.text = $"{curValue}/{maxHpValue}".ToString();
+            Debug.Log("Max");
+
         }
     }
     private void StatusMPUpdate( int curValue)

@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Sprites;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class PlayerControll : MonoBehaviour
 {
@@ -35,7 +38,11 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] Collider2D [] colliders = new Collider2D [5];
     [SerializeField] Transform effectDir;
     Vector2 lastMoveDirection;
+ 
+
+    [Header("PlayerUI")]
     [SerializeField] PauseUI pauseUI;
+
 
     [Header("Character Sound")]
 
@@ -52,20 +59,20 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     [SerializeField] bool dashOn;
     [SerializeField] bool atkOn = false;
+  
     bool die;
  
     [SerializeField] Animator animator;
     [SerializeField] LayerMask targetLayer;
     protected Coroutine coolDown;
     protected bool CoolChecker = false;
-    
-
-   
 
 
 
 
-  
+
+
+
 
 
     private void Update()
@@ -75,7 +82,7 @@ public class PlayerControll : MonoBehaviour
             Move();
             PlayerDir();
         }
-        
+    
 
     }
 
@@ -139,6 +146,7 @@ public class PlayerControll : MonoBehaviour
         die = false;
         animator.SetBool("Die", false) ;
     }
+
     public void Dash()
     {
         
@@ -295,11 +303,18 @@ public class PlayerControll : MonoBehaviour
             Debug.Log("WaitCool");
         }
     }
-    public void OnMouseOver()
+
+
+    public void OnInven(InputValue value )
     {
-            
+        inventoryManager.Ins.OpenInven();
 
     }
+    public void OnQuest(InputValue value)
+    {
+        inventoryManager.Ins.OpenQuest();
+    }
+
     protected IEnumerator CoolDown(float coolTime)
     {
         CoolChecker = true;
@@ -321,7 +336,17 @@ public class PlayerControll : MonoBehaviour
         atkOn = false;
         moveSpeed = 10f;
     }
-
+    private void OnTriggerEnter2D( Collider2D collision )
+    {
+        Debug.Log("Enter");
+        if ( collision.CompareTag("FieldItem") )
+        {
+            Debug.Log("Get");
+            Fielditem fielditem = collision.GetComponent<Fielditem>();
+            if ( inventoryManager.Ins.AddItem(fielditem.GetItem()) )
+                fielditem.DestroyItem();
+        }
+    }
     public void PlayerDir()
     {
         

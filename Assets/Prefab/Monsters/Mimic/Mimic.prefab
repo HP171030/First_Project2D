@@ -279,6 +279,7 @@ MonoBehaviour:
   monsterPool: {fileID: -2638430739128470967}
   monsterData: {fileID: 11400000, guid: 1acfee2e44633944fa8bcd71c265560f, type: 2}
   thisMonsterHP: 0
+  dropItem: {fileID: 8172179191049220640, guid: a50bfbce368a25f4db6e0e2f9641795b, type: 3}
   curState: 0
 --- !u!95 &447919135614299130
 Animator:

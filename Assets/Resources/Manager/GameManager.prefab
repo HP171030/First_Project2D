@@ -45,7 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4fcfa33b2f5d5e47b5fc920f8e1da03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryUI: {fileID: 8613166499102231986, guid: edc3a730b3ffe8c44ac9a935dd5152df, type: 3}
+  questUI: {fileID: -7903181057377323994, guid: 2215ba07c26b4f44795e00b1d701233b, type: 3}
   fullScreenMode: {fileID: 0}
+  titleOff: 1
+  title: 0
   pauseUI: {fileID: 2111280174689593511, guid: 433f6dff57c943842b371b2226faf8da, type: 3}
 --- !u!114 &-8050722253010694835
 MonoBehaviour:

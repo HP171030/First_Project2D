@@ -23,6 +23,7 @@ public static class Manager
         UIManager.ReleaseInstance();
         QuestManager.ReleaseInstance();
 
+
         GameManager.CreateInstance();
         DataManager.CreateInstance();
         PoolManager.CreateInstance();
@@ -31,5 +32,6 @@ public static class Manager
         SoundManager.CreateInstance();
         UIManager.CreateInstance();
         QuestManager.CreateInstance();
+
     }
 }

@@ -42,18 +42,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "QuestWindow",
+                    "name": "Inven",
                     "type": "Button",
-                    "id": "34926cb8-2eb3-4911-a43a-34c3ff6687cf",
+                    "id": "3dcee630-a251-4be9-b7eb-3bad5fe2bdec",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Inventory",
+                    "name": "Quest",
                     "type": "Button",
-                    "id": "285dbad7-a0ef-4d4f-97c7-bf65c8dc8d4f",
+                    "id": "c4ef91d4-cf7d-4c65-99d5-30edad6960a4",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -151,23 +151,23 @@
                 },
                 {
                     "name": "",
-                    "id": "ad7ac21c-a9af-4db2-982d-795838e1c74c",
-                    "path": "<Keyboard>/q",
+                    "id": "364b7d2f-28a4-4b7c-8dd4-7c3332d6a7cc",
+                    "path": "<Keyboard>/i",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "QuestWindow",
+                    "action": "Inven",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "dd1430cb-d629-4b00-9116-5581d112e291",
-                    "path": "<Keyboard>/i",
+                    "id": "e0069cf5-53a6-4e16-b51a-41f386194b6f",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Inventory",
+                    "action": "Quest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

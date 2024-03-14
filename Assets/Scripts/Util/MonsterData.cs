@@ -14,6 +14,7 @@ public class MonsterData : ScriptableObject
     public float attackRange;
     public float atkDelay;
     public event UnityAction<string> monsterOnDied;
+    public Item dropItem;
     
 
     [Header("Sound Clip")]

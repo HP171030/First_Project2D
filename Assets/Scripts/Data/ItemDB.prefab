@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &47051086255655850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2938936908017326090}
+  - component: {fileID: 5364697903955194734}
+  m_Layer: 0
+  m_Name: ItemDB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2938936908017326090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47051086255655850}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.09, y: 10.01, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5364697903955194734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 47051086255655850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7646854daffa6194fa7de15f199627bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsDB:
+  - itemType: 1
+    itemName: HealingPotion
+    itemDescription: that is healingPotion +10
+    itemImage: {fileID: -798172418, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
+    effects: {fileID: 11400000, guid: 2e3d3353a2dc5ba4da8bb6dfdb11dcb3, type: 2}
+    itemColor: {r: 1, g: 0, b: 0, a: 1}
+  - itemType: 0
+    itemName: af
+    itemDescription: asdfjnd
+    itemImage: {fileID: -1492837466, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
+    effects: {fileID: 0}
+    itemColor: {r: 0.02641511, g: 0.02641511, b: 0.02641511, a: 1}
+  - itemType: 2
+    itemName: asdf
+    itemDescription: QuestItem
+    itemImage: {fileID: 1615807933, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
+    effects: {fileID: 0}
+    itemColor: {r: 0.68812466, g: 0, b: 1, a: 1}
+  fieldItemPrefab: {fileID: 8172179191049220640, guid: a50bfbce368a25f4db6e0e2f9641795b, type: 3}

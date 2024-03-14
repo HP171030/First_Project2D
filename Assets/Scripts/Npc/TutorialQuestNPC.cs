@@ -24,11 +24,10 @@ public class TutorialQuestNPC : NPCScript
     }
     public void AddQuest()
     {
-        quests.Add(0, new string [] { "please Kill the Mimic", "u can find them","Kill 5 mimics","Script is done" });
-        quests.Add(1,new string[] {"Come on","you must kill them" });   
-        quests.Add(2, new string [] { "you did it!", 
-            "i can help you something","Take this Portion and Scroll", 
-            "If you take this scroll to the FirstNPC, he will be able to leave from here." });
+        quests.Add(0, new string [] { "please Kill the Mimic", "u can find them", "Kill 5 mimics", "Script is done" });
+        quests.Add(1, new string [] { "Come on", "you must kill them" });
+        quests.Add(2, new string [] { "you did it!",
+            "i can help you something" });
     }
     private IEnumerator SpawnMimicsRoutine()
     {

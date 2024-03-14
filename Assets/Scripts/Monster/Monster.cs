@@ -29,6 +29,8 @@ public class Monster : MonoBehaviour, Idamagable
     public MonsterData monsterData;
 
     public float thisMonsterHP;
+
+    public GameObject dropItem;
     private void Start()
     {
         ChangeState(MonsterState.Idle);
@@ -153,8 +155,6 @@ public class Monster : MonoBehaviour, Idamagable
             case MonsterState.Attack:
                 
                 StartCoroutine(AttackPlayer());
-                
-
                 break;
 
             case MonsterState.Dead:
@@ -259,8 +259,18 @@ public class Monster : MonoBehaviour, Idamagable
         Manager.Sound.PlaySFX(monsterData.soundMonsterDead);
         yield return new WaitForSeconds(1f);
         Manager.Quest.HandleMonsterDied(monsterData.id);
+        int Ran = Random.Range(0, 2);
+        if(Ran > 0 )
+        {
+        GameObject dropIns = Instantiate(dropItem, transform.position, Quaternion.identity);
+        dropIns.GetComponent<Fielditem>().SetItem(monsterData.dropItem);
+            Debug.Log("Drop");
+        }
+        else
+        {
+            Debug.Log("NoDrop");
+        }
         Destroy(gameObject);
-        
        
 
     }
