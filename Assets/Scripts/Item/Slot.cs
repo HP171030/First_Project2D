@@ -35,7 +35,7 @@ public class Slot : MonoBehaviour,IPointerUpHandler,IPointerEnterHandler,IPointe
 
     public void OnPointerUp( PointerEventData eventData )
     {
-        if(item.itemType == ItemType.Consumable && item.itemImage !=null )
+        if( item != null&&item.itemType == ItemType.Consumable )
         {
             bool isUse = item.Use();
     
@@ -54,7 +54,8 @@ public class Slot : MonoBehaviour,IPointerUpHandler,IPointerEnterHandler,IPointe
 
     public void OnPointerEnter( PointerEventData eventData )
     {
-        if ( item!=null)
+       
+        if (item != null)
         {
         detailImage.sprite = item.itemImage;
         text.text = item.itemDescription;

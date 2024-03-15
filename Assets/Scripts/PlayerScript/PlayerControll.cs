@@ -280,17 +280,7 @@ public class PlayerControll : MonoBehaviour
         }
 
     }
-    public void OnQuestWindow(InputValue value )
-    {
-        
-        Debug.Log("Current kill quests:");
-
-        foreach ( KillQuest quest in Manager.Quest.killQuests)
-        {
-            string status = quest.isCompleted ? "Completed" : "Incomplete";
-            Debug.Log("QuestName : " + quest.questName + ", Monster ID: " + quest.monsterId + ", Target Count: " + quest.targetCount + ", Status: " + status);
-        }
-    }
+  
     public void OnDash(InputValue value)
     {
         if ( value.isPressed&&!dashOn )
@@ -312,7 +302,7 @@ public class PlayerControll : MonoBehaviour
     }
     public void OnQuest(InputValue value)
     {
-        inventoryManager.Ins.OpenQuest();
+        QuestUIManager.Ins.OpenQuest();
     }
 
     protected IEnumerator CoolDown(float coolTime)

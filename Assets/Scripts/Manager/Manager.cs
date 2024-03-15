@@ -9,7 +9,7 @@ public static class Manager
     public static SceneManager Scene { get { return SceneManager.Instance; } }
     public static SoundManager Sound { get { return SoundManager.Instance; } }
     public static UIManager UI { get { return UIManager.Instance; } }
-    public static QuestManager Quest { get { return QuestManager.Instance; }}
+  
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -21,7 +21,7 @@ public static class Manager
         SceneManager.ReleaseInstance();
         SoundManager.ReleaseInstance();
         UIManager.ReleaseInstance();
-        QuestManager.ReleaseInstance();
+
 
 
         GameManager.CreateInstance();
@@ -31,7 +31,7 @@ public static class Manager
         SceneManager.CreateInstance();
         SoundManager.CreateInstance();
         UIManager.CreateInstance();
-        QuestManager.CreateInstance();
+  
 
     }
 }

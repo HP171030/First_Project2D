@@ -25,8 +25,9 @@ public class inventoryManager : MonoBehaviour
     #endregion
     public List<Item> itemsList = new List<Item>();
     bool invenClose = false;
+ 
     [SerializeField] InventoryUI inventoryUI;
-    [SerializeField] QuestUI questUI;
+  
     public event UnityAction onAddItem;
     public Transform playerPos;
     public Animator animator;
@@ -134,9 +135,5 @@ public class inventoryManager : MonoBehaviour
         itemsList.RemoveAt (slotId);
         onAddItem.Invoke();
     }
-    public void OpenQuest()
-    {
-
     
-    }
 }

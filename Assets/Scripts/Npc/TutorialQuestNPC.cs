@@ -12,6 +12,8 @@ public class TutorialQuestNPC : NPCScript
     [SerializeField] GameObject monsterMimic;
     [SerializeField] int curQuestNum = 0;
     [SerializeField] KillQuest mimicQuest;
+    [SerializeField] KillQuest test;
+    [SerializeField] KillQuest test2;
 
 
 
@@ -124,24 +126,37 @@ public class TutorialQuestNPC : NPCScript
         {
             case 0: curQuestNum++;
                     StartCoroutine(SpawnMimicsRoutine());
-                    mimicQuest = new KillQuest("mimicQuest",1, 5); 
-                    Manager.Quest.AddKillQuest(mimicQuest);
+                    mimicQuest = new KillQuest("mimicQuest",1, 5, $"Kill 5 mimic \n asdfasdfsf"); 
+                    QuestUIManager.Ins.AddKillQuest(mimicQuest);
 
                     break;
             case 1:
-                    if (  mimicQuest.isCompleted)
+                    if (mimicQuest.isCompleted)
                     {
                         curQuestNum++;
+                    }
+                    else
+                    {
+                        Debug.Log("testON");
+                        test = new KillQuest("TestCase", 1, 5, $"testest 5 mimic \n\n\n asdfasdfsf");
+                        QuestUIManager.Ins.AddKillQuest(test);
                     }
                     
                 
                 break;
             case 2:
-               
-                quests.Clear();
+                    QuestUIManager.Ins.RemoveKillQuest(mimicQuest);
+                    curQuestNum++;
+                    quests.Clear();
+                    
                 break;
+                case 3:
+                    test2 = new KillQuest("test2", 1, 5, $"baodfa");
+                    QuestUIManager.Ins.AddKillQuest(test2);
+                    break;
 
-        }
+
+            }
         }
         
     }

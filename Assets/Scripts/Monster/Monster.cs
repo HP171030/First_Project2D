@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
@@ -116,7 +117,12 @@ public class Monster : MonoBehaviour, Idamagable
 
    public MonsterState curState;
 
- 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, monsterData.attackRange);
+
+    }
     private void Update()
     {
         
@@ -258,7 +264,7 @@ public class Monster : MonoBehaviour, Idamagable
         MoveOn = false;
         Manager.Sound.PlaySFX(monsterData.soundMonsterDead);
         yield return new WaitForSeconds(1f);
-        Manager.Quest.HandleMonsterDied(monsterData.id);
+       QuestUIManager.Ins.HandleMonsterDied(monsterData.id);
         int Ran = Random.Range(0, 2);
         if(Ran > 0 )
         {
