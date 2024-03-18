@@ -16,17 +16,19 @@ MonoBehaviour:
   name: Mimic
   hp: 10
   range: 4
-  atk: 10
+  atk: 5
   speed: 3
   attackRange: 1
   atkDelay: 3
+  moveDelay: 2
   dropItem:
-    itemType: 2
+    itemType: 3
     itemName: Mimic rubble
-    itemDescription: Mimic's rubble it's Quest item
-    itemImage: {fileID: -429799713, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
+    itemDescription: Mimic's rubble \n it's Quest item
+    itemImage: {fileID: -1679452853, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
     effects: {fileID: 0}
     itemColor: {r: 1, g: 1, b: 1, a: 1}
+  dropGold: 1
   soundPlayerDamaged: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
   soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}
   soundAttack: {fileID: 8300000, guid: edd73e3973a792d4ca342f322b8cbef3, type: 3}

@@ -16,7 +16,7 @@ public class Fielditem : MonoBehaviour
         this.item.itemColor = item.itemColor;   
         this.item.itemDescription = item.itemDescription;
 
-        image.sprite = this.item.itemImage;
+        image.sprite = item.itemImage;
     }
 
     public Item GetItem()

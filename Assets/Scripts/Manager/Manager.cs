@@ -14,6 +14,7 @@ public static class Manager
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
+        Debug.Log("NewGameStart");
         GameManager.ReleaseInstance();
         DataManager.ReleaseInstance();
         PoolManager.ReleaseInstance();

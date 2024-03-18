@@ -14,11 +14,23 @@ public class PauseUI : PopUpUI
     {
         base.Awake();
         GetUI<Button>("Options").onClick.AddListener(Option);
+        GetUI<Button>("Save").onClick.AddListener(Save);
+        GetUI<Button>("Title").onClick.AddListener(Title);
         GetUI<Button>("Close").onClick.AddListener(Close);
     }
     public void Option()
     {
         Manager.UI.ShowPopUpUI(optionUI);
+
+    }
+    public void Title()
+    {
+        Time.timeScale = 1f;
+        Manager.UI.ClearPopUpUI();
+        Manager.Scene.LoadScene("TitleScene");
+    }
+    public void Save()
+    {
 
     }
  

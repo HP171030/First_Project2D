@@ -13,8 +13,10 @@ public class MonsterData : ScriptableObject
     public float speed;
     public float attackRange;
     public float atkDelay;
+    public float moveDelay;
     public event UnityAction<string> monsterOnDied;
     public Item dropItem;
+    public int dropGold;
     
 
     [Header("Sound Clip")]

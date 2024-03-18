@@ -74,6 +74,7 @@ public class TutorialQuestNPC : NPCScript
 
         StartCoroutine(WaitSpace());
         text.text = strings.Dequeue();
+        DoTweenText.DoText(text, 0.2f);
         IEnumerator WaitSpace()
         {
             while ( true )
@@ -93,13 +94,14 @@ public class TutorialQuestNPC : NPCScript
                 if ( Input.GetKeyDown(KeyCode.Space) )
                 {
                     text.text = strings.Dequeue();
-                    Debug.Log(strings.Count);
+                    DoTweenText.DoText(text, 0.2f);
+                   
                     StartCoroutine(WaitSpace());
                 }
             }
             else
             {
-                Debug.Log("LastOn");
+               
                 dialogueOn.enabled = false;
                 text.enabled = false;
                 player.enabled = true;

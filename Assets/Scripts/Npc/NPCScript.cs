@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
 using System.Collections;
-using Unity.VisualScripting;
+using DG.Tweening;
 
 public class NPCScript : MonoBehaviour
 {
@@ -15,7 +15,9 @@ public class NPCScript : MonoBehaviour
     [SerializeField] string [] dialogueLine;
    protected bool enterNPC = false;
     [SerializeField] protected TMP_Text text;
-   
+
+
+
 
     [Header("Quest")]
     protected Dictionary<int, string []> quests = new Dictionary<int, string []> ();
@@ -23,6 +25,9 @@ public class NPCScript : MonoBehaviour
 
     protected virtual void Start()
     {
+       
+       
+       
         tryEnter.enabled = false;
         text.enabled = false;
         dialogueOn.enabled = false;
@@ -30,13 +35,13 @@ public class NPCScript : MonoBehaviour
     }
     private void OnTriggerEnter2D( Collider2D collision )
     {
-        Debug.Log("enter");
+        
         tryEnter.enabled = true;
         enterNPC = true;
     }
     private void OnTriggerExit2D( Collider2D collision )
     {
-        Debug.Log("exit");
+        
         tryEnter.enabled = false;
         enterNPC = false;
     }
@@ -73,9 +78,10 @@ public class NPCScript : MonoBehaviour
            
             strings.Enqueue(dialogueLine [i]);
         }
-
+        
         StartCoroutine(WaitSpace());
         text.text = strings.Dequeue();
+        DoTweenText.DoText(text, 0.2f);
         IEnumerator WaitSpace()
         {
             while ( true )
@@ -95,6 +101,7 @@ public class NPCScript : MonoBehaviour
                 if ( Input.GetKeyDown(KeyCode.Space) )
                 {
                     text.text = strings.Dequeue();
+                    DoTweenText.DoText(text, 0.2f);
                     Debug.Log(strings.Count);   
                 StartCoroutine(WaitSpace());
                 }
@@ -102,10 +109,17 @@ public class NPCScript : MonoBehaviour
                 else 
                 {
                     Debug.Log("LastOn");
+                text.DOFade(0, 0.5f);
+                dialogueOn.DOFade(0, 0.5f).OnComplete(() =>
+                {
+                    dialogueOn.DOFade(1, 0f);
                     dialogueOn.enabled = false;
+                    
                     text.enabled = false;
                     player.enabled = true;
                     return;
+
+                });
                 }
         }
     }

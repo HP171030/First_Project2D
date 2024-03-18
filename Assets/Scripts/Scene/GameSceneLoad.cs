@@ -21,8 +21,13 @@ public class GameSceneLoad : BaseScene
     
     public override IEnumerator LoadingRoutine()
     {
-       
-        Debug.Log("GameSceneLoad");     //게임 씬에 따른 내용 미리 구성(맵,풀드오브젝트..)
+
+        //게임 씬에 따른 내용 미리 구성(맵,풀드오브젝트..)
+        Manager.Game.HpEvent = 100;
+        Manager.Game.MpEvent = 100;
+        Manager.Game.MaxHpEvent = 100;
+        Manager.Game.MaxMpEvent = 100;
+        
         uiManager = FindObjectOfType<UIManager>();
         if(uiManager != null )
         {
@@ -47,7 +52,7 @@ public class GameSceneLoad : BaseScene
     public override IEnumerator OnStartScene()
     { 
         
-        
+        Manager.Game.hitdam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.3f);
         animator.gameObject.SetActive(true);
         Instantiate(particlePrefab,player.transform.position,Quaternion.identity);

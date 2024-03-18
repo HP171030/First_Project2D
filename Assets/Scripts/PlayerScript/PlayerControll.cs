@@ -328,10 +328,10 @@ public class PlayerControll : MonoBehaviour
     }
     private void OnTriggerEnter2D( Collider2D collision )
     {
-        Debug.Log("Enter");
+       
         if ( collision.CompareTag("FieldItem") )
         {
-            Debug.Log("Get");
+            
             Fielditem fielditem = collision.GetComponent<Fielditem>();
             if ( inventoryManager.Ins.AddItem(fielditem.GetItem()) )
                 fielditem.DestroyItem();
