@@ -7,6 +7,10 @@ public class ArrowHit : MonoBehaviour
     Archer archer;
     Transform target;
 
+    private void Start()
+    {
+        StartCoroutine(DeadDelay());
+    }
     public void SetArcher( Archer archerRef )
     {
         archer = archerRef;
@@ -42,5 +46,12 @@ public class ArrowHit : MonoBehaviour
         }
 
 
+    }
+
+    public IEnumerator DeadDelay()
+    {
+        if(this != null)
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject);
     }
 }

@@ -41,7 +41,6 @@ ChangeState(MonsterState.Idle);
             animator.SetBool("Move", false);    
 yield return new WaitForSeconds(monsterData.atkDelay);
 atkDelayOn = false;
-ChangeState(MonsterState.Chase);
         }
     }
 

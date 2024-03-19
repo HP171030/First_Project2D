@@ -15,9 +15,9 @@ MonoBehaviour:
   id: 1
   name: Mimic
   hp: 10
-  range: 4
+  range: 7
   atk: 5
-  speed: 3
+  speed: 1
   attackRange: 1
   atkDelay: 3
   moveDelay: 2

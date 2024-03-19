@@ -23,10 +23,7 @@ public class GameSceneLoad : BaseScene
     {
 
         //게임 씬에 따른 내용 미리 구성(맵,풀드오브젝트..)
-        Manager.Game.HpEvent = 100;
-        Manager.Game.MpEvent = 100;
-        Manager.Game.MaxHpEvent = 100;
-        Manager.Game.MaxMpEvent = 100;
+        
         
         uiManager = FindObjectOfType<UIManager>();
         if(uiManager != null )
@@ -50,8 +47,8 @@ public class GameSceneLoad : BaseScene
     }
 
     public override IEnumerator OnStartScene()
-    { 
-        
+    {
+        Debug.Log("Onstart");
         Manager.Game.hitdam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.3f);
         animator.gameObject.SetActive(true);
@@ -59,12 +56,19 @@ public class GameSceneLoad : BaseScene
         player.gameObject.SetActive(true);
         yield return new WaitForSeconds(0.6f);
         animator.gameObject.SetActive(false);
-       
-
-        
-        
 
     }
-
+    public override void SceneLoad()
+    {
+        Debug.Log("Loading File");
+        
+        Manager.Game.MaxHpEvent = Manager.Data.GameData.maxHp;
+        Manager.Game.MaxMpEvent = Manager.Data.GameData.maxMp;
+        Debug.Log($"LoadingHP = {Manager.Data.GameData.Hp}");
+        Manager.Game.HpEvent = Manager.Data.GameData.Hp;
+        Manager.Game.MpEvent = Manager.Data.GameData.Mp;
+        Manager.Game.GoldEvent = Manager.Data.GameData.gold;
+        player.transform.position = Manager.Data.GameData.playerPos;
+    }
 
 }

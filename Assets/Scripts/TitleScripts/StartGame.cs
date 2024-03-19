@@ -11,13 +11,23 @@ public class StartGame : MonoBehaviour
     [SerializeField] Image setUpMenu;
     [SerializeField] OptionUI optionUI;
     [SerializeField] GameObject title;
+    [SerializeField] Button continueButton;
+
     private void Start()
     {
+       
         Manager.Game.titleOption += OptionClose;
+    }
+    private void Update()
+    {
+        bool exist = Manager.Data.ExistData();
+        continueButton.gameObject.SetActive(exist);
+
     }
     public void StartGameFunc()
     {
         Manager.Sound.PlaySFX(selectButton);
+        Manager.Data.NewData();
         Manager.Scene.LoadScene("GameScene");
         Manager.Sound.StopBGM();
     }
@@ -32,9 +42,11 @@ public class StartGame : MonoBehaviour
        
         Manager.UI.ShowPopUpUI(optionUI);
         }
-        public void Credit()
+        public void ContinueButton()
     {
         Manager.Sound.PlaySFX(selectButton);
+        Manager.Data.LoadData();
+        Manager.Scene.LoadScene("GameScene");
     }
     public void Quit()
     {

@@ -17,8 +17,8 @@ MonoBehaviour:
   hp: 15
   range: 10
   atk: 15
-  speed: 5
-  attackRange: 5
+  speed: 2
+  attackRange: 3
   atkDelay: 3
   moveDelay: 1
   dropItem:

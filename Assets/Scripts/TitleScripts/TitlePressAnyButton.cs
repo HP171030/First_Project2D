@@ -74,7 +74,7 @@ public class TitlePressAnyButton : MonoBehaviour
         {
             float t = time / titleTargetTime;
             time += Time.deltaTime;
-            titleLogo.transform.position = Vector3.Lerp(titlePos, titlePos + new Vector3(0, 200, 0), t);
+            titleLogo.transform.position = Vector3.Lerp(titlePos, titlePos + new Vector3(0, 150, 0), t);
            
             
             if(t >=1f )

@@ -11,7 +11,7 @@ public class ItemHealEffect : ItemEffect
    
     public override bool eft()
     {
-        if(Manager.Game.HpEvent == Manager.Game.MaxHpEvent)
+        if(Manager.Game.HpEvent >= Manager.Game.MaxHpEvent)
         {
             
             return false;

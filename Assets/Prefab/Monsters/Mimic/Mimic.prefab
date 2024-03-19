@@ -397,8 +397,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.64, y: 0.64}
+  m_Offset: {x: 0.013394064, y: 0.00000004429815}
+  m_Size: {x: 0.4123013, y: 0.4122938}
   m_Direction: 0
 --- !u!95 &447919135614299130
 Animator:
@@ -447,6 +447,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16969ec1ad4287d45b188e5bd4c037fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliders: []
+  spriteRenderer: {fileID: 0}
+  rb: {fileID: 0}
   damagedEffect: {fileID: 7493631519212315503}
   damagedEffectPos: {fileID: 7559759152338386044}
   playerLayer:

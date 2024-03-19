@@ -18,7 +18,7 @@ public class UIManager : Singleton<UIManager>
     private Stack<PopUpUI> popUpStack = new Stack<PopUpUI>();
     private float prevTimeScale;
     private InGameUI curInGameUI;
-    PlayerControll playerCon;
+
     public PlayerInput playerInput;
 
     

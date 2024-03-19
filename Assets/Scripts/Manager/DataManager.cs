@@ -17,6 +17,7 @@ public class DataManager : Singleton<DataManager>
     {
         
         gameData = new GameData();
+        
     }
 
     public void SaveData(int index = 0)
@@ -42,6 +43,7 @@ public class DataManager : Singleton<DataManager>
         try
         {
             gameData = JsonUtility.FromJson<GameData>(json);
+            Debug.Log(gameData.ToString());
         }
         catch (Exception ex)
         {

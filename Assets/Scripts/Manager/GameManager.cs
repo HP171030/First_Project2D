@@ -7,10 +7,10 @@ using Cinemachine;
 
 public class GameManager : Singleton<GameManager>
 {
-    
 
-[SerializeField] Camera mainCam;
-    [SerializeField]public Image    hitdam;
+
+    [SerializeField] Camera mainCam;
+    [SerializeField] public Image hitdam;
 
     public Transform playerPos;
 
@@ -34,6 +34,7 @@ public class GameManager : Singleton<GameManager>
     bool time;
     public bool titleOff = true;
     public bool title;
+    public bool onInvenTory = false;
 
 
     [SerializeField] PauseUI pauseUI;
@@ -61,7 +62,7 @@ public class GameManager : Singleton<GameManager>
 
 
     public int GoldEvent { get { return curGold; } set { curGold = value; GoldUpdate?.Invoke(value); } }
-    public int HpEvent {  get { return playerHP; }set { playerHP = Mathf.Clamp(value, 0, playerMaxMP); playerHPevent?.Invoke(value); } }
+    public int HpEvent { get { return playerHP; } set { playerHP = Mathf.Clamp(value, 0, playerMaxMP); playerHPevent?.Invoke(value); } }
     public int MpEvent { get { return playerMP; } set { playerMP = Mathf.Clamp(value, 0, playerMaxMP); playerMPevent?.Invoke(value); } }
     public int MaxHpEvent { get { return playerMaxHP; } set { playerMaxHP = value; } }
     public int MaxMpEvent { get { return playerMaxMP; } set { playerMaxMP = value; } }
@@ -71,13 +72,16 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-       
-       if(hitdam != null )
+
+        if ( hitdam != null )
         {
-        hitdam.gameObject.SetActive(false);
+            hitdam.gameObject.SetActive(false);
         }
 
     }
+    
+
+
 
     public void ShakeCam()
     {
@@ -90,4 +94,5 @@ public class GameManager : Singleton<GameManager>
         });
 
     }
+  
 }

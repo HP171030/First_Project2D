@@ -86,17 +86,18 @@ public class Archer : Monster
         Manager.Sound.PlaySFX(arrowShot);
         newArrow.transform.rotation = Quaternion.LookRotation(Vector3.forward, atkDir);
 
-        float elapsedTime = 0f;
-        float dur = 2f;
-        Vector2 endPos = (Vector2)newArrow.transform.position + atkDir * 10;
+        float isTime = 0f;
+        float dur = 1f;
+        Vector2 startPos = newArrow.transform.position; 
+        Vector2 endPos = (Vector2)newArrow.transform.position + atkDir * 20;
 
-        while ( elapsedTime < dur )
+        while ( isTime < dur )
         {
             
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / dur;
-            Debug.Log(t);   
-                newArrow.transform.position = Vector2.Lerp(newArrow.transform.position, endPos, t);
+            isTime += Time.deltaTime;
+            float t = isTime / dur;
+            
+                newArrow.transform.position = Vector2.Lerp(startPos, endPos, t);
                 yield return null;
 
         }

@@ -30,7 +30,7 @@ public class Monster : MonoBehaviour, Idamagable
     float localX;
         float localY;
 
-    protected float thisMonsterHP;
+   [SerializeField] protected float thisMonsterHP;
 
    [SerializeField] protected GameObject dropItem;
     protected virtual void Start()
@@ -79,7 +79,7 @@ public class Monster : MonoBehaviour, Idamagable
         else if (size <1)
         {
             ChangeState(MonsterState.Idle);
-            Debug.Log("ChaIDle");
+           
             animator.SetBool("Move", false);
         }
    
@@ -222,6 +222,7 @@ public class Monster : MonoBehaviour, Idamagable
     {
         if ( curState != MonsterState.Dead ) {
             thisMonsterHP -= damage;
+            Debug.Log(thisMonsterHP);
             spriteRenderer.material.color = Color.red;
             spriteRenderer.material.DOColor(Color.white, 1f);
             damagedEffectPos.position = transform.position + Random.insideUnitSphere * 1f;
@@ -241,7 +242,7 @@ public class Monster : MonoBehaviour, Idamagable
             {
                 if (!MoveOn&&curState != MonsterState.Attack )
                 {
-                    Debug.Log(curState);
+                    
                     animator.Play("Damaged");
                     
                 }

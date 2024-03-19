@@ -56,14 +56,15 @@ public class SceneManager : Singleton<SceneManager>
 
         Manager.UI.EnsureEventSystem();
         BaseScene curScene = GetCurScene();
-        Debug.Log(curScene.name);
+      
         yield return curScene.LoadingRoutine();     //해당 씬에서 추가적인 로딩
 
         loadingBar.gameObject.SetActive(false);
         Time.timeScale = 1f;
 
+        curScene.SceneLoad();
         yield return FadeIn();
-
+      
         yield return curScene.OnStartScene();
     }
 
