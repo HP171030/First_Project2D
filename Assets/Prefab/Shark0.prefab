@@ -126,6 +126,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   anim: {fileID: 1854909004439082012}
+  col: {fileID: 3118146513040343449}
+  sharkReady: {fileID: 8300000, guid: 6dfd0a67631b3e445920c379f0643b43, type: 3}
+  sharkOn: {fileID: 8300000, guid: 2bf3ba85e6787af428790c254d8a013d, type: 3}
+  rb: {fileID: 2098778537618442465}
 --- !u!58 &3118146513040343449
 CircleCollider2D:
   m_ObjectHideFlags: 0

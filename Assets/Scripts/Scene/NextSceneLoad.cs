@@ -10,6 +10,7 @@ public class NextSceneLoad : BaseScene
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     public override IEnumerator LoadingRoutine()
     {
+        Manager.UICanvas.gameObject.SetActive(true);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player.transform.position = startPos.position;
         virtualCamera.Follow = player.transform;

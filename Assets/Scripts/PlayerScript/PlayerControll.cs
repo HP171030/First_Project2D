@@ -1,18 +1,11 @@
-using DG.Tweening;
+
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Build;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Sprites;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class PlayerControll : MonoBehaviour
 {

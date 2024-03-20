@@ -1,15 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using static UnityEditor.Profiling.RawFrameDataView;
 using UnityEngine.Events;
 
 public class QuestUIManager : Singleton<QuestUIManager>
 {
     bool questClose;
-   [SerializeField] QuestUIManager questUI;
+    [SerializeField] QuestUIManager questUI;
 
 
     List<KillQuest> killQuestLists = new List<KillQuest>();
@@ -20,18 +16,18 @@ public class QuestUIManager : Singleton<QuestUIManager>
 
     public void questSlotChan()
     {
-        for(int i = 0; i < questSlots.Length; i++)
+        for ( int i = 0; i < questSlots.Length; i++ )
         {
             questSlots [i].gameObject.SetActive(false);
             questSlots [i].RemoveQuest();
         }
-        for(int i = 0; i < questSlots.Length; i++)
+        for ( int i = 0; i < questSlots.Length; i++ )
         {
-            if(i < killQuestLists.Count)
+            if ( i < killQuestLists.Count )
             {
-            questSlots [i].quest = killQuestLists [i];
-                
-            questSlots [i].gameObject.SetActive (true);
+                questSlots [i].quest = killQuestLists [i];
+
+                questSlots [i].gameObject.SetActive(true);
                 questSlots [i].LoadQuest();
             }
             else
@@ -67,7 +63,7 @@ public class QuestUIManager : Singleton<QuestUIManager>
         questSlotEvent += questSlotChan;
 
         questSlots = holder.GetComponentsInChildren<QuestSlot>();
-        questClose=true;
+        questClose = true;
         questUI.gameObject.SetActive(false);
         questSlotEvent?.Invoke();
     }

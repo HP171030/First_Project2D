@@ -14,6 +14,7 @@ public class LastTele : MonoBehaviour
 
     public void Teleport()
     {
+        Manager.UICanvas.gameObject.SetActive(false);
         Manager.Scene.LoadScene("NextScene");
     }
 }

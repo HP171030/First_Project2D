@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.VFX;
 
 public class TutorialQuestNPC : NPCScript
 {
@@ -23,7 +20,7 @@ public class TutorialQuestNPC : NPCScript
     protected override void Start()
     {
         base.Start();
-      
+
         AddQuest();
     }
     public void AddQuest()
@@ -54,7 +51,7 @@ public class TutorialQuestNPC : NPCScript
             else if ( limit >= 11 )
             {
                 StopCoroutine("SpawnMimicsRoutine");
-            
+
             }
         }
     }
@@ -71,7 +68,7 @@ public class TutorialQuestNPC : NPCScript
         for ( int i = 0; i < quests [curQuestNum].Length; i++ )
         {
 
-            strings.Enqueue(quests[curQuestNum] [i]);
+            strings.Enqueue(quests [curQuestNum] [i]);
         }
 
         StartCoroutine(WaitSpace());
@@ -97,13 +94,13 @@ public class TutorialQuestNPC : NPCScript
                 {
                     Manager.UICanvas.text.text = strings.Dequeue();
                     DoTweenText.DoText(Manager.UICanvas.text, 0.2f);
-                   
+
                     StartCoroutine(WaitSpace());
                 }
             }
             else
             {
-               
+
                 Manager.UICanvas.dialogue.enabled = false;
                 Manager.UICanvas.text.enabled = false;
                 player.enabled = true;
@@ -126,48 +123,49 @@ public class TutorialQuestNPC : NPCScript
             {
                 ShowDialogue();
             }
-        switch ( curQuestNum )
-        {
-            case 0: curQuestNum++;
+            switch ( curQuestNum )
+            {
+                case 0:
+                    curQuestNum++;
                     StartCoroutine(SpawnMimicsRoutine());
-                    mimicQuest = new KillQuest("mimicQuest",1, 5, $"Kill 5 mimic \n asdfasdfsf"); 
+                    mimicQuest = new KillQuest("mimicQuest", 1, 5, $"Kill 5 mimic \n asdfasdfsf");
                     Manager.Quest.AddKillQuest(mimicQuest);
-                    
-                    
+
+
 
                     break;
-            case 1:
-                    if (mimicQuest.isCompleted)
+                case 1:
+                    if ( mimicQuest.isCompleted )
                     {
                         curQuestNum++;
                     }
                     else
                     {
-                        
+
                         test = new KillQuest("TestCase", 1, 5, $"testest 5 mimic \n\n\n asdfasdfsf");
                         Manager.Quest.AddKillQuest(test);
                     }
-                    
-                
-                break;
-            case 2:
+
+
+                    break;
+                case 2:
                     Manager.Quest.RemoveKillQuest(mimicQuest);
                     curQuestNum++;
                     Last.SetActive(true);
                     quests.Clear();
-                    
-                break;
+
+                    break;
                 case 3:
                     test2 = new KillQuest("test2", 1, 5, $"baodfa");
                     Manager.Quest.AddKillQuest(test2);
-                    
+
                     break;
 
 
             }
         }
-        
+
     }
 
-    
+
 }

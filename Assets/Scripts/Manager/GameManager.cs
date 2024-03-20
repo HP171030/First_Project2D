@@ -8,11 +8,11 @@ using Cinemachine;
 public class GameManager : Singleton<GameManager>
 {
 
-
+    [SerializeField] public GameObject player;
     [SerializeField] Camera mainCam;
     [SerializeField] public Image hitdam;
 
-    public Transform playerPos;
+    public GameObject inPlayer;
 
     private int curGold = 0;
 
@@ -42,7 +42,11 @@ public class GameManager : Singleton<GameManager>
     private float brightnessVol;
 
     public UnityEvent DieEvent;
-
+    
+    public void HerePlayer()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
     public void OnOption( InputValue value )
     {
         if ( !titleOff && value.isPressed )

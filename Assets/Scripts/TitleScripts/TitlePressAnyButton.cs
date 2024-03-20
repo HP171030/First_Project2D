@@ -1,10 +1,8 @@
 using System.Collections;
-using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
-using static UnityEditor.PlayerSettings.Switch;
+using UnityEngine;
 using UnityEngine.InputSystem;
-using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class TitlePressAnyButton : MonoBehaviour
 {
@@ -28,7 +26,7 @@ public class TitlePressAnyButton : MonoBehaviour
         text.color = Color.white;
         StartCoroutine(TextColor());
         Manager.Sound.PlayBGM(titleBGM);
-        
+
     }
 
     private IEnumerator TextColor()
@@ -38,10 +36,10 @@ public class TitlePressAnyButton : MonoBehaviour
 
             Color start = isLerping ? Color.white : Color.black;
             Color end = isLerping ? Color.black : Color.white;
-                
+
             Color lerpColor = Color.Lerp(start, end, time);
             text.color = lerpColor;
-           time += Time.deltaTime * lerpSpeed;
+            time += Time.deltaTime * lerpSpeed;
 
             if ( time >= 1f )
             {
@@ -53,31 +51,31 @@ public class TitlePressAnyButton : MonoBehaviour
         }
     }
 
-    public void OnAnyKey(InputValue value)
+    public void OnAnyKey( InputValue value )
     {
-        if( value.isPressed )
+        if ( value.isPressed )
         {
-        StartCoroutine(PressAnyKey());
-        
+            StartCoroutine(PressAnyKey());
+
 
         }
     }
 
-    
+
     public IEnumerator PressAnyKey()
     {
         float time = 0;
-        
+
         Vector3 titlePos = titleLogo.transform.position;
         Manager.Sound.PlaySFX(pressButton);
-        while (true)
+        while ( true )
         {
             float t = time / titleTargetTime;
             time += Time.deltaTime;
             titleLogo.transform.position = Vector3.Lerp(titlePos, titlePos + new Vector3(0, 150, 0), t);
-           
-            
-            if(t >=1f )
+
+
+            if ( t >= 1f )
             {
                 text.gameObject.SetActive(false);
                 SetUpMenu.gameObject.SetActive(true);
@@ -88,6 +86,6 @@ public class TitlePressAnyButton : MonoBehaviour
         }
     }
 
-    
+
 
 }
