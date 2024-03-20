@@ -12,7 +12,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] Image MPGauge;
     int maxHpValue;
     int maxMpValue;
-    [SerializeField] UnityEvent Die;
+    [SerializeField] public UnityEvent Die;
     [SerializeField] Ease ease;
 
     private void Start()
@@ -61,7 +61,7 @@ public class PlayerStatus : MonoBehaviour
         if ( Manager.Game.HpEvent <= 0 )
         {
             hpText.text = $"{Manager.Game.HpEvent}/{maxHpValue}".ToString();
-            Die.Invoke();
+            Manager.Game.DieEvent.Invoke();
 
         }
         if ( Manager.Game.HpEvent > Manager.Game.MaxHpEvent )

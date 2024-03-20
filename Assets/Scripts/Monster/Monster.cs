@@ -266,7 +266,7 @@ public class Monster : MonoBehaviour, Idamagable
         
         Debug.Log("Coin");
         yield return new WaitForSeconds(1f);
-       QuestUIManager.Ins.HandleMonsterDied(monsterData.id);
+       Manager.Quest.HandleMonsterDied(monsterData.id);
         int Ran = Random.Range(1, 2);
         if(Ran > 0 )
         {

@@ -41,6 +41,7 @@ public class GameManager : Singleton<GameManager>
 
     private float brightnessVol;
 
+    public UnityEvent DieEvent;
 
     public void OnOption( InputValue value )
     {

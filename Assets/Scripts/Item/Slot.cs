@@ -42,7 +42,7 @@ public class Slot : MonoBehaviour,IPointerUpHandler,IPointerEnterHandler,IPointe
                  if ( isUse )
                  {
                      
-                     inventoryManager.Ins.RemoveItem(slotID);
+                     Manager.inven.RemoveItem(slotID);
                  }
         }
         else

@@ -39,14 +39,13 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] Image slashUi;
     [SerializeField] Image skUi1;
     [SerializeField] Image skUi2;
-    [SerializeField] Camera main;
     float Xdir;
     float Ydir;
     bool up;
     bool left;
     bool right;
     bool down;
-
+    public UnityEvent DieEvent;
 
     [Header("PlayerUI")]
     [SerializeField] PauseUI pauseUI;
@@ -74,8 +73,8 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] LayerMask targetLayer;
     protected Coroutine coolDown;
     protected bool CoolChecker = false;
-    [SerializeField]CoolTimeManager coolMan;
 
+    PlayerStatus status;
 
 
     public enum SkillState { Slash, FireBall, Shark }
@@ -85,9 +84,17 @@ public class PlayerControll : MonoBehaviour
     private void Start()
     {
         ChangeSkill(SkillState.Slash);
+        slashUi = Manager.UICanvas.slash;
+        skUi1 = Manager.UICanvas.skill1;
+        skUi2 = Manager.UICanvas.skill2;
+        DashskillCoolTime = Manager.UICanvas.dash;
         slashUi.color = Color.green;
         skUi1.color = Color.clear;
         skUi2.color = Color.clear;
+        Manager.Game.DieEvent.AddListener(Die);
+        DontDestroyOnLoad(gameObject);
+
+
     }
     public void ChangeSkill(SkillState skillstate)
     {
@@ -149,9 +156,7 @@ public class PlayerControll : MonoBehaviour
             DashskillCoolTime.fillAmount = coolTime / initial;
             yield return null;
         }
-        Debug.Log("DashCoolOff");
         dashOn = false;
-        Debug.Log(dashOn);
     }
     public IEnumerator FireBallCooltime( float coolTime )
     {
@@ -173,6 +178,8 @@ public class PlayerControll : MonoBehaviour
 
     }
     public void DieOff()
+
+
     {
         die = false;
         animator.SetBool("Die", false);
@@ -220,12 +227,12 @@ public class PlayerControll : MonoBehaviour
 
     public void OnInven( InputValue value )
     {
-        inventoryManager.Ins.OpenInven();
+        Manager.inven.OpenInven();
 
     }
     public void OnQuest( InputValue value )
     {
-        QuestUIManager.Ins.OpenQuest();
+        Manager.Quest.OpenQuest();
     }
 
     protected IEnumerator CoolDown( float coolTime )
@@ -295,7 +302,7 @@ public class PlayerControll : MonoBehaviour
         {
 
             Fielditem fielditem = collision.GetComponent<Fielditem>();
-            if ( inventoryManager.Ins.AddItem(fielditem.GetItem()) )
+            if ( Manager.inven.AddItem(fielditem.GetItem()) )
                 fielditem.DestroyItem();
         }
     }
@@ -365,7 +372,7 @@ public class PlayerControll : MonoBehaviour
     }
     public void SetEffectDirection()
     {
-        mousePosition = main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 direction = mousePosition - transform.position;
 
 
@@ -587,11 +594,11 @@ public class PlayerControll : MonoBehaviour
                 break;
 
             case SkillState.FireBall:
-               if( coolMan.IsSkillCool("FireBall"))
+               if( Manager.Cool.IsSkillCool("FireBall"))
                 {
                     moveSpeed = 5f;                             //스킬 사용시 이속저하
                     StartCoroutine(AttackAnim());
-                    coolMan.UseSkill("FireBall");
+                    Manager.Cool.UseSkill("FireBall");
                    GameObject fire = Instantiate(fireBallPrefab,skillEffectLocation.position,Quaternion.identity);
                     fire.transform.rotation = skillEffectLocation.rotation;
                 }
@@ -604,11 +611,11 @@ public class PlayerControll : MonoBehaviour
 
             case SkillState.Shark:
                 Vector2 mousePos = new Vector2(mousePosition.x, mousePosition.y);
-                if ( coolMan.IsSkillCool("Shark") )
+                if ( Manager.Cool.IsSkillCool("Shark") )
                 {
                     moveSpeed = 5f;                             //스킬 사용시 이속저하
                     StartCoroutine(AttackAnim());
-                    coolMan.UseSkill("Shark");
+                    Manager.Cool.UseSkill("Shark");
                     GameObject shark = Instantiate(sharkPrefab,mousePos, Quaternion.identity);
                    
                 }

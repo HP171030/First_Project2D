@@ -11,7 +11,6 @@ using DG.Tweening;
 public class NPCScript : MonoBehaviour
 {
     [SerializeField]protected SpriteRenderer tryEnter;
-    [SerializeField]protected Image dialogueOn;
     [SerializeField] string [] dialogueLine;
    protected bool enterNPC = false;
     [SerializeField] protected TMP_Text text;
@@ -29,9 +28,6 @@ public class NPCScript : MonoBehaviour
        
        
         tryEnter.enabled = false;
-        text.enabled = false;
-        dialogueOn.enabled = false;
-        
     }
     private void OnTriggerEnter2D( Collider2D collision )
     {
@@ -66,11 +62,11 @@ public class NPCScript : MonoBehaviour
 
     protected virtual void ShowDialogue()
     {
-        dialogueOn.enabled = true;
+        Manager.UICanvas.dialogue.enabled = true;
        PlayerControll playerCon = FindObjectOfType<PlayerControll>();
         PlayerInput player = playerCon.GetComponent<PlayerInput>(); 
         player.enabled = false;
-        text.enabled = true;
+        Manager.UICanvas.text.enabled = true;
         enterNPC = false;
         Queue<string> strings = new Queue<string>(dialogueLine.Length);
         for (int i =0;  i < dialogueLine.Length; i++)
@@ -80,8 +76,8 @@ public class NPCScript : MonoBehaviour
         }
         
         StartCoroutine(WaitSpace());
-        text.text = strings.Dequeue();
-        DoTweenText.DoText(text, 0.2f);
+        Manager.UICanvas.text.text = strings.Dequeue();
+        DoTweenText.DoText(Manager.UICanvas.text, 0.2f);
         IEnumerator WaitSpace()
         {
             while ( true )
@@ -100,8 +96,8 @@ public class NPCScript : MonoBehaviour
             {
                 if ( Input.GetKeyDown(KeyCode.Space) )
                 {
-                    text.text = strings.Dequeue();
-                    DoTweenText.DoText(text, 0.2f);
+                    Manager.UICanvas.text.text = strings.Dequeue();
+                    DoTweenText.DoText(Manager.UICanvas.text, 0.2f);
                     Debug.Log(strings.Count);   
                 StartCoroutine(WaitSpace());
                 }
@@ -109,13 +105,13 @@ public class NPCScript : MonoBehaviour
                 else 
                 {
                     Debug.Log("LastOn");
-                text.DOFade(0, 0.5f);
-                dialogueOn.DOFade(0, 0.5f).OnComplete(() =>
+                Manager.UICanvas.text.DOFade(0, 0.5f);
+                Manager.UICanvas.dialogue.DOFade(0, 0.5f).OnComplete(() =>
                 {
-                    dialogueOn.DOFade(1, 0f);
-                    dialogueOn.enabled = false;
-                    
-                    text.enabled = false;
+                    Manager.UICanvas.dialogue.DOFade(1, 0f);
+                    Manager.UICanvas.dialogue.enabled = false;
+
+                    Manager.UICanvas.text.enabled = false;
                     player.enabled = true;
                     return;
 

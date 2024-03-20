@@ -4,33 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class inventoryManager : MonoBehaviour
+public class inventoryManager : Singleton<inventoryManager>
 {
-#region singleton
-    private static inventoryManager instance;
-    public static inventoryManager Ins { get { return instance; } }
 
-    private void Awake()
-    {
-        if ( instance == null )
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-    #endregion
     public List<Item> itemsList = new List<Item>();
     bool invenClose = false;
  
     [SerializeField] InventoryUI inventoryUI;
   
     public event UnityAction onAddItem;
-    public Transform playerPos;
-    public Animator animator;
     
     public event UnityAction<int> slotEvent;
 

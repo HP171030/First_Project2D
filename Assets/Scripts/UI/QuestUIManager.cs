@@ -6,25 +6,8 @@ using TMPro;
 using static UnityEditor.Profiling.RawFrameDataView;
 using UnityEngine.Events;
 
-public class QuestUIManager : MonoBehaviour
+public class QuestUIManager : Singleton<QuestUIManager>
 {
-    #region singleton
-    private static QuestUIManager instance;
-    public static QuestUIManager Ins { get { return instance; } }
-
-    private void Awake()
-    {
-        if ( instance == null )
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-    #endregion
     bool questClose;
    [SerializeField] QuestUIManager questUI;
 

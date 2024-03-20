@@ -4,10 +4,12 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CoolTimeManager : MonoBehaviour
+public class CoolTimeManager : Singleton<CoolTimeManager>   
 {
+    
     [SerializeField] Image skill1Cool;
     [SerializeField] Image skill2Cool;
+
     [Serializable]
     public class SkillCooldownInfo
     {
@@ -21,23 +23,11 @@ public class CoolTimeManager : MonoBehaviour
 
     void Start()
     {
+        skill1Cool = Manager.UICanvas.Skill1Cool;
+        skill2Cool = Manager.UICanvas.Skill2Cool;
         StartCoroutine(UpdateSkillCooldowns());
     }
-    private static CoolTimeManager instance;
-    public static CoolTimeManager Ins { get { return instance; } }
 
-    private void Awake()
-    {
-        if ( instance == null )
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
     IEnumerator UpdateSkillCooldowns()
     {
         while ( true )

@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class TutorialQuestNPC : NPCScript
 {
@@ -14,6 +15,7 @@ public class TutorialQuestNPC : NPCScript
     [SerializeField] KillQuest mimicQuest;
     [SerializeField] KillQuest test;
     [SerializeField] KillQuest test2;
+    [SerializeField] GameObject Last;
 
 
 
@@ -52,18 +54,18 @@ public class TutorialQuestNPC : NPCScript
             else if ( limit >= 11 )
             {
                 StopCoroutine("SpawnMimicsRoutine");
-                Debug.Log("CheckStopCo");
+            
             }
         }
     }
     protected override void StartQuest()
     {
         base.StartQuest();
-        dialogueOn.enabled = true;
+        Manager.UICanvas.dialogue.enabled = true;
         PlayerControll playerCon = FindObjectOfType<PlayerControll>();
         PlayerInput player = playerCon.GetComponent<PlayerInput>();
         player.enabled = false;
-        text.enabled = true;
+        Manager.UICanvas.text.enabled = true;
         enterNPC = false;
         Queue<string> strings = new Queue<string>(quests [curQuestNum].Length);
         for ( int i = 0; i < quests [curQuestNum].Length; i++ )
@@ -73,8 +75,8 @@ public class TutorialQuestNPC : NPCScript
         }
 
         StartCoroutine(WaitSpace());
-        text.text = strings.Dequeue();
-        DoTweenText.DoText(text, 0.2f);
+        Manager.UICanvas.text.text = strings.Dequeue();
+        DoTweenText.DoText(Manager.UICanvas.text, 0.2f);
         IEnumerator WaitSpace()
         {
             while ( true )
@@ -93,8 +95,8 @@ public class TutorialQuestNPC : NPCScript
             {
                 if ( Input.GetKeyDown(KeyCode.Space) )
                 {
-                    text.text = strings.Dequeue();
-                    DoTweenText.DoText(text, 0.2f);
+                    Manager.UICanvas.text.text = strings.Dequeue();
+                    DoTweenText.DoText(Manager.UICanvas.text, 0.2f);
                    
                     StartCoroutine(WaitSpace());
                 }
@@ -102,8 +104,8 @@ public class TutorialQuestNPC : NPCScript
             else
             {
                
-                dialogueOn.enabled = false;
-                text.enabled = false;
+                Manager.UICanvas.dialogue.enabled = false;
+                Manager.UICanvas.text.enabled = false;
                 player.enabled = true;
                 return;
             }
@@ -129,7 +131,9 @@ public class TutorialQuestNPC : NPCScript
             case 0: curQuestNum++;
                     StartCoroutine(SpawnMimicsRoutine());
                     mimicQuest = new KillQuest("mimicQuest",1, 5, $"Kill 5 mimic \n asdfasdfsf"); 
-                    QuestUIManager.Ins.AddKillQuest(mimicQuest);
+                    Manager.Quest.AddKillQuest(mimicQuest);
+                    
+                    
 
                     break;
             case 1:
@@ -139,22 +143,24 @@ public class TutorialQuestNPC : NPCScript
                     }
                     else
                     {
-                        Debug.Log("testON");
+                        
                         test = new KillQuest("TestCase", 1, 5, $"testest 5 mimic \n\n\n asdfasdfsf");
-                        QuestUIManager.Ins.AddKillQuest(test);
+                        Manager.Quest.AddKillQuest(test);
                     }
                     
                 
                 break;
             case 2:
-                    QuestUIManager.Ins.RemoveKillQuest(mimicQuest);
+                    Manager.Quest.RemoveKillQuest(mimicQuest);
                     curQuestNum++;
+                    Last.SetActive(true);
                     quests.Clear();
                     
                 break;
                 case 3:
                     test2 = new KillQuest("test2", 1, 5, $"baodfa");
-                    QuestUIManager.Ins.AddKillQuest(test2);
+                    Manager.Quest.AddKillQuest(test2);
+                    
                     break;
 
 

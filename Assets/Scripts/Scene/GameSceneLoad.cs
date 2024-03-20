@@ -40,9 +40,10 @@ public class GameSceneLoad : BaseScene
 
         }
         
-        dialogOff.gameObject.SetActive(true);
-        dialogOff.enabled = false;
+        Manager.UICanvas.dialogue.gameObject.SetActive(true);
+        Manager.UICanvas.dialogue.enabled = false;
         Manager.Game.titleOff = false;
+        Manager.UICanvas.gameObject.SetActive (true);
         yield return null;
     }
 

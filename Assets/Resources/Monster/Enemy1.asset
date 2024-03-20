@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 2
   name: Enemy
-  hp: 15
+  hp: 10
   range: 10
-  atk: 15
+  atk: 5
   speed: 2
   attackRange: 3
   atkDelay: 3
