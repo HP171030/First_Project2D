@@ -13,6 +13,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] Camera mainCam;
     [SerializeField] public Image hitdam;
     [SerializeField] public CinemachineVirtualCamera cine;
+    [SerializeField] public PooledObject damageUI;
 
     public GameObject inPlayer;
 
@@ -85,6 +86,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        
         if ( hitdam != null )
         {
             hitdam.gameObject.SetActive(false);
@@ -92,7 +94,10 @@ public class GameManager : Singleton<GameManager>
 
     }
 
-
+    public void ScenePool()
+    {
+        Manager.Pool.CreatePool(damageUI, 7, 10);
+    }
 
 
     public void ShakeCam()

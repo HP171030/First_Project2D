@@ -50,6 +50,8 @@ MonoBehaviour:
   player: {fileID: 0}
   mainCam: {fileID: 0}
   hitdam: {fileID: 8942430992221749408}
+  cine: {fileID: 0}
+  damageUI: {fileID: 9202737964008188726, guid: 708d69d9cb98d3a49ba884619fa9f69e, type: 3}
   inPlayer: {fileID: 0}
   fullScreenMode: {fileID: 0}
   titleOff: 1

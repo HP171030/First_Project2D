@@ -21,7 +21,7 @@ public class ObjectPool : MonoBehaviour
             PooledObject instance = Instantiate(prefab);
             instance.gameObject.SetActive(false);
             instance.Pool = this;
-            instance.transform.parent = transform;
+            instance.transform.SetParent(transform, false);
             objectPool.Push(instance);
         }
     }

@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
+using TMPro;
 
 public class Shark : MonoBehaviour
 {
@@ -42,12 +44,20 @@ public class Shark : MonoBehaviour
             {
                
                 monster.TakeDamage(damage);
+                #region 몬스터데미지Ui
                 int monsterHpUi = monster.monsterData.hp;
                 string monsterNameUi = monster.monsterData.name;
                 Manager.UICanvas.enemyDamagedEvent.Invoke();
                 Manager.UICanvas.enemyHpUi.fillAmount = monster.thisMonsterHP / monsterHpUi;
                 Manager.UICanvas.enemyNameUi.text = monsterNameUi;
-
+                PooledObject dmgui = Manager.Pool.GetPool(Manager.Game.damageUI, monster.transform.position, Quaternion.identity);
+                TMP_Text dmgtext = dmgui.gameObject.GetComponent<TMP_Text>();
+                dmgtext.text = damage.ToString();
+                Sequence sequence = DOTween.Sequence();
+                sequence.Append(dmgui.transform.DOMoveY(dmgui.transform.position.y + 2f, 0.5f).SetEase(Ease.OutQuad)); // Y축으로 3 유닛 위로 0.5초 동안 이동하고, OutQuad 이징을 적용합니다.
+                sequence.Append(dmgui.transform.DOMoveY(dmgui.transform.position.y, 0.5f).SetEase(Ease.InQuint)); // 현재 위치로부터 1 유닛 위로 0.5초 동안 이동하고, InQuint 이징을 적용합니다.
+                #endregion
+                
 
             }
         }

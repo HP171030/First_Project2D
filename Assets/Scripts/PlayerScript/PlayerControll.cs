@@ -1,7 +1,9 @@
 
+using DG.Tweening;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -33,6 +35,9 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] Image slashUi;
     [SerializeField] Image skUi1;
     [SerializeField] Image skUi2;
+    [SerializeField] GameObject playerMarker;   
+
+    
     float Xdir;
     float Ydir;
     bool up;
@@ -98,6 +103,15 @@ public class PlayerControll : MonoBehaviour
     }
     private void Update()
     {
+
+       
+            // 마우스 위치를 World 좌표로 변환
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // 마우스 위치와 게임 오브젝트의 위치를 연결하는 벡터를 계산
+            Vector3 direction = mousePosition - transform.position;
+            playerMarker.transform.rotation = Quaternion.Euler(0f, 0f, (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg)-90);
+
         if ( !die )
         {
             Move();
@@ -206,7 +220,7 @@ public class PlayerControll : MonoBehaviour
         }
 
     }
-
+    
     public void OnDash( InputValue value )
     {
         if ( value.isPressed && !dashOn )
@@ -641,6 +655,13 @@ public class PlayerControll : MonoBehaviour
         Manager.UICanvas.enemyDamagedEvent.Invoke();
         Manager.UICanvas.enemyHpUi.fillAmount = hitedMonster.thisMonsterHP / monsterHpUi;
         Manager.UICanvas.enemyNameUi.text = monsterNameUi;
+        PooledObject dmgui = Manager.Pool.GetPool(Manager.Game.damageUI, hitedMonster.transform.position, Quaternion.identity);
+        TMP_Text dmgtext = dmgui.gameObject.GetComponent<TMP_Text>();
+        dmgtext.text = power.ToString();
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(dmgui.transform.DOMoveY(dmgui.transform.position.y + 2f, 0.5f).SetEase(Ease.OutQuad)); 
+        sequence.Append(dmgui.transform.DOMoveY(dmgui.transform.position.y, 0.5f).SetEase(Ease.InQuint)); 
+
     }
 }
 

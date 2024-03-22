@@ -14,6 +14,7 @@ public class GameSceneLoad : BaseScene
     [SerializeField] GameObject monsterMimic;
     [SerializeField] Transform mimicRegen1;
 
+
     [SerializeField] Image dialogOff;
     [SerializeField] UIManager uiManager;
 
@@ -23,8 +24,8 @@ public class GameSceneLoad : BaseScene
     {
 
         //게임 씬에 따른 내용 미리 구성(맵,풀드오브젝트..)
-        
-        
+
+        Manager.Game.ScenePool();
         uiManager = FindObjectOfType<UIManager>();
         if(uiManager != null )
         {

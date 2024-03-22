@@ -23,7 +23,6 @@ public class UICanvasManager : Singleton<UICanvasManager>
     [SerializeField] public Image dialogue;
     [SerializeField] public TMP_Text text;
     public UnityEvent enemyDamagedEvent;
-    bool onEnemyUI = false;
     float time;
     private void Start()
     {
@@ -39,7 +38,11 @@ public class UICanvasManager : Singleton<UICanvasManager>
         if(time > 0 )
         {
             time -= Time.deltaTime;
-            Debug.Log(time);
+         
+        }
+        else if(time > 5 )
+        {
+            time = 5;
         }
         else if (time <= 0 )
         {
