@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Cinemachine;
+using System.Collections;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -11,6 +12,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] public GameObject player;
     [SerializeField] Camera mainCam;
     [SerializeField] public Image hitdam;
+    [SerializeField] public CinemachineVirtualCamera cine;
 
     public GameObject inPlayer;
 
@@ -43,6 +45,12 @@ public class GameManager : Singleton<GameManager>
 
     public UnityEvent DieEvent;
     
+    
+    public void CineInCam()
+    {
+        cine = FindObjectOfType<CinemachineVirtualCamera>();
+        Debug.Log(cine);
+    }
     public void HerePlayer()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -77,27 +85,52 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-
         if ( hitdam != null )
         {
             hitdam.gameObject.SetActive(false);
         }
 
     }
-    
+
 
 
 
     public void ShakeCam()
     {
- 
+        if ( cine != null )
+        {
+            CinemachineBasicMultiChannelPerlin perlin = cine.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            if ( perlin != null )
+            {
+                perlin.m_AmplitudeGain = 2;
+                perlin.m_FrequencyGain = 2;
+                StartCoroutine(DampenShake(perlin));
+               
+            }
+            else
+            {
+                Debug.LogError("CinemachineBasicMultiChannelPerlin not found.");
+            }
+        }
+        else
+        {
+            Debug.LogError("CinemachineVirtualCamera not assigned.");
+        }
+
+        // 나머지 코드는 그대로 유지됩니다.
         hitdam.gameObject.SetActive(true);
         hitdam.DOFade(0, 1f).OnComplete(() =>
         {
             hitdam.gameObject.SetActive(false);
             hitdam.DOFade(1, 0);
         });
-
     }
-  
+    private IEnumerator DampenShake( CinemachineBasicMultiChannelPerlin perlin )
+    {
+        yield return new WaitForSeconds(0.5f); // 1초 대기
+
+        // 흔들림 감쇠
+        perlin.m_AmplitudeGain = 0;
+        perlin.m_FrequencyGain = 0;
+    }
 }

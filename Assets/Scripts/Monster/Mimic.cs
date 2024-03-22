@@ -22,7 +22,8 @@ public class Mimic : Monster
             while (t< 1f )
             {
                 transform.position = Vector2.Lerp(prePos, targetPos, t);
-                t += Time.deltaTime / duration; 
+                t += Time.deltaTime / duration;
+
                 yield return null;
 
             }

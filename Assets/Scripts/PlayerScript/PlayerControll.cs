@@ -1,4 +1,5 @@
 
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -68,6 +69,8 @@ public class PlayerControll : MonoBehaviour
     protected bool CoolChecker = false;
 
     PlayerStatus status;
+
+    Monster hitedMonster;
 
 
     public enum SkillState { Slash, FireBall, Shark }
@@ -548,13 +551,17 @@ public class PlayerControll : MonoBehaviour
                             if ( targetLayer.Contain(colliders [i].gameObject.layer) )
                             {
 
-                                Monster monster = colliders [i].gameObject.GetComponent<Monster>();
-                                if ( monster != null )
+                                hitedMonster = colliders [i].gameObject.GetComponent<Monster>();
+                                if ( hitedMonster != null )
                                 {
                                     Vector2 AttackedDir = ( colliders [i].transform.position - skillEffectLocation.position ).normalized;
                                     Rigidbody2D rb = colliders [i].GetComponent<Rigidbody2D>();
 
-                                    monster.TakeDamage(power);
+                                    hitedMonster.TakeDamage(power);
+                                    MonsterHit();
+
+
+
                                     #region 피격음 1,2 랜덤생성
                                     int soundIndex = Random.Range(1, 4);
                                     switch ( soundIndex )
@@ -570,7 +577,7 @@ public class PlayerControll : MonoBehaviour
                                             break;
                                     }
                                     #endregion
-                                    if ( monster.curState != Monster.MonsterState.Dead )
+                                    if ( hitedMonster.curState != Monster.MonsterState.Dead )
                                     {
                                         StartCoroutine(MonsterDamaged(0.2f, rb, AttackedDir));
 
@@ -625,6 +632,15 @@ public class PlayerControll : MonoBehaviour
             
 
         }
+        
+    }
+    public void MonsterHit()
+    {
+        int monsterHpUi = hitedMonster.monsterData.hp;
+        string monsterNameUi = hitedMonster.monsterData.name;
+        Manager.UICanvas.enemyDamagedEvent.Invoke();
+        Manager.UICanvas.enemyHpUi.fillAmount = hitedMonster.thisMonsterHP / monsterHpUi;
+        Manager.UICanvas.enemyNameUi.text = monsterNameUi;
     }
 }
 

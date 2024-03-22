@@ -45,8 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9a0f1692f70e3e47af7e1d37291fc26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorIcon: {fileID: 2800000, guid: 6c4477d03de24814388eed1c33238356, type: 3}
-  modifiedCursorIcon: {fileID: 2800000, guid: f56a888d1f5aec94e994888f6e6efedd, type: 3}
+  cursorIcon: {fileID: 2800000, guid: 643384bb0e0f2be4d8d8f91ea54c7277, type: 3}
 --- !u!114 &8065633413064898198
 MonoBehaviour:
   m_ObjectHideFlags: 0
