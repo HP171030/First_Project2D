@@ -17,20 +17,23 @@ public class Monster : MonoBehaviour, Idamagable
  protected   Collider2D thisCollider;
  protected   Vector2 atkDir;
  protected   bool atkDelayOn;
+   
     protected Collider2D player;
+   [SerializeField] protected LayerMask Obstacle;
     [SerializeField] protected  Rigidbody2D rb;
+    protected Collider2D hitWall;
     protected bool flipXed;
  [SerializeField]protected Animator damagedEffect;
 [SerializeField] protected Transform damagedEffectPos;
     
     [SerializeField] protected LayerMask playerLayer;
    [SerializeField]protected PooledObject monsterPool;
-   [SerializeField] protected MonsterData monsterData;
+   [SerializeField] public MonsterData monsterData;
 
-    float localX;
-        float localY;
-
-   [SerializeField] protected float thisMonsterHP;
+   protected float localX;
+     protected float localY;
+    protected bool onBossAtk = false;
+   [SerializeField] public float thisMonsterHP;
 
    [SerializeField] protected GameObject dropItem;
     protected virtual void Start()
@@ -56,7 +59,7 @@ public class Monster : MonoBehaviour, Idamagable
     }
 
     
-    public void Targeting()
+    protected virtual void Targeting()
     {
        
         int size = Physics2D.OverlapCircleNonAlloc(transform.position, monsterData.range, colliders, playerLayer);
@@ -110,7 +113,8 @@ public class Monster : MonoBehaviour, Idamagable
     {
         if ( MoveOn )
         {
-            
+           
+
             transform.Translate(moveDir * monsterData.speed/100);
         }
     }
@@ -129,10 +133,10 @@ public class Monster : MonoBehaviour, Idamagable
    public MonsterState curState;
 
    
-    protected void Update()
+    protected virtual void Update()
     {
         
-        if ( moveDir.x < 0 )
+        if ( moveDir.x < 0 &&!onBossAtk )
         {
 
             flipXed = true;
@@ -140,7 +144,7 @@ public class Monster : MonoBehaviour, Idamagable
            
 
         }
-        else if ( moveDir.x > 0 )
+        else if ( moveDir.x > 0 &&!onBossAtk)
         {
 
             flipXed = false;
@@ -183,7 +187,7 @@ public class Monster : MonoBehaviour, Idamagable
     }
     protected virtual void IdleStates()
     {
-        
+       rb.velocity = Vector2.zero;
         int size = Physics2D.OverlapCircleNonAlloc(transform.position, monsterData.range, colliders, playerLayer);
 
         if ( size > 0 )
@@ -222,7 +226,6 @@ public class Monster : MonoBehaviour, Idamagable
     {
         if ( curState != MonsterState.Dead ) {
             thisMonsterHP -= damage;
-            Debug.Log(thisMonsterHP);
             spriteRenderer.material.color = Color.red;
             spriteRenderer.material.DOColor(Color.white, 1f);
             damagedEffectPos.position = transform.position + Random.insideUnitSphere * 1f;

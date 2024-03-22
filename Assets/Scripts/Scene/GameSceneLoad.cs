@@ -44,6 +44,7 @@ public class GameSceneLoad : BaseScene
         Manager.UICanvas.dialogue.enabled = false;
         Manager.Game.titleOff = false;
         Manager.UICanvas.gameObject.SetActive (true);
+        Manager.Game.CineInCam();
         yield return null;
     }
 

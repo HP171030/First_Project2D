@@ -42,7 +42,13 @@ public class Shark : MonoBehaviour
             {
                
                 monster.TakeDamage(damage);
-               
+                int monsterHpUi = monster.monsterData.hp;
+                string monsterNameUi = monster.monsterData.name;
+                Manager.UICanvas.enemyDamagedEvent.Invoke();
+                Manager.UICanvas.enemyHpUi.fillAmount = monster.thisMonsterHP / monsterHpUi;
+                Manager.UICanvas.enemyNameUi.text = monsterNameUi;
+
+
             }
         }
     }

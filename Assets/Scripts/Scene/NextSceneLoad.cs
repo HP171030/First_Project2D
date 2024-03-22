@@ -16,6 +16,7 @@ public class NextSceneLoad : BaseScene
         virtualCamera.Follow = player.transform;
         Debug.Log("Last");
         Manager.Sound.PlayBGM(fireBGM);
+        Manager.Game.CineInCam();
         yield return null;
     }
 

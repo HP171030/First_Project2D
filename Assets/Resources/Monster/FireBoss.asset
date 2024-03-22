@@ -15,11 +15,11 @@ MonoBehaviour:
   id: 3
   name: FireBoss
   hp: 300
-  range: 20
+  range: 10
   atk: 10
-  speed: 10
+  speed: 7.47
   attackRange: 5
-  atkDelay: 3
+  atkDelay: 1
   moveDelay: 1
   dropItem:
     itemType: 3
@@ -29,7 +29,7 @@ MonoBehaviour:
     effects: {fileID: 0}
     itemColor: {r: 1, g: 0.6087532, b: 0, a: 0}
   dropGold: 100
-  soundPlayerDamaged: {fileID: 0}
+  soundPlayerDamaged: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
   soundMonsterDamaged: {fileID: 8300000, guid: eadc1884b1dd22149a671dfe76a479ae, type: 3}
   soundAttack: {fileID: 8300000, guid: cb3f4beb166a6244eb1f7379562094cf, type: 3}
   soundMonsterDead: {fileID: 0}

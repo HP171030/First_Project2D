@@ -140,16 +140,11 @@ MonoBehaviour:
   moveSpeed: 10
   dashSpeed: 20
   sprite: {fileID: 3941626407867355231}
-  Xdir: 0
-  Ydir: 0
-  up: 0
-  left: 0
-  right: 0
-  down: 0
   dashTrail: {fileID: 5131462656197016813, guid: a693ddb6e3ce98a49a12338ab6b5ea2d, type: 3}
   skillEffect: {fileID: 5723702106371360345}
   skillEffectLocation: {fileID: 1228226595629928531}
-  skillCoolTime: {fileID: 0}
+  DashskillCoolTime: {fileID: 0}
+  FireBallCoolTime: {fileID: 0}
   range: 1
   colliders:
   - {fileID: 0}
@@ -158,8 +153,16 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   effectDir: {fileID: 2755471958827590572}
+  fireBallPrefab: {fileID: 0}
+  sharkPrefab: {fileID: 0}
+  slashUi: {fileID: 0}
+  skUi1: {fileID: 0}
+  skUi2: {fileID: 0}
+  DieEvent:
+    m_PersistentCalls:
+      m_Calls: []
   pauseUI: {fileID: 2111280174689593511, guid: 433f6dff57c943842b371b2226faf8da, type: 3}
-  soundAtk: {fileID: 8300000, guid: 6b594e0b2b80db14b9ff8e68b1b50f1d, type: 3}
+  soundAtk: {fileID: 8300000, guid: 21d81d8c943a4884b9c6f52c247f3806, type: 3}
   soundDash: {fileID: 8300000, guid: 7756a544d93c02040ace7ab722576ff5, type: 3}
   soundHit: {fileID: 8300000, guid: 04d294ee3dc27db458512e937aad4943, type: 3}
   soundHit2: {fileID: 8300000, guid: cc14918ecadd80a40b2b36c495aeea14, type: 3}
@@ -175,6 +178,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
+  curSkillState: 0
 --- !u!95 &4492340121305364852
 Animator:
   serializedVersion: 5
