@@ -29,17 +29,21 @@ public class Monster : MonoBehaviour, Idamagable
     [SerializeField] protected LayerMask playerLayer;
    [SerializeField]protected PooledObject monsterPool;
    [SerializeField] public MonsterData monsterData;
-
-   protected float localX;
+    bool dead = false;
+    protected float localX;
      protected float localY;
     protected bool onBossAtk = false;
    [SerializeField] public float thisMonsterHP;
+    [SerializeField] public float thisMonsterMaxHp;
+
+    [SerializeField] protected GameObject parent;
 
    [SerializeField] protected GameObject dropItem;
     protected virtual void Start()
     {
         ChangeState(MonsterState.Idle);
         thisMonsterHP = monsterData.hp;
+        thisMonsterMaxHp = monsterData.hp;
         colliders = new Collider2D [20];
         animator = GetComponent<Animator>();
         thisCollider = GetComponent<Collider2D>();
@@ -54,6 +58,7 @@ public class Monster : MonoBehaviour, Idamagable
 
     public void ChasePattern()
     {
+      
         Targeting();
         Moving();
     }
@@ -109,7 +114,7 @@ public class Monster : MonoBehaviour, Idamagable
         }
     }
 
-    public void Moving()
+    protected virtual void Moving()
     {
         if ( MoveOn )
         {
@@ -135,21 +140,22 @@ public class Monster : MonoBehaviour, Idamagable
    
     protected virtual void Update()
     {
-        
+       
         if ( moveDir.x < 0 &&!onBossAtk )
         {
-
+            
             flipXed = true;
-            transform.localScale = new Vector3(-localX, localY, 1);
-           
+            spriteRenderer.flipX = true;
+
+
 
         }
         else if ( moveDir.x > 0 &&!onBossAtk)
         {
-
+           
             flipXed = false;
-            transform.localScale = new Vector3(localX,localY, 1);
-
+            spriteRenderer.flipX = false;
+           
 
         }
         switch ( curState )
@@ -179,11 +185,23 @@ public class Monster : MonoBehaviour, Idamagable
                 break;
 
             case MonsterState.Dead:
-                
-                thisCollider.enabled = false;
-                
+
+                DeadState();
+
                 break;
         }
+    }
+    protected virtual void DeadState()
+    {
+       
+        if ( !dead )
+        {
+            dead = true;
+            thisCollider.enabled = false;
+            animator.Play("Dead");
+            StartCoroutine(ThisDestroy());
+        }
+        
     }
     protected virtual void IdleStates()
     {
@@ -219,7 +237,8 @@ public class Monster : MonoBehaviour, Idamagable
 
     public void ChangeState(MonsterState nextState)
     {
-        curState = nextState;
+        if ( curState != MonsterState.Dead )
+            curState = nextState;
       
     }
     public void TakeDamage( int damage )
@@ -237,8 +256,7 @@ public class Monster : MonoBehaviour, Idamagable
             {
                 MoveOn = false;
                 ChangeState(MonsterState.Dead);
-                animator.Play("Dead");
-                StartCoroutine(ThisDestroy());
+               
 
             }
             else

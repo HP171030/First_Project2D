@@ -46,7 +46,7 @@ public class StartGame : MonoBehaviour
     {
         Manager.Sound.PlaySFX(selectButton);
         Manager.Data.LoadData();
-        Manager.Scene.LoadScene("GameScene");
+        Manager.Scene.LoadScene(Manager.Data.GameData.sceneName);
     }
     public void Quit()
     {

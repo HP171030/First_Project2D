@@ -52,7 +52,7 @@ public class ObjectPool : MonoBehaviour
         if (objectPool.Count < capacity)
         {
             instance.gameObject.SetActive(false);
-            instance.transform.parent = transform;
+            instance.transform.SetParent(transform, false);
             objectPool.Push(instance);
         }
         else

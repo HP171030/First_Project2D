@@ -43,7 +43,7 @@ public class DataManager : Singleton<DataManager>
         try
         {
             gameData = JsonUtility.FromJson<GameData>(json);
-            Debug.Log(gameData.ToString());
+            Debug.Log(gameData);
         }
         catch (Exception ex)
         {

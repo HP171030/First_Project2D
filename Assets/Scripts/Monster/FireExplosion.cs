@@ -15,7 +15,7 @@ public class FireExplosion : MonoBehaviour
     private void OnEnable()
     {
         Range.enabled = false;
-        Manager.Sound.PlaySFX(fire);
+        
     }
     void OnTriggerEnter2D( Collider2D player )
     {

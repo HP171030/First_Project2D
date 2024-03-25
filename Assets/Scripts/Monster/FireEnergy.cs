@@ -5,32 +5,25 @@ public class FireEnergy : MonoBehaviour
 {
     public float speed = 10f;
     public int damage = 3;
-    float lifeTime = 3f;
 
     [SerializeField] LayerMask targetLayer;
     [SerializeField] Animator anim;
     [SerializeField] ParticleSystem particle;
-    [SerializeField] AudioClip fire;
+
     [SerializeField] AudioClip boom;
 
 
     public Rigidbody2D rb;
 
-    void Start()
-    {
-        
-        
-        Manager.Sound.PlaySFX(fire);
-        StartCoroutine(DestroyAfterLifetime());
-
-    }
-    public IEnumerator DestroyAfterLifetime()
+    void OnEnable()
     {
 
-        yield return new WaitForSeconds(lifeTime);
-        if ( this != null )
-            Destroy(gameObject);
+        anim = gameObject.GetComponent<Animator>();
+       
+
+
     }
+
     void OnTriggerEnter2D( Collider2D other )
     {
 
@@ -48,12 +41,6 @@ public class FireEnergy : MonoBehaviour
                 Instantiate(particle, transform.position, Quaternion.Euler(-60f, 0f, 0f));
             }
         }
-    }
-    public void Dead()
-    {
-        Debug.Log("deadanim");
-        if ( this != null )
-            Destroy(gameObject);
     }
 
 }

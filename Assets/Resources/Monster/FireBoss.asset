@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 3
   name: FireBoss
-  hp: 300
-  range: 10
+  hp: 30
+  range: 20
   atk: 10
-  speed: 7.47
+  speed: 8
   attackRange: 5
-  atkDelay: 1
+  atkDelay: 2
   moveDelay: 1
   dropItem:
     itemType: 3

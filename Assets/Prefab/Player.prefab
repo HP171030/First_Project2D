@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   power: 1
-  moveSpeed: 10
+  moveSpeed: 7
   dashSpeed: 20
   sprite: {fileID: 3941626407867355231}
   dashTrail: {fileID: 5131462656197016813, guid: a693ddb6e3ce98a49a12338ab6b5ea2d, type: 3}

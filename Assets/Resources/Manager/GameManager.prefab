@@ -58,6 +58,7 @@ MonoBehaviour:
   title: 0
   onInvenTory: 0
   pauseUI: {fileID: 2111280174689593511, guid: 433f6dff57c943842b371b2226faf8da, type: 3}
+  deadui: {fileID: -4917069306090321139, guid: eba741aaa47f651469fa1dc1c8d5d6d4, type: 3}
   DieEvent:
     m_PersistentCalls:
       m_Calls: []

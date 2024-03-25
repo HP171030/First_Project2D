@@ -48,6 +48,7 @@ public class PlayerControll : MonoBehaviour
 
     [Header("PlayerUI")]
     [SerializeField] PauseUI pauseUI;
+    [SerializeField] DeadUi deadui;
 
 
     [Header("Character Sound")]
@@ -125,7 +126,7 @@ public class PlayerControll : MonoBehaviour
     {
         if ( atkOn )
         {
-            moveSpeed = 5f;
+            moveSpeed = 2f;
         }
 
         if ( Xdir > 0 || Ydir > 0 || Xdir < 0 || Ydir < 0 )
@@ -184,15 +185,16 @@ public class PlayerControll : MonoBehaviour
     {
         animator.SetBool("Die", true);
         Manager.Sound.PlaySFX(soundDie);
+        Manager.UICanvas.gameObject.SetActive(false);
         die = true;
 
     }
     public void DieOff()
-
-
     {
         die = false;
         animator.SetBool("Die", false);
+        Manager.UI.ShowPopUpUI(Manager.Game.deadui);
+ 
     }
     public IEnumerator MonsterDamaged( float delay, Rigidbody2D rb, Vector2 dir )
     {
@@ -263,21 +265,21 @@ public class PlayerControll : MonoBehaviour
                 yield return new WaitForSeconds(0.3f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
-                moveSpeed = 10f;
+                moveSpeed = 9f;
                 break;
             case SkillState.FireBall:
                 animator.SetBool("Attack", true);
                 yield return new WaitForSeconds(0.3f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
-                moveSpeed = 10f;
+                moveSpeed = 9f;
                 break;
             case SkillState.Shark:
                 animator.SetBool("Attack", true);
                 yield return new WaitForSeconds(0.3f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
-                moveSpeed = 10f;
+                moveSpeed = 9f;
                 break;
         }
        
@@ -550,7 +552,7 @@ public class PlayerControll : MonoBehaviour
                 {
                     coolDown = StartCoroutine(CoolDown(0.3f));
                     Manager.Sound.PlaySFX(soundAtk);
-                    moveSpeed = 5f;                                 //공격시 이속저하
+                    moveSpeed = 2f;                                 //공격시 이속저하
                     StartCoroutine(AttackAnim());
 
 
@@ -603,14 +605,14 @@ public class PlayerControll : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("WaitCoolDown");
+                    
                 }
                 break;
 
             case SkillState.FireBall:
                if( Manager.Cool.IsSkillCool("FireBall"))
                 {
-                    moveSpeed = 5f;                             //스킬 사용시 이속저하
+                    moveSpeed = 2f;                             //스킬 사용시 이속저하
                     StartCoroutine(AttackAnim());
                     Manager.Cool.UseSkill("FireBall");
                    GameObject fire = Instantiate(fireBallPrefab,skillEffectLocation.position,Quaternion.identity);
@@ -627,7 +629,7 @@ public class PlayerControll : MonoBehaviour
                 Vector2 mousePos = new Vector2(mousePosition.x, mousePosition.y);
                 if ( Manager.Cool.IsSkillCool("Shark") )
                 {
-                    moveSpeed = 5f;                             //스킬 사용시 이속저하
+                    moveSpeed = 2f;                             //스킬 사용시 이속저하
                     StartCoroutine(AttackAnim());
                     Manager.Cool.UseSkill("Shark");
                     GameObject shark = Instantiate(sharkPrefab,mousePos, Quaternion.identity);
@@ -650,7 +652,7 @@ public class PlayerControll : MonoBehaviour
     }
     public void MonsterHit()
     {
-        int monsterHpUi = hitedMonster.monsterData.hp;
+        float monsterHpUi = hitedMonster.thisMonsterMaxHp;
         string monsterNameUi = hitedMonster.monsterData.name;
         Manager.UICanvas.enemyDamagedEvent.Invoke();
         Manager.UICanvas.enemyHpUi.fillAmount = hitedMonster.thisMonsterHP / monsterHpUi;

@@ -51,12 +51,14 @@ public class PauseUI : PopUpUI
         }
 
         player = playerObject.transform;
+        Manager.Data.GameData.sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Manager.Data.GameData.playerPos = player.position;
         Manager.Data.GameData.Hp = Manager.Game.HpEvent;
         Manager.Data.GameData.maxHp = Manager.Game.MaxHpEvent;
         Manager.Data.GameData.Mp = Manager.Game.MpEvent;
         Manager.Data.GameData.maxMp = Manager.Game.MaxMpEvent;
         Manager.Data.GameData.gold = Manager.Game.GoldEvent;
+        Manager.Data.GameData.thisisNew = false;
         Manager.Data.SaveData();
         Debug.Log("Save");
         Manager.UI.ClearPopUpUI();

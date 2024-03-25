@@ -41,6 +41,7 @@ public class GameManager : Singleton<GameManager>
 
 
     [SerializeField] PauseUI pauseUI;
+    [SerializeField] public DeadUi deadui;
 
     private float brightnessVol;
 
@@ -50,7 +51,7 @@ public class GameManager : Singleton<GameManager>
     public void CineInCam()
     {
         cine = FindObjectOfType<CinemachineVirtualCamera>();
-        Debug.Log(cine);
+     
     }
     public void HerePlayer()
     {
@@ -58,6 +59,7 @@ public class GameManager : Singleton<GameManager>
     }
     public void OnOption( InputValue value )
     {
+        Manager.UI.ClearWindowUI();
         if ( !titleOff && value.isPressed )
             if ( !time )
             {
@@ -86,7 +88,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        
+      
         if ( hitdam != null )
         {
             hitdam.gameObject.SetActive(false);
@@ -122,7 +124,7 @@ public class GameManager : Singleton<GameManager>
             Debug.LogError("CinemachineVirtualCamera not assigned.");
         }
 
-        // 나머지 코드는 그대로 유지됩니다.
+       
         hitdam.gameObject.SetActive(true);
         hitdam.DOFade(0, 1f).OnComplete(() =>
         {
@@ -132,9 +134,7 @@ public class GameManager : Singleton<GameManager>
     }
     private IEnumerator DampenShake( CinemachineBasicMultiChannelPerlin perlin )
     {
-        yield return new WaitForSeconds(0.5f); // 1초 대기
-
-        // 흔들림 감쇠
+        yield return new WaitForSeconds(0.5f);
         perlin.m_AmplitudeGain = 0;
         perlin.m_FrequencyGain = 0;
     }
