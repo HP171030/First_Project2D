@@ -1,22 +1,19 @@
 using Cinemachine;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class NextSceneLoad : BaseScene
 {
-    [SerializeField] AudioClip fireBGM; 
-   [SerializeField] Transform startPos;
+    [SerializeField] AudioClip fireBGM;
+    [SerializeField] Transform startPos;
     [SerializeField] CinemachineVirtualCamera virtualCamera;
-    [SerializeField]GameObject player;
-    [SerializeField] GameObject playerPrefab;   
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject playerPrefab;
 
     public override IEnumerator LoadingRoutine()
     {
-        
+
         Manager.UICanvas.gameObject.SetActive(true);
-        Debug.Log(player);
         player = GameObject.FindGameObjectWithTag("Player");
 
         if ( player != null )
@@ -40,7 +37,7 @@ public class NextSceneLoad : BaseScene
 
 
         virtualCamera.Follow = player.transform;
-     
+
         Manager.Sound.PlayBGM(fireBGM);
         Manager.UICanvas.dialogue.gameObject.SetActive(true);
         Manager.UICanvas.dialogue.enabled = false;
@@ -52,16 +49,10 @@ public class NextSceneLoad : BaseScene
     }
     public override void SceneLoad()
     {
-        Debug.Log("Loading File");
+        base.SceneLoad();
 
-        Manager.Game.MaxHpEvent = Manager.Data.GameData.maxHp;
-        Manager.Game.MaxMpEvent = Manager.Data.GameData.maxMp;
-        Debug.Log($"LoadingHP = {Manager.Data.GameData.Hp}");
-        Manager.Game.HpEvent = Manager.Data.GameData.Hp;
-        Manager.Game.MpEvent = Manager.Data.GameData.Mp;
-        Manager.Game.GoldEvent = Manager.Data.GameData.gold;
-       
-       
+
+
     }
 
 

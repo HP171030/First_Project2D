@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f6b3908a783b204ab014ff7080c3ee1, type: 3}
-  m_Name: Enemy1
+  m_Name: Archer
   m_EditorClassIdentifier: 
   id: 2
-  name: Enemy
+  name: Archer
   hp: 10
   range: 10
   atk: 5
@@ -30,6 +30,6 @@ MonoBehaviour:
     itemColor: {r: 0.645283, g: 0, b: 0, a: 1}
   dropGold: 3
   soundPlayerDamaged: {fileID: 8300000, guid: 04d294ee3dc27db458512e937aad4943, type: 3}
-  soundMonsterDamaged: {fileID: 8300000, guid: 2f4910f5866099c4daeda0d2c6c811df, type: 3}
+  soundMonsterDamaged: {fileID: 8300000, guid: 5bd1aab7b6652a547baf0e60b061b472, type: 3}
   soundAttack: {fileID: 8300000, guid: 9e44a1aa80e69dc44a4692d548b09b88, type: 3}
-  soundMonsterDead: {fileID: 8300000, guid: 69b22ae44994d6940909ec1939a988dd, type: 3}
+  soundMonsterDead: {fileID: 8300000, guid: 5ec723d03f836304a8cc3733dcf1f676, type: 3}

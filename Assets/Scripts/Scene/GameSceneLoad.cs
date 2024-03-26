@@ -63,14 +63,7 @@ public class GameSceneLoad : BaseScene
     }
     public override void SceneLoad()
     {
-        Debug.Log("Loading File");
-        
-        Manager.Game.MaxHpEvent = Manager.Data.GameData.maxHp;
-        Manager.Game.MaxMpEvent = Manager.Data.GameData.maxMp;
-        Debug.Log($"LoadingHP = {Manager.Data.GameData.Hp}");
-        Manager.Game.HpEvent = Manager.Data.GameData.Hp;
-        Manager.Game.MpEvent = Manager.Data.GameData.Mp;
-        Manager.Game.GoldEvent = Manager.Data.GameData.gold;
+        base.SceneLoad();
         player.transform.position = Manager.Data.GameData.playerPos;
     }
 

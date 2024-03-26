@@ -4,18 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms;
 
 public class FireBoss : Monster
 {
     [SerializeField] FireEnergy fireEnergy;
     [SerializeField] PooledObject fireEnergyPooled;
     [SerializeField] PooledObject stompPooled;
+    [SerializeField] PooledObject summonEffect;
     [SerializeField] string [] bossString;
     [SerializeField] CinemachineVirtualCamera cineCam;
     [SerializeField] AudioClip startBossBGM;
     [SerializeField] AudioClip fireBall;
     [SerializeField] float kickRange = 2f;
+    [SerializeField] AudioClip phase2BGM;
     [SerializeField] Animator skillAnim;
     [SerializeField] GameObject eff;
     [SerializeField] GameObject phase2;
@@ -23,6 +24,7 @@ public class FireBoss : Monster
     [SerializeField] ParticleSystem fireEffect;
     [SerializeField] AudioClip fire;
     [SerializeField] AudioClip Phase2Sound;
+    [SerializeField] GameObject fireArcher;
 
     int fireEnergyCount = 5;
     int kickShotRange = 5;
@@ -37,6 +39,7 @@ public class FireBoss : Monster
         base.Start();
         Manager.Pool.CreatePool(fireEnergyPooled, 20, 20);
         Manager.Pool.CreatePool(stompPooled, 10, 10);
+        Manager.Pool.CreatePool(summonEffect, 10, 10);
     }
     private void OnDrawGizmos()
     {
@@ -105,23 +108,27 @@ public class FireBoss : Monster
     }
     protected override void DeadState()
     {
-        if ( startPhase2&&!phase2Pattern)
-            {
-            animator.SetTrigger("Phase1End");
-        }
-        if ( !startPhase2 )
-            
+        if ( phase2Pattern )
         {
+            base.DeadState();
+        }
+        if ( !startPhase2&&!phase2Pattern )
+            
+        {startPhase2 = true;
             animator.SetTrigger("Phase1End");
-        startPhase2 = true;
+        
 
         }
         
     }
+    public void Phase2BGMOn()
+    {
+        Manager.Sound.PlayBGM(phase2BGM);
+    }
     public void SecondPhaseStart()
     {
-        thisMonsterMaxHp = 40;
-        thisMonsterHP = 40;
+        thisMonsterMaxHp = 70;
+        thisMonsterHP = 70;
       
         fireEnergyCount = 20;
         curState = MonsterState.Idle;
@@ -130,10 +137,10 @@ public class FireBoss : Monster
         phase2.SetActive(true);
         phase2_1.SetActive(true);
         kickRange++;
-        kickShotRange += 3;
+        kickShotRange += 5;
         Manager.Game.ShakeCam();
         fireEffect.gameObject.SetActive(true);
-        Manager.Sound.PlaySFX(Phase2Sound);
+       
     }
     protected override void Moving()
     {
@@ -165,187 +172,230 @@ public class FireBoss : Monster
     }
     protected override IEnumerator AttackPlayer()
     {
+        int pattern = 0;
+
         if ( !startPhase2 )
         {
-            int phase1Pattern = Random.Range(0, 3);
-           
-            switch ( phase1Pattern )
+            if ( !phase2Pattern && !atkDelayOn )
             {
-                case 0:
-                    if ( !atkDelayOn )
-                    {
-                        #region 발차기1
-                        Vector2 prePos = transform.position;
-                        Vector2 targetPos = ( Vector2 )transform.position + atkDir * kickShotRange;
-                        float t = 0;
-                        float duration = 0.5f;
-                        atkDelayOn = true;
-                        Manager.Sound.PlaySFX(monsterData.soundAttack);
-                        animator.Play("FireBossAttack1");
 
-                        while ( t < 1f )
+                pattern = Random.Range(0, 3);
+                Debug.Log("phase1");
+            }
+            else
+            {
+                pattern = Random.Range(0, 4);
+                Debug.Log(pattern);
+            }
+
+                switch ( pattern )
+                {
+                    case 0:
+                        if ( !atkDelayOn )
                         {
-                            transform.position = Vector2.Lerp(prePos, targetPos, t);
-                            t += Time.deltaTime / duration;
-                            inRangePlayer = Physics2D.OverlapCircle(transform.position, kickRange, playerLayer);
-                            Collider2D hitWall = Physics2D.OverlapCircle(transform.position, kickRange, Obstacle);
-                            if ( hitWall != null )
-                            {
-                                Debug.Log("Wall");
-                                break;
-                            }
-                            yield return null;
-
-                        }
-
-                        if ( inRangePlayer != null )
-                        {
-                            SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
-                            Manager.Game.HpEvent -= monsterData.atk;
-                            Manager.Game.ShakeCam();
-                            spriteRenderer.material.color = Color.red;
-                            spriteRenderer.material.DOColor(Color.white, 1f);
-                            Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
-                        }
-                        #endregion
-                        if(!phase2Pattern )
-                        yield return new WaitForSeconds(1f);
-                        else if ( phase2Pattern )
-                            yield return new WaitForSeconds(0.1f);
-                        #region 발차기2
-                        
-                        
-                          prePos = transform.position;
-                        player = Physics2D.OverlapCircle(transform.position, monsterData.range, playerLayer);
-                        if ( player != null )
-                        {
-                            onBossAtk = true;
-                            atkDir = ( player.transform.position - transform.position ).normalized;
-
-                            if ( atkDir.x < 0 )
-                            {
-                                spriteRenderer.flipX = true;
-
-                            }
-                            else if ( atkDir.x > 0 )
-                            {
-                                spriteRenderer.flipX = false;
-
-                            }
-                            onBossAtk = false;
-                        }
-
-
-
-                        targetPos = ( Vector2 )transform.position + atkDir * kickShotRange;
-                        t = 0;
-                        if (! phase2Pattern )
-                        {
-                            duration = 0.5f;
-                        }
-                        else if ( phase2Pattern )
-                            duration = 0.3f;
-
-                        atkDelayOn = true;
-                        Manager.Sound.PlaySFX(monsterData.soundAttack);
-                        animator.Play("FireBossAttack2");
-
-                        while ( t < 1f )
-                        {
-                            transform.position = Vector2.Lerp(prePos, targetPos, t);
-                            t += Time.deltaTime / duration;
-                            inRangePlayer = Physics2D.OverlapCircle(transform.position, kickRange, playerLayer);
-                            Collider2D hitWall = Physics2D.OverlapCircle(transform.position, kickRange, Obstacle);
-                            if ( hitWall != null )
-                            {
-                                Debug.Log("Wall");
-                                break;
-                            }
-                            yield return null;
-
-                        }
-
-                        if ( inRangePlayer != null )
-                        {
-                            SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
-                            Manager.Game.HpEvent -= monsterData.atk;
-                            Manager.Game.ShakeCam();
-                            spriteRenderer.material.color = Color.red;
-                            spriteRenderer.material.DOColor(Color.white, 1f);
-                            Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
-                        }
-                        #endregion
-                        
-                     
-                        ChangeState(MonsterState.Idle);
-                        onBossAtk = false;
-                        animator.SetBool("Move", false);
-                        if(!phase2Pattern)
-                        yield return new WaitForSeconds(monsterData.atkDelay);
-                        else if(phase2Pattern)
-                            yield return new WaitForSeconds(0.5f);
-                        atkDelayOn = false;
-                        
-
-                    }
-                    break;
-                case 1:
-                    if ( !atkDelayOn )
-                    {
-                        if(!phase2Pattern )
-                        {
-                        atkDelayOn = true;
-                        animator.Play("FireBossStomp");
-                        onBossAtk = false;
-                        animator.SetBool("Move", false);
-                        yield return new WaitForSeconds(1f);
-                           
-                        ChangeState(MonsterState.Idle);
-                        yield return new WaitForSeconds(monsterData.atkDelay);
-                        atkDelayOn = false;
-                           
-                        }
-                        else if ( phase2Pattern )
-                        {
-                            
-                            onBossAtk = false; 
+                            #region 발차기1
+                            Vector2 prePos = transform.position;
+                            Vector2 targetPos = ( Vector2 )transform.position + atkDir * kickShotRange;
+                            float t = 0;
+                            float duration = 0.5f;
                             atkDelayOn = true;
-                            animator.SetBool("Move", false);
-                            for ( int i = 0; i < 5; i++ )
+                            Manager.Sound.PlaySFX(monsterData.soundAttack);
+                            animator.Play("FireBossAttack1");
+
+                            while ( t < 1f )
                             {
-                                Debug.Log("stomp");
-                                animator.Play("FireBossStomp");
-                                yield return new WaitForSeconds(0.7f);
+                                transform.position = Vector2.Lerp(prePos, targetPos, t);
+                                t += Time.deltaTime / duration;
+                                inRangePlayer = Physics2D.OverlapCircle(transform.position, kickRange, playerLayer);
+                                Collider2D hitWall = Physics2D.OverlapCircle(transform.position, kickRange, Obstacle);
+                                if ( hitWall != null )
+                                {
+                                    Debug.Log("Wall");
+                                    break;
+                                }
+                                yield return null;
 
                             }
+
+                            if ( inRangePlayer != null )
+                            {
+                                SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
+                                Manager.Game.HpEvent -= monsterData.atk;
+                                Manager.Game.ShakeCam();
+                                spriteRenderer.material.color = Color.red;
+                                spriteRenderer.material.DOColor(Color.white, 1f);
+                                Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
+                            }
+                            #endregion
+                            if ( !phase2Pattern )
+                                yield return new WaitForSeconds(1f);
+                            else if ( phase2Pattern )
+                                yield return new WaitForSeconds(0.1f);
+                            #region 발차기2
+
+
+                            prePos = transform.position;
+                            player = Physics2D.OverlapCircle(transform.position, monsterData.range, playerLayer);
+                            if ( player != null )
+                            {
+                                onBossAtk = true;
+                                atkDir = ( player.transform.position - transform.position ).normalized;
+
+                                if ( atkDir.x < 0 )
+                                {
+                                    spriteRenderer.flipX = true;
+
+                                }
+                                else if ( atkDir.x > 0 )
+                                {
+                                    spriteRenderer.flipX = false;
+
+                                }
+                                onBossAtk = false;
+                            }
+
+
+
+                            targetPos = ( Vector2 )transform.position + atkDir * kickShotRange;
+                            t = 0;
+                            if ( !phase2Pattern )
+                            {
+                                duration = 0.5f;
+                            }
+                            else if ( phase2Pattern )
+                                duration = 0.3f;
+
+                            atkDelayOn = true;
+                            Manager.Sound.PlaySFX(monsterData.soundAttack);
+                            animator.Play("FireBossAttack2");
+
+                            while ( t < 1f )
+                            {
+                                transform.position = Vector2.Lerp(prePos, targetPos, t);
+                                t += Time.deltaTime / duration;
+                                inRangePlayer = Physics2D.OverlapCircle(transform.position, kickRange, playerLayer);
+                                Collider2D hitWall = Physics2D.OverlapCircle(transform.position, kickRange, Obstacle);
+                                if ( hitWall != null )
+                                {
+                                    Debug.Log("Wall");
+                                    break;
+                                }
+                                yield return null;
+
+                            }
+
+                            if ( inRangePlayer != null )
+                            {
+                                SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
+                                Manager.Game.HpEvent -= monsterData.atk;
+                                Manager.Game.ShakeCam();
+                                spriteRenderer.material.color = Color.red;
+                                spriteRenderer.material.DOColor(Color.white, 1f);
+                                Manager.Sound.PlaySFX(monsterData.soundPlayerDamaged);
+                            }
+                            #endregion
+
+
+                            ChangeState(MonsterState.Idle);
+                            onBossAtk = false;
+                            animator.SetBool("Move", false);
+                            if ( !phase2Pattern )
+                                yield return new WaitForSeconds(monsterData.atkDelay);
+                            else if ( phase2Pattern )
+                                yield return new WaitForSeconds(1f);
+                            atkDelayOn = false;
+
+
+                        }
+                        break;
+                    case 1:
+                        if ( !atkDelayOn )
+                        {
+                            if ( !phase2Pattern )
+                            {
+                                atkDelayOn = true;
+                                animator.Play("FireBossStomp");
+                                onBossAtk = false;
+                                animator.SetBool("Move", false);
+                                yield return new WaitForSeconds(1f);
+
+                                ChangeState(MonsterState.Idle);
+                                yield return new WaitForSeconds(monsterData.atkDelay);
+                                atkDelayOn = false;
+
+                            }
+                            else if ( phase2Pattern )
+                            {
+
+                                onBossAtk = false;
+                                atkDelayOn = true;
+                                animator.SetBool("Move", false);
+                                for ( int i = 0; i < 5; i++ )
+                                {
+                                    Debug.Log("stomp");
+                                    animator.Play("FireBossStomp");
+                                    yield return new WaitForSeconds(0.7f);
+
+                                }
+                                ChangeState(MonsterState.Idle);
+                                yield return new WaitForSeconds(monsterData.atkDelay);
+                                atkDelayOn = false;
+
+                            }
+                        }
+
+                        break;
+                    case 2:
+                        if ( !atkDelayOn )
+                        {
+
+                            atkDelayOn = true;
+
+                            StartCoroutine(FireEnergy());
+                            animator.SetBool("Move", false);
+                            yield return new WaitForSeconds(3f);
+                            ChangeState(MonsterState.Idle);
+
+                            yield return new WaitForSeconds(monsterData.atkDelay);
+                            atkDelayOn = false;
+
+
+                        }
+
+                        break;
+                    case 3:
+                        if ( !atkDelayOn )
+                        {
+
+
+                            atkDelayOn = true;
+                            animator.Play("Summon");
+                            onBossAtk = false;
+                            animator.SetBool("Move", false);
+                            for ( int i = 0; i < 3; i++ )
+                            {
+                                Vector2 randomOffset = Random.insideUnitCircle.normalized * 10f;
+
+                                Manager.Pool.GetPool(summonEffect,(Vector2)transform.position + randomOffset, Quaternion.identity);
+                                Instantiate(fireArcher, ( Vector2 )transform.position + randomOffset, Quaternion.identity);
+
+
+                            }
+
                             ChangeState(MonsterState.Idle);
                             yield return new WaitForSeconds(monsterData.atkDelay);
                             atkDelayOn = false;
-                           
                         }
-                    }
-                   
-                    break;
-                case 2:
-                    if ( !atkDelayOn )
-                    {
 
-                        atkDelayOn = true;
 
-                        StartCoroutine(FireEnergy());
-                        animator.SetBool("Move", false);
-                        yield return new WaitForSeconds(3f);
-                        ChangeState(MonsterState.Idle);
 
-                        yield return new WaitForSeconds(monsterData.atkDelay);
-                        atkDelayOn = false;
-                        
 
-                    }
-                   
-                    break;
+                        break;
+                }
+            
 
-            }
+           
+
         }
 
 

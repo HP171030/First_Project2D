@@ -105,13 +105,12 @@ public class PlayerControll : MonoBehaviour
     private void Update()
     {
 
-       
-            // 마우스 위치를 World 좌표로 변환
+        if ( !Manager.Game.time )
+        {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-            // 마우스 위치와 게임 오브젝트의 위치를 연결하는 벡터를 계산
             Vector3 direction = mousePosition - transform.position;
             playerMarker.transform.rotation = Quaternion.Euler(0f, 0f, (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg)-90);
+        }
 
         if ( !die )
         {
@@ -265,21 +264,21 @@ public class PlayerControll : MonoBehaviour
                 yield return new WaitForSeconds(0.3f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
-                moveSpeed = 9f;
+                moveSpeed = 8f;
                 break;
             case SkillState.FireBall:
                 animator.SetBool("Attack", true);
                 yield return new WaitForSeconds(0.3f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
-                moveSpeed = 9f;
+                moveSpeed = 8f;
                 break;
             case SkillState.Shark:
                 animator.SetBool("Attack", true);
                 yield return new WaitForSeconds(0.3f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
-                moveSpeed = 9f;
+                moveSpeed = 8f;
                 break;
         }
        
@@ -656,6 +655,8 @@ public class PlayerControll : MonoBehaviour
         string monsterNameUi = hitedMonster.monsterData.name;
         Manager.UICanvas.enemyDamagedEvent.Invoke();
         Manager.UICanvas.enemyHpUi.fillAmount = hitedMonster.thisMonsterHP / monsterHpUi;
+        Manager.UICanvas.enemyHpText.text = $"{hitedMonster.thisMonsterHP} /  {monsterHpUi}";
+        Debug.Log($"{hitedMonster.thisMonsterHP} /  {monsterHpUi}");
         Manager.UICanvas.enemyNameUi.text = monsterNameUi;
         PooledObject dmgui = Manager.Pool.GetPool(Manager.Game.damageUI, hitedMonster.transform.position, Quaternion.identity);
         TMP_Text dmgtext = dmgui.gameObject.GetComponent<TMP_Text>();

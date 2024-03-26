@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -8,9 +9,9 @@ public class inventoryManager : Singleton<inventoryManager>
 {
 
     public List<Item> itemsList = new List<Item>();
-    bool invenClose = false;
+    public bool invenClose = false;
  
-    [SerializeField] InventoryUI inventoryUI;
+    [SerializeField] public InventoryUI inventoryUI;
   
     public event UnityAction onAddItem;
     
@@ -28,7 +29,21 @@ public class inventoryManager : Singleton<inventoryManager>
         return false;
     }
 
-
+    protected override void Awake()
+    {
+        
+    {
+        if ( instance == null )
+        {
+            instance = this;
+           
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+}
 
 
 

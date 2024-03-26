@@ -31,9 +31,14 @@ public class QuestSlot : MonoBehaviour,IPointerUpHandler,IPointerExitHandler
     {
         
         quest = null;
+       
         
     }
-
+    public void UpdateQuestUIText( string newText )
+    {
+        // 퀘스트 슬롯의 UI 텍스트 업데이트
+        contentsText.text = newText;
+    }
     public void OnPointerUp( PointerEventData eventData )
     {
        

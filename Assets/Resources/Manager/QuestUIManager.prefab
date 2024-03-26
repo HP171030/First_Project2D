@@ -876,9 +876,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0b8e38d570d504ea1a683967baa695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questClose: 0
   questUI: {fileID: 5676317502836384867}
   questSlots: []
   holder: {fileID: 4845325131848390938}
+  questContents: {fileID: 7887556511870750757}
 --- !u!1 &5181201875561149464
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 public class PauseUI : PopUpUI
 {
 
@@ -59,6 +60,10 @@ public class PauseUI : PopUpUI
         Manager.Data.GameData.maxMp = Manager.Game.MaxMpEvent;
         Manager.Data.GameData.gold = Manager.Game.GoldEvent;
         Manager.Data.GameData.thisisNew = false;
+        foreach (KillQuest quest in Manager.Quest.killQuestLists)
+        {
+            Manager.Data.GameData.questList.Add(quest);
+        }
         Manager.Data.SaveData();
         Debug.Log("Save");
         Manager.UI.ClearPopUpUI();

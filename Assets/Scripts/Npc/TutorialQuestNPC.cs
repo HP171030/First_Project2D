@@ -9,13 +9,21 @@ public class TutorialQuestNPC : NPCScript
     [SerializeField] float mimicSpawnInterval;
     [SerializeField] GameObject monsterMimic;
     [SerializeField] int curQuestNum = 0;
-    [SerializeField] KillQuest mimicQuest;
+ KillQuest mimicQuest = null;
     [SerializeField] KillQuest test;
     [SerializeField] KillQuest test2;
     [SerializeField] GameObject Last;
+    [SerializeField] bool mimicQuestComplete;
 
 
-
+    private void Update()
+    {
+        if ( !mimicQuestComplete && mimicQuest != null && mimicQuest.isCompleted )
+        {
+            curQuestNum++;
+            mimicQuestComplete = true;
+        }
+    }
 
     protected override void Start()
     {
@@ -128,7 +136,7 @@ public class TutorialQuestNPC : NPCScript
                 case 0:
                     curQuestNum++;
                     StartCoroutine(SpawnMimicsRoutine());
-                    mimicQuest = new KillQuest("mimicQuest", 1, 5, $"Kill 5 mimic \n asdfasdfsf");
+                    mimicQuest = new KillQuest("mimicQuest","Mimic", 5, $"Kill the 5 mimic ");
                     Manager.Quest.AddKillQuest(mimicQuest);
 
 
@@ -142,7 +150,7 @@ public class TutorialQuestNPC : NPCScript
                     else
                     {
 
-                        test = new KillQuest("TestCase", 1, 5, $"testest 5 mimic \n\n\n asdfasdfsf");
+                        test = new KillQuest("TestCase","Mimic", 5, $"testest 5 mimic \n\n\n asdfasdfsf");
                         Manager.Quest.AddKillQuest(test);
                     }
 
@@ -156,7 +164,7 @@ public class TutorialQuestNPC : NPCScript
 
                     break;
                 case 3:
-                    test2 = new KillQuest("test2", 1, 5, $"baodfa");
+                    test2 = new KillQuest("test2", "Mimic", 5, $"baodfa");
                     Manager.Quest.AddKillQuest(test2);
 
                     break;

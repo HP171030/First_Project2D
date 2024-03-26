@@ -34,7 +34,7 @@ public class GameManager : Singleton<GameManager>
     public Toggle fullScreenMode;
 
 
-    bool time;
+    public bool time;
     public bool titleOff = true;
     public bool title;
     public bool onInvenTory = false;
@@ -46,8 +46,8 @@ public class GameManager : Singleton<GameManager>
     private float brightnessVol;
 
     public UnityEvent DieEvent;
-    
-    
+
+
     public void CineInCam()
     {
         cine = FindObjectOfType<CinemachineVirtualCamera>();
@@ -59,9 +59,18 @@ public class GameManager : Singleton<GameManager>
     }
     public void OnOption( InputValue value )
     {
-        Manager.UI.ClearWindowUI();
-        if ( !titleOff && value.isPressed )
-            if ( !time )
+        if(Manager.inven.inventoryUI.gameObject.activeSelf||Manager.Quest.questUI.gameObject.activeSelf)
+        {
+            Manager.inven.inventoryUI.gameObject.SetActive(false);
+            Manager.Quest.questUI.gameObject.SetActive(false);
+            Manager.inven.invenClose = true;
+            Manager.Quest.questClose = true;
+        }
+        else
+        {
+ if ( !titleOff && value.isPressed )
+            {
+ if ( !time )
             {
                 Manager.UI.ShowPopUpUI(pauseUI);
                 time = true;
@@ -72,6 +81,11 @@ public class GameManager : Singleton<GameManager>
                 Manager.UI.ClearPopUpUI();
                 time = false;
             }
+            }
+           
+        }
+       
+       
 
     }
 

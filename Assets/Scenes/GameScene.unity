@@ -12269,6 +12269,7 @@ MonoBehaviour:
   monsterMimic: {fileID: 6379233055840216801, guid: 944bcc2c4620d9c4194431bac08d5599, type: 3}
   curQuestNum: 0
   Last: {fileID: 1713681968}
+  mimicQuestComplete: 0
 --- !u!1 &733246420
 GameObject:
   m_ObjectHideFlags: 0
@@ -12430,6 +12431,7 @@ MonoBehaviour:
   title: 0
   onInvenTory: 0
   pauseUI: {fileID: 0}
+  deadui: {fileID: 0}
   DieEvent:
     m_PersistentCalls:
       m_Calls: []

@@ -17,7 +17,8 @@ public class DataManager : Singleton<DataManager>
     {
         
         gameData = new GameData();
-        
+        Manager.Quest.HandleNewData();
+
     }
 
     public void SaveData(int index = 0)
@@ -43,7 +44,6 @@ public class DataManager : Singleton<DataManager>
         try
         {
             gameData = JsonUtility.FromJson<GameData>(json);
-            Debug.Log(gameData);
         }
         catch (Exception ex)
         {

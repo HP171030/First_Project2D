@@ -562,11 +562,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4504921369413657366}
   - component: {fileID: 7539402789680483135}
+  - component: {fileID: 3536354715787373291}
   - component: {fileID: 5940762810172514823}
   - component: {fileID: 97776202823047831}
   - component: {fileID: 447919135614299130}
   - component: {fileID: -2638430739128470967}
-  - component: {fileID: 8396660333077186580}
   m_Layer: 8
   m_Name: Archer
   m_TagString: Untagged
@@ -646,6 +646,41 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3536354715787373291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6379233055840216801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae1b12358a87df438f85a26f497f314, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliders: []
+  spriteRenderer: {fileID: 7539402789680483135}
+  Obstacle:
+    serializedVersion: 2
+    m_Bits: 16
+  rb: {fileID: 5940762810172514823}
+  damagedEffect: {fileID: 7493631519212315503}
+  damagedEffectPos: {fileID: 7559759152338386044}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  monsterPool: {fileID: 0}
+  monsterData: {fileID: 11400000, guid: 999487d424164fe43bc7c48035d50568, type: 2}
+  thisMonsterHP: 0
+  thisMonsterMaxHp: 0
+  parent: {fileID: 0}
+  dropItem: {fileID: 308354900947512561}
+  curState: 0
+  arrowReady: {fileID: 8300000, guid: 0f17c3dfa5ef89b42a12e9f03d413eee, type: 3}
+  arrowShot: {fileID: 8300000, guid: 32bba1af50bf77b4e9b4a8a2bbdeee2c, type: 3}
+  arrowPos: {fileID: 764921932601895360}
+  lineRenderer: {fileID: 5416771455961627517}
+  arrow: {fileID: 5947104945435055805, guid: 7ca83ff7e0552824288994457437c43d, type: 3}
 --- !u!50 &5940762810172514823
 Rigidbody2D:
   serializedVersion: 4
@@ -743,35 +778,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoRelease: 0
   releaseTime: 0
---- !u!114 &8396660333077186580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6379233055840216801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83d6390152ee4214aa899abbfd56ed8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colliders: []
-  spriteRenderer: {fileID: 7539402789680483135}
-  rb: {fileID: 0}
-  damagedEffect: {fileID: 7493631519212315503}
-  damagedEffectPos: {fileID: 7559759152338386044}
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  monsterPool: {fileID: 0}
-  monsterData: {fileID: 11400000, guid: 999487d424164fe43bc7c48035d50568, type: 2}
-  dropItem: {fileID: 308354900947512561}
-  curState: 0
-  arrowReady: {fileID: 8300000, guid: 0f17c3dfa5ef89b42a12e9f03d413eee, type: 3}
-  arrowShot: {fileID: 8300000, guid: 32bba1af50bf77b4e9b4a8a2bbdeee2c, type: 3}
-  arrowPos: {fileID: 6541345988396011275}
-  lineRenderer: {fileID: 5416771455961627517}
-  arrow: {fileID: 5947104945435055805, guid: 7ca83ff7e0552824288994457437c43d, type: 3}
 --- !u!1 &7900100611161729680
 GameObject:
   m_ObjectHideFlags: 0

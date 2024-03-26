@@ -1,14 +1,23 @@
 {
-    "sceneName": "NextScene",
+    "sceneName": "GameScene",
     "playerPos": {
-        "x": 72.01664733886719,
-        "y": -21.860000610351564,
+        "x": 41.77499008178711,
+        "y": -9.350049018859864,
         "z": 0.0
     },
-    "Hp": 100,
+    "Hp": 95,
     "maxHp": 100,
     "Mp": 100,
     "maxMp": 100,
     "gold": 0,
+    "questList": [
+        {
+            "monsterId": 1,
+            "targetCount": 5,
+            "questName": "mimicQuest",
+            "questContents": "Kill 5 mimic \n asdfasdfsf",
+            "isCompleted": false
+        }
+    ],
     "thisisNew": false
 }

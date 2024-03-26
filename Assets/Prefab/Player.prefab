@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   power: 1
   moveSpeed: 7
-  dashSpeed: 20
+  dashSpeed: 30
   sprite: {fileID: 3941626407867355231}
   dashTrail: {fileID: 5131462656197016813, guid: a693ddb6e3ce98a49a12338ab6b5ea2d, type: 3}
   skillEffect: {fileID: 5723702106371360345}
@@ -165,6 +165,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pauseUI: {fileID: 2111280174689593511, guid: 433f6dff57c943842b371b2226faf8da, type: 3}
+  deadui: {fileID: 0}
   soundAtk: {fileID: 8300000, guid: 21d81d8c943a4884b9c6f52c247f3806, type: 3}
   soundDash: {fileID: 8300000, guid: 7756a544d93c02040ace7ab722576ff5, type: 3}
   soundHit: {fileID: 8300000, guid: 04d294ee3dc27db458512e937aad4943, type: 3}

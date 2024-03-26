@@ -244,7 +244,8 @@ public class Monster : MonoBehaviour, Idamagable
     public void TakeDamage( int damage )
     {
         if ( curState != MonsterState.Dead ) {
-            thisMonsterHP -= damage;
+            float actualDmg = Mathf.Min(damage, thisMonsterHP);
+            thisMonsterHP -= actualDmg;
             spriteRenderer.material.color = Color.red;
             spriteRenderer.material.DOColor(Color.white, 1f);
             damagedEffectPos.position = transform.position + Random.insideUnitSphere * 1f;
@@ -287,7 +288,7 @@ public class Monster : MonoBehaviour, Idamagable
         
         Debug.Log("Coin");
         yield return new WaitForSeconds(1f);
-       Manager.Quest.HandleMonsterDied(monsterData.id);
+       Manager.Quest.HandleMonsterDied(monsterData.name);
         int Ran = Random.Range(1, 2);
         if(Ran > 0 )
         {

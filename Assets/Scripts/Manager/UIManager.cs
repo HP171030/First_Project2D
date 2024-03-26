@@ -122,7 +122,9 @@ public class UIManager : Singleton<UIManager>
     }
 
     public void ClearWindowUI()
+
     {
+        
         for (int i = 0; i < windowCanvas.transform.childCount; i++)
         {
             Destroy(windowCanvas.transform.GetChild(i).gameObject);

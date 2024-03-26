@@ -1,11 +1,10 @@
-using DG.Tweening;
+
 using System.Collections;
-using System.Collections.Generic;
+
 using Unity.Mathematics;
-using Unity.VisualScripting;
+
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
-using UnityEngine.UIElements;
+
 
 public class Archer : Monster
 {
@@ -23,6 +22,57 @@ public class Archer : Monster
         lineRenderer.positionCount = 2;
 
         lineRenderer.enabled = false;
+    }
+    protected override void Update()
+    {
+        if ( moveDir.x < 0 && !onBossAtk )
+        {
+
+            flipXed = true;
+            transform.localScale = new Vector3(-localX, localY, 1);
+
+
+
+        }
+        else if ( moveDir.x > 0 && !onBossAtk )
+        {
+
+            flipXed = false;
+            transform.localScale = new Vector3(localX, localY, 1);
+
+        }
+        switch ( curState )
+        {
+            case MonsterState.Idle:
+
+
+
+                IdleStates();
+                break;
+
+            case MonsterState.Chase:
+                ChasePattern();
+                player = Physics2D.OverlapCircle(transform.position, monsterData.attackRange, playerLayer);
+                if ( player != null )
+                {
+                    atkDir = ( player.transform.position - transform.position ).normalized;
+                    ChangeState(MonsterState.Attack);
+                    MoveOn = false;
+                    break;
+                }
+                break;
+
+            case MonsterState.Attack:
+
+                StartCoroutine(AttackPlayer());
+                break;
+
+            case MonsterState.Dead:
+
+                DeadState();
+
+                break;
+        }
     }
     protected override IEnumerator AttackPlayer()
     {
