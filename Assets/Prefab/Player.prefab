@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eecd3d56b03ed914c8f6587943f4ded0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 1
+  power: 2
   moveSpeed: 7
   dashSpeed: 30
   sprite: {fileID: 3941626407867355231}

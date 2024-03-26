@@ -20,10 +20,10 @@ public class GameData
         sceneName = "GameScene";
         thisisNew = true;
         playerPos = new Vector3(9.25f, 12.71321f,0);
-        Hp = 100;
-        maxHp  = 100;
-        Mp = 100;
-        maxMp = 100;
+        Hp = 150;
+        maxHp  = 150;
+        Mp = 150;
+        maxMp = 150;
         gold = 0;
         questList = new List<KillQuest>();
 

@@ -127,8 +127,8 @@ public class FireBoss : Monster
     }
     public void SecondPhaseStart()
     {
-        thisMonsterMaxHp = 70;
-        thisMonsterHP = 70;
+        thisMonsterMaxHp = 50;
+        thisMonsterHP = 50;
       
         fireEnergyCount = 20;
         curState = MonsterState.Idle;

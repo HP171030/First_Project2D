@@ -15,10 +15,8 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField] public UnityEvent Die;
     [SerializeField] Ease ease;
 
-    private void Start()
+    private void Update()
     {
-
-
 
 
     }
@@ -67,15 +65,29 @@ public class PlayerStatus : MonoBehaviour
         if ( Manager.Game.HpEvent > Manager.Game.MaxHpEvent )
         {
             hpText.text = $"{maxHpValue}/{maxHpValue}".ToString();
-            Debug.Log("Max");
+            Debug.Log("HpMax");
 
         }
     }
     private void StatusMPUpdate( int curValue )
     {
-        Debug.Log("MpSet");
+        
          
          mpText.text = $"{Manager.Game.MpEvent}/{maxMpValue}".ToString();
         MPGauge.fillAmount = ( float )Manager.Game.MpEvent / maxMpValue;
+
+
+        if ( Manager.Game.MpEvent <= 0 )
+        {
+            mpText.text = $"{Manager.Game.MpEvent}/{maxMpValue}".ToString();
+            
+
+        }
+        if ( Manager.Game.MpEvent > Manager.Game.MaxMpEvent )
+        {
+            mpText.text = $"{maxMpValue}/{maxMpValue}".ToString();
+            Debug.Log("MpMax");
+
+        }
     }
 }

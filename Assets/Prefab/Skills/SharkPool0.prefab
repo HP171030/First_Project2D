@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4593e22997ee8542ab352f6de10e84a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 15
+  damage: 10
   targetLayer:
     serializedVersion: 2
     m_Bits: 256

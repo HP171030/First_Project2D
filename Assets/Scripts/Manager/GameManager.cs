@@ -19,10 +19,10 @@ public class GameManager : Singleton<GameManager>
 
     private int curGold = 0;
 
-    private int playerHP = 100;
-    private int playerMP = 100;
-    private int playerMaxHP = 100;
-    private int playerMaxMP = 100;
+    private int playerHP = 150;
+    private int playerMP = 150;
+   [SerializeField] private int playerMaxHP = 150;
+   [SerializeField] private int playerMaxMP = 150;
 
     public event UnityAction<int> playerHPevent;
     public event UnityAction<int> playerMPevent;
@@ -92,14 +92,14 @@ public class GameManager : Singleton<GameManager>
 
 
     public int GoldEvent { get { return curGold; } set { curGold = value; GoldUpdate?.Invoke(value); } }
-    public int HpEvent { get { return playerHP; } set { playerHP = Mathf.Clamp(value, 0, playerMaxMP); playerHPevent?.Invoke(value); } }
+    public int HpEvent { get { return playerHP; } set { playerHP = Mathf.Clamp(value, 0, playerMaxHP); playerHPevent?.Invoke(value); } }
     public int MpEvent { get { return playerMP; } set { playerMP = Mathf.Clamp(value, 0, playerMaxMP); playerMPevent?.Invoke(value); } }
     public int MaxHpEvent { get { return playerMaxHP; } set { playerMaxHP = value; } }
     public int MaxMpEvent { get { return playerMaxMP; } set { playerMaxMP = value; } }
 
     public float BrightnessVol {
         get { return brightnessVol; } set { brightnessVol = value; brightUpdate?.Invoke(value); } }
-
+    private Coroutine mamaRegeneration;
     private void Start()
     {
       
@@ -107,9 +107,28 @@ public class GameManager : Singleton<GameManager>
         {
             hitdam.gameObject.SetActive(false);
         }
+        StartManaRegeneration();
 
     }
 
+    private void StartManaRegeneration()
+    {
+        if ( mamaRegeneration == null )
+        {
+            mamaRegeneration = StartCoroutine(ManaRegenerationCoroutine());
+        }
+    }
+
+    // 마나 회복 코루틴
+    private IEnumerator ManaRegenerationCoroutine()
+    {
+        while ( true )
+        {
+            // 0.2초마다 1씩 마나 증가
+            yield return new WaitForSeconds(0.2f);
+            MpEvent += 1;
+        }
+    }
     public void ScenePool()
     {
         Manager.Pool.CreatePool(damageUI, 7, 10);

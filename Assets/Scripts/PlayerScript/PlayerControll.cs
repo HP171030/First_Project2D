@@ -261,7 +261,7 @@ public class PlayerControll : MonoBehaviour
             case SkillState.Slash:
                 animator.SetBool("Attack", true);
                 skillEffect.Play("Slash");
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.15f);
                 animator.SetBool("Attack", false);
                 atkOn = false;
                 moveSpeed = 8f;
@@ -611,11 +611,15 @@ public class PlayerControll : MonoBehaviour
             case SkillState.FireBall:
                if( Manager.Cool.IsSkillCool("FireBall"))
                 {
+                    if(Manager.Game.MpEvent > 10 )
+                    {
+                        Manager.Game.MpEvent -= 10;
                     moveSpeed = 2f;                             //스킬 사용시 이속저하
                     StartCoroutine(AttackAnim());
                     Manager.Cool.UseSkill("FireBall");
                    GameObject fire = Instantiate(fireBallPrefab,skillEffectLocation.position,Quaternion.identity);
                     fire.transform.rotation = skillEffectLocation.rotation;
+                    }
                 }
                 else
                 {
@@ -628,10 +632,15 @@ public class PlayerControll : MonoBehaviour
                 Vector2 mousePos = new Vector2(mousePosition.x, mousePosition.y);
                 if ( Manager.Cool.IsSkillCool("Shark") )
                 {
+                    if(Manager.Game.MpEvent > 30 )
+                    {
+
                     moveSpeed = 2f;                             //스킬 사용시 이속저하
                     StartCoroutine(AttackAnim());
                     Manager.Cool.UseSkill("Shark");
                     GameObject shark = Instantiate(sharkPrefab,mousePos, Quaternion.identity);
+                        Manager.Game.MpEvent -= 30;
+                    }
                    
                 }
                 else

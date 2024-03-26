@@ -19,7 +19,7 @@ MonoBehaviour:
   atk: 10
   speed: 8
   attackRange: 5
-  atkDelay: 3
+  atkDelay: 1.5
   moveDelay: 1
   dropItem:
     itemType: 3
