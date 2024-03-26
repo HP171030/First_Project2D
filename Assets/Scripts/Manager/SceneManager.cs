@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
@@ -8,6 +9,7 @@ public class SceneManager : Singleton<SceneManager>
     [SerializeField] Image fade;
     [SerializeField] Slider loadingBar;
     [SerializeField] float fadeTime;
+    public bool newStart;
 
     private BaseScene curScene;
 
@@ -61,8 +63,12 @@ public class SceneManager : Singleton<SceneManager>
 
         loadingBar.gameObject.SetActive(false);
         Time.timeScale = 1f;
-
-        curScene.SceneLoad();
+        if ( newStart )
+        {
+            curScene.SceneLoad();
+            newStart = false;
+        }
+        
         yield return FadeIn();
       
         yield return curScene.OnStartScene();

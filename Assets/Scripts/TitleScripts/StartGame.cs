@@ -27,6 +27,7 @@ public class StartGame : MonoBehaviour
     public void StartGameFunc()
     {
         Manager.Sound.PlaySFX(selectButton);
+        Manager.Scene.newStart = true;
         Manager.Data.NewData();
         Manager.Scene.LoadScene("GameScene");
         Manager.Sound.StopBGM();
@@ -44,7 +45,7 @@ public class StartGame : MonoBehaviour
         }
         public void ContinueButton()
     {
-        Manager.Sound.PlaySFX(selectButton);
+        Manager.Sound.PlaySFX(selectButton); Manager.Scene.newStart = true;
         Manager.Data.LoadData();
         Manager.Scene.LoadScene(Manager.Data.GameData.sceneName);
     }
