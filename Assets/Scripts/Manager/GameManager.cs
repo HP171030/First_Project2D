@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager>
     private int playerMP = 150;
    [SerializeField] private int playerMaxHP = 150;
    [SerializeField] private int playerMaxMP = 150;
+    [SerializeField] GameObject CursorIcon;
 
     public event UnityAction<int> playerHPevent;
     public event UnityAction<int> playerMPevent;
@@ -102,7 +103,7 @@ public class GameManager : Singleton<GameManager>
     private Coroutine mamaRegeneration;
     private void Start()
     {
-      
+        Instantiate(CursorIcon, transform.position, Quaternion.identity);
         if ( hitdam != null )
         {
             hitdam.gameObject.SetActive(false);

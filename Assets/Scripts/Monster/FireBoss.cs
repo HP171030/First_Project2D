@@ -112,7 +112,7 @@ public class FireBoss : Monster
         {
             base.DeadState();
         }
-        if ( !startPhase2&&!phase2Pattern )
+        if (!atkDelayOn&& !startPhase2&&!phase2Pattern )
             
         {startPhase2 = true;
             animator.SetTrigger("Phase1End");

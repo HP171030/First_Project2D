@@ -11,7 +11,7 @@ public class TitlePressAnyButton : MonoBehaviour
     [SerializeField] Image titleLogo;
     [SerializeField] float titleTargetTime;
     [SerializeField] Image SetUpMenu;
-    [SerializeField] GameObject CursorIcon;
+
     [SerializeField] GameObject Menu;
     [SerializeField] AudioClip pressButton;
     [SerializeField] AudioClip titleBGM;
@@ -22,7 +22,7 @@ public class TitlePressAnyButton : MonoBehaviour
 
     private void Start()
     {
-        Instantiate(CursorIcon, transform.position, Quaternion.identity);
+    
         text.color = Color.white;
         StartCoroutine(TextColor());
         Manager.Sound.PlayBGM(titleBGM);

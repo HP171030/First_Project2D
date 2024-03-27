@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorIcon: {fileID: 2800000, guid: 643384bb0e0f2be4d8d8f91ea54c7277, type: 3}
+  cursorPosition: {x: 60, y: 60}
 --- !u!114 &8065633413064898198
 MonoBehaviour:
   m_ObjectHideFlags: 0

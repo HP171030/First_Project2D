@@ -4,11 +4,14 @@ using UnityEngine.InputSystem;
 public class CustomCursor : MonoBehaviour
 {
     [SerializeField] Texture2D cursorIcon;
-    CursorMode cursorMode = CursorMode.Auto;
+    CursorMode cursorMode = CursorMode.ForceSoftware;
+    [SerializeField] Vector2 cursorPosition;
 
-    void Start()
+    void Update()
     {
-        Cursor.SetCursor(cursorIcon, Vector2.zero, cursorMode);
+        Cursor.SetCursor(cursorIcon,cursorPosition, cursorMode);
+        Debug.Log(cursorPosition);
+
     }
 
 }

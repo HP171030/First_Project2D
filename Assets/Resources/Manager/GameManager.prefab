@@ -53,7 +53,12 @@ MonoBehaviour:
   cine: {fileID: 0}
   damageUI: {fileID: 9202737964008188726, guid: 708d69d9cb98d3a49ba884619fa9f69e, type: 3}
   inPlayer: {fileID: 0}
+  playerMaxHP: 150
+  playerMaxMP: 150
+  CursorIcon: {fileID: 4107754999681912090, guid: 34b578023f7f0544e930a0c0c1d01e56, type: 3}
+  curIns: {fileID: 0}
   fullScreenMode: {fileID: 0}
+  time: 0
   titleOff: 1
   title: 0
   onInvenTory: 0
