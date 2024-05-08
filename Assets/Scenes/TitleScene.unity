@@ -651,7 +651,6 @@ MonoBehaviour:
   titleLogo: {fileID: 1274709716}
   titleTargetTime: 0.6
   SetUpMenu: {fileID: 1794914440}
-  CursorIcon: {fileID: 4107754999681912090, guid: 34b578023f7f0544e930a0c0c1d01e56, type: 3}
   Menu: {fileID: 75297988}
   pressButton: {fileID: 8300000, guid: 4dc780d3b319e5c42b0a832fa3955d80, type: 3}
   titleBGM: {fileID: 8300000, guid: e53a8995dfd103246a78e698df830a0e, type: 3}

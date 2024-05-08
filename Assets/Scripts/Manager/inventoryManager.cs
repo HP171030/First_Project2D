@@ -9,6 +9,10 @@ public class inventoryManager : Singleton<inventoryManager>
 {
 
     public List<Item> itemsList = new List<Item>();
+
+    public List<Arcana> arcanaList = new List<Arcana>();
+
+
     public bool invenClose = false;
  
     [SerializeField] public InventoryUI inventoryUI;
@@ -16,6 +20,8 @@ public class inventoryManager : Singleton<inventoryManager>
     public event UnityAction onAddItem;
     
     public event UnityAction<int> slotEvent;
+    public event UnityAction<int> arcanaSlotEvent;
+
 
     public bool AddItem( Item item )
     {
@@ -46,6 +52,23 @@ public class inventoryManager : Singleton<inventoryManager>
 }
 
 
+    private int arcanaSlot;
+
+    public int ArcanaSlot
+    {
+        get { return arcanaSlot; } set
+        {
+            arcanaSlot = value;
+            arcanaSlotEvent?.Invoke(value);
+        }
+    }
+    public ArcanaSlot [] arcanaSlots;
+    public Transform arcanaSlotHolder;
+
+    public void OpenArcana( Arcana arcana )
+    {
+        arcanaList.Add(arcana);
+    }
 
     private int slot;
     
@@ -81,7 +104,21 @@ public class inventoryManager : Singleton<inventoryManager>
         Slot++;
        
     }
-
+    public void ArcanaChange(int var)
+    {
+        for ( int i = 0; i < arcanaSlots.Length; i++ )
+        {
+            arcanaSlots [i].slotID = i;
+            if ( i < arcanaSlot )
+            {
+                arcanaSlots [i].GetComponent<Button>().interactable = true;
+            }
+            else
+            {
+                arcanaSlots [i].GetComponent<Button>().interactable = false;
+            }
+        }
+    }
     public void SlotChange( int var )
     {
         
@@ -101,8 +138,9 @@ public class inventoryManager : Singleton<inventoryManager>
 
     private void Start()
     {
-        
+        arcanaSlotEvent += ArcanaChange;
         slotEvent += SlotChange;
+        arcanaSlots = arcanaSlotHolder.GetComponentsInChildren<ArcanaSlot>();
         slots = slotHolder.GetComponentsInChildren<Slot>();
         onAddItem += inventoryReload;
         inventoryUI.gameObject.SetActive(false);

@@ -12008,6 +12008,7 @@ MonoBehaviour:
   mimicRegen1: {fileID: 4398426}
   dialogOff: {fileID: 0}
   uiManager: {fileID: 0}
+  questNPC: {fileID: 705237191}
 --- !u!4 &216676881
 Transform:
   m_ObjectHideFlags: 0
@@ -12237,15 +12238,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
-      insertIndex: 5
-      addedObject: {fileID: 705237190}
+      insertIndex: -1
+      addedObject: {fileID: 705237191}
   m_SourcePrefab: {fileID: 100100000, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
 --- !u!1 &705237189 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
   m_PrefabInstance: {fileID: 705237188}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &705237190
+--- !u!114 &705237191
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12254,22 +12255,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 705237189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afadcf8ee3575804dac76a1d7ce8f7d3, type: 3}
+  m_Script: {fileID: 11500000, guid: d2d13d98a3e7bd748b8fe3f132c109a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCID: 1
+  curNpc: 1
   tryEnter: {fileID: 1499481093}
-  dialogueLine:
-  - i'm tutorial npc.
-  - This dialogue is shown when you've completed all the quests.
-  - i cant sure my script is right
-  - seeya
   text: {fileID: 0}
+  npcTalkData: {fileID: 11400000, guid: aa2984fd2cc689943b4a38399ef1fe5e, type: 2}
+  curQuestLevel: 0
+  quest:
+  - Type: 0
+    questName: TutorialQuest
+    questContents: 5 mimic Kill
+    targetName: Mimic
+    isCompleted: 0
+    Count: 0
+    targetCount: 5
+    npcID: 1
+    npcCurQuestLevel: 0
+    npcCurQuestProcess: 1
+    startQuest:
+    - start quest1
+    - start quest2
+    WaitQuest:
+    - Wait Quest1
+    - Wait Quest2
+    - Wait Quest3
+    ClearQuest:
+    - Clear Quest1
+    - Clear Quest2
+    - Clear Quest3
+    - Clear Quest4
+  curQuestProcess: 0
   mimicRegen2: {fileID: 1329141359}
-  mimicSpawnInterval: 10
-  monsterMimic: {fileID: 6379233055840216801, guid: 944bcc2c4620d9c4194431bac08d5599, type: 3}
-  curQuestNum: 0
+  mimicSpawnInterval: 5
+  monsterMimic: {fileID: 1246698426}
   Last: {fileID: 1713681968}
-  mimicQuestComplete: 0
 --- !u!1 &733246420
 GameObject:
   m_ObjectHideFlags: 0
@@ -12426,7 +12448,11 @@ MonoBehaviour:
   cine: {fileID: 0}
   damageUI: {fileID: 0}
   inPlayer: {fileID: 0}
+  playerMaxHP: 150
+  playerMaxMP: 150
+  CursorIcon: {fileID: 0}
   fullScreenMode: {fileID: 0}
+  time: 0
   titleOff: 0
   title: 0
   onInvenTory: 0
@@ -13615,6 +13641,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 944bcc2c4620d9c4194431bac08d5599, type: 3}
+--- !u!1 &1246698426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6379233055840216801, guid: 944bcc2c4620d9c4194431bac08d5599, type: 3}
+  m_PrefabInstance: {fileID: 1246698425}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1248485007
 GameObject:
   m_ObjectHideFlags: 0
@@ -26684,6 +26715,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: npcTalkData
+      value: 
+      objectReference: {fileID: 11400000, guid: b5b74990f00b40d4083da6ffa48ef691, type: 2}
+    - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
       propertyPath: QuestNumber.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -26799,11 +26834,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 347771326266883271, guid: 9aba68e31b6b3d447971d60bdc009b4b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.194994
+      value: 14.181437
       objectReference: {fileID: 0}
     - target: {fileID: 347771326266883271, guid: 9aba68e31b6b3d447971d60bdc009b4b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.165319
+      value: 12.16509
       objectReference: {fileID: 0}
     - target: {fileID: 347771326266883271, guid: 9aba68e31b6b3d447971d60bdc009b4b, type: 3}
       propertyPath: m_LocalPosition.z

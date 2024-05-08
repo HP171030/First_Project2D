@@ -10,23 +10,28 @@ using DG.Tweening;
 
 public class NPCScript : MonoBehaviour
 {
+    public int NPCID;
+
+    public enum NPCState{Talk,Quest}
+    public NPCState curNpc;
+
+  
+
+
     [SerializeField]protected SpriteRenderer tryEnter;
-    [SerializeField] string [] dialogueLine;
+
    protected bool enterNPC = false;
     [SerializeField] protected TMP_Text text;
 
 
+    [SerializeField] protected NpcTalkData npcTalkData ;
 
-
-    [Header("Quest")]
-    protected Dictionary<int, string []> quests = new Dictionary<int, string []> ();
 
 
     protected virtual void Start()
     {
-       
-       
-       
+        
+        curNpc = NPCState.Talk;
         tryEnter.enabled = false;
     }
     private void OnTriggerEnter2D( Collider2D collision )
@@ -47,15 +52,12 @@ public class NPCScript : MonoBehaviour
         if(enterNPC)
         {
             tryEnter.enabled = false;
-            if( quests.Count > 0 )
-            {
-                StartQuest();
-            }
-            else
+            if( curNpc == NPCState.Talk)
             {
                 ShowDialogue();
+                
             }
-        
+
         }
         
     }
@@ -68,11 +70,11 @@ public class NPCScript : MonoBehaviour
         player.enabled = false;
         Manager.UICanvas.text.enabled = true;
         enterNPC = false;
-        Queue<string> strings = new Queue<string>(dialogueLine.Length);
-        for (int i =0;  i < dialogueLine.Length; i++)
+        Queue<string> strings = new Queue<string>(npcTalkData.dialogueLine.Length);
+        for (int i =0;  i < npcTalkData.dialogueLine.Length; i++)
         {
            
-            strings.Enqueue(dialogueLine [i]);
+            strings.Enqueue(npcTalkData.dialogueLine [i]);
         }
         
         StartCoroutine(WaitSpace());
@@ -119,10 +121,6 @@ public class NPCScript : MonoBehaviour
                 }
         }
     }
-        protected virtual void StartQuest()
-        {
-
-        }
     
 
 }

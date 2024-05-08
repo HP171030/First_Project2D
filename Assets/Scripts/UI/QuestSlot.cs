@@ -11,7 +11,7 @@ public class QuestSlot : MonoBehaviour,IPointerUpHandler,IPointerExitHandler
   [SerializeField] public TMP_Text text;
   [SerializeField] public int targetAmount;
   [SerializeField] public TMP_Text contentsText;
-  [SerializeField] public KillQuest quest;
+  [SerializeField] public Quest quest;
    
    
     void Start()

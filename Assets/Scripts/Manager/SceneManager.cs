@@ -50,6 +50,7 @@ public class SceneManager : Singleton<SceneManager>
         loadingBar.gameObject.SetActive(true);
 
         AsyncOperation oper = UnitySceneManager.LoadSceneAsync(sceneName);
+        oper.completed += oper => { Manager.Data.SettingQuestList(); };
         while (oper.isDone == false)
         {
             loadingBar.value = oper.progress;

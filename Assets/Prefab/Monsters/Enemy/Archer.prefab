@@ -131,10 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item:
-    itemType: 0
-    itemName: 
-    itemDescription: 
-    itemImage: {fileID: 0}
+    itemType: 3
+    itemName: Arrow
+    itemDescription: it's just normal Arrow
+    itemImage: {fileID: 1026177465, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
     effects: {fileID: 0}
     itemColor: {r: 0, g: 0, b: 0, a: 0}
   image: {fileID: 4011814662098909185}

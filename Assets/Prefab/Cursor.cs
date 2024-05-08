@@ -10,7 +10,7 @@ public class CustomCursor : MonoBehaviour
     void Update()
     {
         Cursor.SetCursor(cursorIcon,cursorPosition, cursorMode);
-        Debug.Log(cursorPosition);
+        
 
     }
 

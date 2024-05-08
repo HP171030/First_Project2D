@@ -15,7 +15,7 @@ public class DataManager : Singleton<DataManager>
 
     public void NewData()
     {
-        
+            
         gameData = new GameData();
         Manager.Quest.HandleNewData();
 
@@ -56,4 +56,28 @@ public class DataManager : Singleton<DataManager>
     {
         return File.Exists($"{path}/{index}.txt");
     }
+
+    public void SettingQuestList()
+    {
+        Manager.Quest.QuestLists.Clear();
+        Manager.Quest.completedQuestList.Clear();
+        foreach ( Quest quest in Manager.Data.GameData.questList )
+        {
+            Manager.Quest.AddQuest(quest); 
+        }
+        foreach( Quest quest in Manager.Data.GameData.completeQuestList )
+        {
+            Debug.Log($"setting complete quest {quest.npcID}");
+            Manager.Quest.completedQuestList.Add(quest);
+        }
+    }
+    public void UpdateQuestList()
+    {
+        foreach ( Quest quest in Manager.Data.GameData.questList )
+        {
+            Debug.Log(Manager.Data.GameData.questList.Count);
+            Manager.Quest.UpdateQuestUIText(quest, quest.targetName);
+        }
+    }
 }
+

@@ -45,9 +45,13 @@ public class StartGame : MonoBehaviour
         }
         public void ContinueButton()
     {
-        Manager.Sound.PlaySFX(selectButton); Manager.Scene.newStart = true;
+        Manager.Sound.PlaySFX(selectButton); 
+        Manager.Scene.newStart = true;
+        Manager.Quest.QuestLists.Clear();
+       
         Manager.Data.LoadData();
         Manager.Scene.LoadScene(Manager.Data.GameData.sceneName);
+       
     }
     public void Quit()
     {

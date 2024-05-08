@@ -142,7 +142,7 @@ public class GameManager : Singleton<GameManager>
         {
             CinemachineBasicMultiChannelPerlin perlin = cine.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             if ( perlin != null )
-            {
+            {   
                 perlin.m_AmplitudeGain = 2;
                 perlin.m_FrequencyGain = 2;
                 StartCoroutine(DampenShake(perlin));

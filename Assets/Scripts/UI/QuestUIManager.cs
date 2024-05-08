@@ -8,7 +8,14 @@ public class QuestUIManager : Singleton<QuestUIManager>
     [SerializeField] public QuestUIManager questUI;
 
 
-    public List<KillQuest> killQuestLists = new List<KillQuest>();
+    public List<Quest> QuestLists = new List<Quest>();
+
+
+
+    public List<Quest> completedQuestList = new List<Quest>();
+
+
+
     public event UnityAction questSlotEvent;
 
     public QuestSlot [] questSlots;
@@ -17,11 +24,11 @@ public class QuestUIManager : Singleton<QuestUIManager>
 
     public void OnEnable()
     {
-        if(killQuestLists.Count == 0 )
+        if(QuestLists.Count == 0 )
         {
             questContents.SetActive(false);
         }
-        else if ( killQuestLists.Count >0)
+        else if (QuestLists.Count >0)
         {
             questContents.SetActive(true);
         }
@@ -35,9 +42,9 @@ public class QuestUIManager : Singleton<QuestUIManager>
         }
         for ( int i = 0; i < questSlots.Length; i++ )
         {
-            if ( i < killQuestLists.Count )
+            if ( i < QuestLists.Count )
             {
-                questSlots [i].quest = killQuestLists [i];
+                questSlots [i].quest = QuestLists [i];
 
                 questSlots [i].gameObject.SetActive(true);
                 questSlots [i].LoadQuest();
@@ -94,55 +101,109 @@ public class QuestUIManager : Singleton<QuestUIManager>
         questUI.gameObject.SetActive(false);
         questSlotEvent?.Invoke();
     }
-    public void AddKillQuest( KillQuest quest )
+
+    public void AddQuest( Quest quest )
     {
-        killQuestLists.Add(quest);
+        QuestLists.Add(quest);
         questSlotEvent?.Invoke();
     }
     public void HandleNewData()
     {
-        killQuestLists.Clear();
+        QuestLists.Clear();
         questSlotEvent?.Invoke();
     }
-    public void RemoveKillQuest( KillQuest quest )
+    public void ClearQuest( Quest quest )
     {
-        killQuestLists.Remove(quest);
-        
-        questSlotEvent?.Invoke();
+        for ( int i = QuestLists.Count - 1; i >= 0; i-- )
+        {
+            if ( QuestLists [i].questName == quest.questName )
+            {
+                completedQuestList.Add(QuestLists [i]);
+                QuestLists.RemoveAt(i);
+                Debug.Log($"{QuestLists.Count} is QuestListCount");
+                Debug.Log($"{completedQuestList.Count} is CompleteList");
+                questSlotEvent?.Invoke();
+                break; // 퀘스트를 찾았으면 반복문 종료
+            }
+        }
+        /* foreach(Quest quests in QuestLists )
+         {
+             if(quests.questName == quest.questName )
+             {
+                 completedQuestList.Add(quests);
+                 QuestLists.Remove(quests);
+                 Debug.Log($"{QuestLists.Count} is QuestListCount");
+                 Debug.Log($"{completedQuestList.Count} is CompleteList");
+
+                 questSlotEvent?.Invoke();
+
+
+             }
+         }*/
+
     }
 
     public void HandleMonsterDied( string monsterName )
     {
-        foreach ( KillQuest quest in killQuestLists )
+        foreach ( Quest quest in QuestLists )
         {
-            if ( quest.monsterName == monsterName && !quest.isCompleted )
+            if ( quest.targetName == monsterName && !quest.isCompleted )
             {
-                quest.targetCount--;
-                if ( quest.targetCount <= 0 )
+              //  Debug.Log($"Count : {quest.Count}  targetCount : {quest.targetCount}");
+                quest.Count++;
+                if ( quest.Count >= quest.targetCount )
                 {
+                   
                     quest.isCompleted = true;
+                   
                     Debug.Log("Complete");
                 }
-                UpdateQuestUIText(quest,monsterName);
+                UpdateQuestUIText(quest, monsterName);
             }
         }
     }
-
-    private void UpdateQuestUIText( KillQuest quest,string monsterName )
+    public void HandleGatherItem(string itemName )
     {
-        // 퀘스트가 UI에 표시된 상태라면 텍스트를 업데이트
-        if ( questUI != null && questSlotEvent != null)
+        foreach( Quest quest in QuestLists )
         {
-            // 새로운 텍스트 생성
-            string updatedText = $" kill {quest.targetCount} {monsterName} ";
-            foreach ( QuestSlot slot in questSlots )
-        {
-            if ( slot.quest == quest )
+            if(quest.targetName == itemName && !quest.isCompleted )
             {
-                slot.UpdateQuestUIText(updatedText);
-                break;
+                quest.Count++;
+                if( quest.Count >=quest.targetCount )
+                {
+                    quest.isCompleted = true;
+                   
+                }
+
+                UpdateQuestUIText(quest,itemName);
             }
         }
+    }
+    public void UpdateQuestUIText(Quest quest,string targetName)
+    {
+       // Debug.Log($"target : {targetName},questName : {quest.questName}");
+        
+        if ( questUI != null && questSlotEvent != null)                                     // 열때 텍스트 업데이트
+        {
+         
+            string updatedText = $" {targetName}   {quest.Count}/{quest.targetCount} ";
+            if ( quest.isCompleted )
+            {
+                updatedText += " (Complete)";
+            }
+            foreach ( QuestSlot slot in questSlots )
+            {
+               if ( slot.quest == quest )
+               {
+                   slot.UpdateQuestUIText(updatedText);
+                  
+                   break;
+               }
+             }
+        }
+        else
+        {
+            Debug.Log($"ui : {questUI.name}, slot : {questSlotEvent}");
         }
         
     }

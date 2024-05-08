@@ -10,6 +10,12 @@ public class UICanvasManager : Singleton<UICanvasManager>
     [SerializeField] public Image skill1;
     [SerializeField] public Image skill2;
 
+    [SerializeField] public Image curSkill1;
+    [SerializeField] public Image curSkill2;
+    [SerializeField] public Image curSkill3;
+
+
+
     [SerializeField] public Image Skill1Cool;
     [SerializeField] public Image Skill2Cool;
 

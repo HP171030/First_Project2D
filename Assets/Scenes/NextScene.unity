@@ -315,6 +315,7 @@ MonoBehaviour:
   virtualCamera: {fileID: 877684214}
   player: {fileID: 3103353787169638026, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
   playerPrefab: {fileID: 3103353787169638026, guid: cb72eb63b8f307643b1385b4526f82f9, type: 3}
+  questNPC: {fileID: 620835153}
 --- !u!1 &235871325
 GameObject:
   m_ObjectHideFlags: 0
@@ -53174,6 +53175,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2223135594198654663, guid: eaf13786a2ee258408d243564dde90d7, type: 3}
+      propertyPath: item.itemType
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4504921369413657366, guid: eaf13786a2ee258408d243564dde90d7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 19.02
@@ -54314,6 +54319,232 @@ Transform:
   - {fileID: 2004452467}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &620835150
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2640211890601302464, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -11.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3006331881366046649, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4932544426361890368, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1645703530, guid: ab6db06fcaf976b49be60b608066408a, type: 3}
+    - target: {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: curNpc
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5383606545878043231, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Size.x
+      value: 4.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Size.x
+      value: 2.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Size.y
+      value: 3.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6926230894814150696, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 2.6875
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5.0000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5.0000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5.0000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945910969168897387, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      propertyPath: m_Name
+      value: NPC
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5215572837299787238, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 620835153}
+  m_SourcePrefab: {fileID: 100100000, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+--- !u!1 &620835151 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7668219186594749487, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+  m_PrefabInstance: {fileID: 620835150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &620835152 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 973031685995150528, guid: c2bcb2a9cdafee44590744280b81fa48, type: 3}
+  m_PrefabInstance: {fileID: 620835150}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &620835153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620835151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afadcf8ee3575804dac76a1d7ce8f7d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NPCID: 2
+  curNpc: 1
+  tryEnter: {fileID: 620835152}
+  text: {fileID: 0}
+  npcTalkData: {fileID: 11400000, guid: 2fe89bd7b3877d2478958c8c5092f398, type: 2}
+  curQuestLevel: 0
+  quest:
+  - Type: 0
+    questName: Kill the Archer1
+    questContents: archer kill 1
+    targetName: Archer
+    isCompleted: 0
+    Count: 0
+    targetCount: 1
+    npcID: 0
+    npcCurQuestLevel: 0
+    npcCurQuestProcess: 1
+    startQuest:
+    - start archer1
+    - start archer1
+    WaitQuest:
+    - wait archer1
+    - wait archer12
+    - wait archer13
+    ClearQuest:
+    - clear arhcer1
+    - clear arhcer2
+    - clear arhcer3
+    - clear arhcer4
+  - Type: 0
+    questName: Kill the Archer2
+    questContents: archer kill 3
+    targetName: Archer
+    isCompleted: 0
+    Count: 0
+    targetCount: 3
+    npcID: 0
+    npcCurQuestLevel: 0
+    npcCurQuestProcess: 1
+    startQuest:
+    - start archer quest2
+    WaitQuest:
+    - go 3 archer2
+    - go there
+    - hurry
+    ClearQuest:
+    - ok good
+    - next is..
+    - 5 archer
+  - Type: 0
+    questName: Kill the Archer3
+    questContents: archer kill 5
+    targetName: Archer
+    isCompleted: 0
+    Count: 0
+    targetCount: 5
+    npcID: 0
+    npcCurQuestLevel: 0
+    npcCurQuestProcess: 1
+    startQuest:
+    - kill 5 archer
+    - it is last quest
+    WaitQuest:
+    - hurry up
+    - i said it's last
+    - hurry
+    ClearQuest:
+    - ok good
+    - i'll give a reward
+    - it is maxHP portion
+  curQuestProcess: 0
 --- !u!1001 &770095208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -75612,3 +75843,4 @@ SceneRoots:
   - {fileID: 537066078}
   - {fileID: 548226743}
   - {fileID: 592086726}
+  - {fileID: 620835150}

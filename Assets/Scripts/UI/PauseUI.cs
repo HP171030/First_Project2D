@@ -27,6 +27,7 @@ public class PauseUI : PopUpUI
         Time.timeScale = 1f;
         Manager.UI.ClearPopUpUI();
         Manager.Scene.LoadScene("TitleScene");
+        Manager.Quest.QuestLists.Clear();
     }
     public void Save()
     {
@@ -60,12 +61,27 @@ public class PauseUI : PopUpUI
         Manager.Data.GameData.maxMp = Manager.Game.MaxMpEvent;
         Manager.Data.GameData.gold = Manager.Game.GoldEvent;
         Manager.Data.GameData.thisisNew = false;
-        foreach (KillQuest quest in Manager.Quest.killQuestLists)
+
+        Manager.Data.GameData.questList.Clear();
+     
+        Manager.Data.GameData.completeQuestList.Clear();
+        
+
+
+        foreach ( Quest quest in Manager.Quest.QuestLists )
         {
             Manager.Data.GameData.questList.Add(quest);
+           
         }
+        foreach ( Quest quest in Manager.Quest.completedQuestList )
+        {
+            Manager.Data.GameData.completeQuestList.Add(quest);
+           
+        }
+        
         Manager.Data.SaveData();
-        Debug.Log("Save");
+     
+        Debug.Log(Manager.Quest.QuestLists.Count);
         Manager.UI.ClearPopUpUI();
     }
 

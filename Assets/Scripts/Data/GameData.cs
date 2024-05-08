@@ -12,7 +12,8 @@ public class GameData
     public int Mp;
     public int maxMp;
     public int gold;
-    public List<KillQuest> questList;
+    public List<Quest> questList;
+    public List<Quest> completeQuestList;
     public bool thisisNew;
 
     public GameData()
@@ -25,8 +26,10 @@ public class GameData
         Mp = 150;
         maxMp = 150;
         gold = 0;
-        questList = new List<KillQuest>();
+        questList = new List<Quest>();
+        completeQuestList = new List<Quest>();
 
-     
-    }
+
+
+}
 }

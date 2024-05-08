@@ -9,6 +9,7 @@ public class NextSceneLoad : BaseScene
     [SerializeField] CinemachineVirtualCamera virtualCamera;
     [SerializeField] GameObject player;
     [SerializeField] GameObject playerPrefab;
+    [SerializeField] QuestNPC questNPC;
 
     public override IEnumerator LoadingRoutine()
     {
@@ -50,6 +51,7 @@ public class NextSceneLoad : BaseScene
     public override void SceneLoad()
     {
         base.SceneLoad();
+        questNPC.InitQuest();
 
 
 

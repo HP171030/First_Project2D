@@ -1,0 +1,96 @@
+{
+    "sceneName": "NextScene",
+    "playerPos": {
+        "x": -7.964461803436279,
+        "y": -12.256065368652344,
+        "z": 0.0
+    },
+    "Hp": 145,
+    "maxHp": 150,
+    "Mp": 100,
+    "maxMp": 150,
+    "gold": 8,
+    "questList": [],
+    "completeQuestList": [
+        {
+            "Type": 0,
+            "questName": "TutorialQuest",
+            "questContents": "5 mimic Kill",
+            "targetName": "Mimic",
+            "isCompleted": true,
+            "Count": 5,
+            "targetCount": 5,
+            "npcID": 1,
+            "npcCurQuestLevel": 0,
+            "npcCurQuestProcess": 2,
+            "startQuest": [
+                "start quest1",
+                "start quest2"
+            ],
+            "WaitQuest": [
+                "Wait Quest1",
+                "Wait Quest2",
+                "Wait Quest3"
+            ],
+            "ClearQuest": [
+                "Clear Quest1",
+                "Clear Quest2",
+                "Clear Quest3",
+                "Clear Quest4"
+            ]
+        },
+        {
+            "Type": 0,
+            "questName": "Kill the Archer1",
+            "questContents": "archer kill 1",
+            "targetName": "Archer",
+            "isCompleted": true,
+            "Count": 1,
+            "targetCount": 1,
+            "npcID": 2,
+            "npcCurQuestLevel": 0,
+            "npcCurQuestProcess": 2,
+            "startQuest": [
+                "start archer1",
+                "start archer1"
+            ],
+            "WaitQuest": [
+                "wait archer1",
+                "wait archer12",
+                "wait archer13"
+            ],
+            "ClearQuest": [
+                "clear arhcer1",
+                "clear arhcer2",
+                "clear arhcer3",
+                "clear arhcer4"
+            ]
+        },
+        {
+            "Type": 0,
+            "questName": "Kill the Archer2",
+            "questContents": "archer kill 3",
+            "targetName": "Archer",
+            "isCompleted": true,
+            "Count": 3,
+            "targetCount": 3,
+            "npcID": 2,
+            "npcCurQuestLevel": 1,
+            "npcCurQuestProcess": 2,
+            "startQuest": [
+                "start archer quest2"
+            ],
+            "WaitQuest": [
+                "go 3 archer2",
+                "go there",
+                "hurry"
+            ],
+            "ClearQuest": [
+                "ok good",
+                "next is..",
+                "5 archer"
+            ]
+        }
+    ],
+    "thisisNew": false
+}

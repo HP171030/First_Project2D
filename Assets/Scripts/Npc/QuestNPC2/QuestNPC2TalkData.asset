@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d063154f32ce154b92a673d7f323157, type: 3}
+  m_Name: QuestNPC2TalkData
+  m_EditorClassIdentifier: 
+  questDone:
+  - nice
+  - i'll give you MaxHp Potion
+  questLine_1:
+  - please Kill Archer
+  - take me their arrow
+  - 5 arrow
+  - go
+  questLine_1_1:
+  - hurry up
+  questLine_2: []
+  questLine_2_1: []
+  questLine_3: []
+  questLine_3_1: []
+  dialogueLine:
+  - go to FireBoss
+  - You can do it
