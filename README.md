@@ -1,5 +1,6 @@
 # Wizard Of Legend RPG
 ![WizardOfLegend Git (2)-min (2)-min](https://github.com/user-attachments/assets/17e58b6d-50ad-4f01-89bd-a266de370a70)
+
 **게임장르** : 2D RPG
 
 **플랫폼** : PC
