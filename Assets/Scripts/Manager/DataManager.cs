@@ -27,7 +27,7 @@ public class DataManager : Singleton<DataManager>
         {
             Directory.CreateDirectory(path);
         }
-
+        gameData.itemList = Manager.inven.itemsList;
         string json = JsonUtility.ToJson(gameData, true);
         File.WriteAllText($"{path}/{index}.txt", json);
     }
@@ -44,6 +44,7 @@ public class DataManager : Singleton<DataManager>
         try
         {
             gameData = JsonUtility.FromJson<GameData>(json);
+            Manager.inven.itemsList = gameData.itemList;
         }
         catch (Exception ex)
         {

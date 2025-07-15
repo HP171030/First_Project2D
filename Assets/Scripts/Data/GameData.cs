@@ -14,6 +14,7 @@ public class GameData
     public int gold;
     public List<Quest> questList;
     public List<Quest> completeQuestList;
+    public List<Item> itemList;
     public bool thisisNew;
 
     public GameData()
@@ -27,9 +28,8 @@ public class GameData
         maxMp = 150;
         gold = 0;
         questList = new List<Quest>();
+        itemList = new List<Item>();
         completeQuestList = new List<Quest>();
-
-
 
 }
 }

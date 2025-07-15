@@ -8,10 +8,6 @@ using System;
 public class NpcTalkData : ScriptableObject
 {
 
-
-
-
-
     [Header("Talk")]
     [SerializeField] public string [] dialogueLine;
 

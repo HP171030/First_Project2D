@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemsDB:
-  - itemType: 1
+  - itemType: 2
     itemName: HealingPotion
     itemDescription: that is healingPotion +10
     itemImage: {fileID: -798172418, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}

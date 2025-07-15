@@ -24,7 +24,7 @@ MonoBehaviour:
   dropItem:
     itemType: 3
     itemName: Fire Element
-    itemDescription: Boss Tiem
+    itemDescription: Boss Item
     itemImage: {fileID: 1433991117, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
     effects: {fileID: 0}
     itemColor: {r: 1, g: 0.6087532, b: 0, a: 0}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -12,11 +13,12 @@ public class StartGame : MonoBehaviour
     [SerializeField] OptionUI optionUI;
     [SerializeField] GameObject title;
     [SerializeField] Button continueButton;
-
+    UnityAction unityActions;
     private void Start()
     {
        
         Manager.Game.titleOption += OptionClose;
+        Manager.Data.NewData();
     }
     private void Update()
     {
@@ -28,7 +30,7 @@ public class StartGame : MonoBehaviour
     {
         Manager.Sound.PlaySFX(selectButton);
         Manager.Scene.newStart = true;
-        Manager.Data.NewData();
+
         Manager.Scene.LoadScene("GameScene");
         Manager.Sound.StopBGM();
     }

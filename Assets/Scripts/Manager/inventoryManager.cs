@@ -140,7 +140,7 @@ public class inventoryManager : Singleton<inventoryManager>
     {
         arcanaSlotEvent += ArcanaChange;
         slotEvent += SlotChange;
-        arcanaSlots = arcanaSlotHolder.GetComponentsInChildren<ArcanaSlot>();
+     //   arcanaSlots = arcanaSlotHolder.GetComponentsInChildren<ArcanaSlot>();
         slots = slotHolder.GetComponentsInChildren<Slot>();
         onAddItem += inventoryReload;
         inventoryUI.gameObject.SetActive(false);

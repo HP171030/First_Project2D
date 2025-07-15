@@ -128,12 +128,6 @@ public class PlayerControll : MonoBehaviour
             moveSpeed = 2f;
         }
 
-        if ( Xdir > 0 || Ydir > 0 || Xdir < 0 || Ydir < 0 )
-        {
-
-            lastMoveDirection = new Vector2(Xdir, Ydir);
-        }
-
         animator.SetBool("Up", up ? true : false);
         animator.SetBool("Down", down ? true : false);
         animator.SetBool("Left", left ? true : false);
@@ -569,7 +563,7 @@ public class PlayerControll : MonoBehaviour
                                 hitedMonster = colliders [i].gameObject.GetComponent<Monster>();
                                 if ( hitedMonster != null )
                                 {
-                                    Vector2 AttackedDir = ( colliders [i].transform.position - skillEffectLocation.position ).normalized;
+                                    Vector2 AttackedDir = ( colliders [i].transform.position - transform.position ).normalized;
                                     Rigidbody2D rb = colliders [i].GetComponent<Rigidbody2D>();
 
                                     hitedMonster.TakeDamage(power);
@@ -594,7 +588,7 @@ public class PlayerControll : MonoBehaviour
                                     #endregion
                                     if ( hitedMonster.curState != Monster.MonsterState.Dead )
                                     {
-                                        StartCoroutine(MonsterDamaged(0.2f, rb, AttackedDir));
+                                        StartCoroutine(MonsterDamaged(0.5f, rb, AttackedDir));
 
                                     }
                                 }

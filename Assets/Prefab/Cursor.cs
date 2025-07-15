@@ -7,7 +7,7 @@ public class CustomCursor : MonoBehaviour
     CursorMode cursorMode = CursorMode.ForceSoftware;
     [SerializeField] Vector2 cursorPosition;
 
-    void Update()
+    void Start()
     {
         Cursor.SetCursor(cursorIcon,cursorPosition, cursorMode);
         

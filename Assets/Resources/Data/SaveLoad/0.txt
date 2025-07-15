@@ -1,17 +1,16 @@
 {
     "sceneName": "NextScene",
     "playerPos": {
-        "x": -7.964461803436279,
-        "y": -12.256065368652344,
+        "x": 80.15486145019531,
+        "y": -18.568689346313478,
         "z": 0.0
     },
-    "Hp": 145,
+    "Hp": 115,
     "maxHp": 150,
-    "Mp": 100,
+    "Mp": 150,
     "maxMp": 150,
-    "gold": 8,
-    "questList": [],
-    "completeQuestList": [
+    "gold": 6,
+    "questList": [
         {
             "Type": 0,
             "questName": "TutorialQuest",
@@ -38,7 +37,9 @@
                 "Clear Quest3",
                 "Clear Quest4"
             ]
-        },
+        }
+    ],
+    "completeQuestList": [
         {
             "Type": 0,
             "questName": "Kill the Archer1",
@@ -65,31 +66,178 @@
                 "clear arhcer3",
                 "clear arhcer4"
             ]
+        }
+    ],
+    "itemList": [
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
         },
         {
-            "Type": 0,
-            "questName": "Kill the Archer2",
-            "questContents": "archer kill 3",
-            "targetName": "Archer",
-            "isCompleted": true,
-            "Count": 3,
-            "targetCount": 3,
-            "npcID": 2,
-            "npcCurQuestLevel": 1,
-            "npcCurQuestProcess": 2,
-            "startQuest": [
-                "start archer quest2"
-            ],
-            "WaitQuest": [
-                "go 3 archer2",
-                "go there",
-                "hurry"
-            ],
-            "ClearQuest": [
-                "ok good",
-                "next is..",
-                "5 archer"
-            ]
+            "itemType": 0,
+            "itemName": "af",
+            "itemDescription": "asdfjnd",
+            "itemImage": {
+                "instanceID": 39044
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 0.026415109634399415,
+                "g": 0.026415109634399415,
+                "b": 0.026415109634399415,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 0,
+            "itemName": "af",
+            "itemDescription": "asdfjnd",
+            "itemImage": {
+                "instanceID": 39044
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 0.026415109634399415,
+                "g": 0.026415109634399415,
+                "b": 0.026415109634399415,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 0,
+            "itemName": "af",
+            "itemDescription": "asdfjnd",
+            "itemImage": {
+                "instanceID": 39044
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 0.026415109634399415,
+                "g": 0.026415109634399415,
+                "b": 0.026415109634399415,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
+        },
+        {
+            "itemType": 3,
+            "itemName": "Mimic rubble",
+            "itemDescription": "Mimic's rubble <br><br> it's Quest item",
+            "itemImage": {
+                "instanceID": 37254
+            },
+            "effects": {
+                "instanceID": 0
+            },
+            "itemColor": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 1.0,
+                "a": 1.0
+            }
         }
     ],
     "thisisNew": false

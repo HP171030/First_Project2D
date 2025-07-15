@@ -24,7 +24,7 @@ MonoBehaviour:
   dropItem:
     itemType: 2
     itemName: HealingPotion
-    itemDescription: this is Healing Potion \n\n +10 HP
+    itemDescription: this is Healing Potion<br><br> +10 HP
     itemImage: {fileID: -843754211, guid: 05a3e34944aee4a44ad34d3626c3c085, type: 3}
     effects: {fileID: 11400000, guid: b39600dffed68534985bae40e14f5f69, type: 2}
     itemColor: {r: 0.645283, g: 0, b: 0, a: 1}

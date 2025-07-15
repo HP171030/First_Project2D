@@ -374,10 +374,18 @@ public class FireBoss : Monster
                             animator.SetBool("Move", false);
                             for ( int i = 0; i < 3; i++ )
                             {
-                                Vector2 randomOffset = Random.insideUnitCircle.normalized * 10f;
+                                Vector2 randomOffset = ( Vector2 )transform.position + Random.insideUnitCircle.normalized * 10f;
+                            
 
                                 Manager.Pool.GetPool(summonEffect,(Vector2)transform.position + randomOffset, Quaternion.identity);
-                                Instantiate(fireArcher, ( Vector2 )transform.position + randomOffset, Quaternion.identity);
+                            Collider2D [] cols = Physics2D.OverlapCircleAll(randomOffset, 2f, LayerMask.GetMask("Water"));
+                            if ( cols.Length > 0 )
+                            {
+                                i--;
+                                continue;
+                            }
+
+                                Instantiate(fireArcher, randomOffset, Quaternion.identity);
 
 
                             }

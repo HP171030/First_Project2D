@@ -13,7 +13,6 @@ public class ItemHealEffect : ItemEffect
     {
         if(Manager.Game.HpEvent >= Manager.Game.MaxHpEvent)
         {
-            
             return false;
         }
         else if ( Manager.Game.HpEvent < Manager.Game.MaxHpEvent )

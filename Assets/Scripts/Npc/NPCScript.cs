@@ -11,42 +11,27 @@ using DG.Tweening;
 public class NPCScript : MonoBehaviour
 {
     public int NPCID;
-
     public enum NPCState{Talk,Quest}
     public NPCState curNpc;
-
-  
-
-
     [SerializeField]protected SpriteRenderer tryEnter;
-
-   protected bool enterNPC = false;
+    protected bool enterNPC = false;
     [SerializeField] protected TMP_Text text;
-
-
     [SerializeField] protected NpcTalkData npcTalkData ;
-
-
-
     protected virtual void Start()
     {
-        
         curNpc = NPCState.Talk;
         tryEnter.enabled = false;
     }
     private void OnTriggerEnter2D( Collider2D collision )
     {
-        
         tryEnter.enabled = true;
         enterNPC = true;
     }
     private void OnTriggerExit2D( Collider2D collision )
     {
-        
         tryEnter.enabled = false;
         enterNPC = false;
     }
-
     protected virtual void OnSpc(InputValue value )
     {
         if(enterNPC)
@@ -55,11 +40,8 @@ public class NPCScript : MonoBehaviour
             if( curNpc == NPCState.Talk)
             {
                 ShowDialogue();
-                
             }
-
         }
-        
     }
 
     protected virtual void ShowDialogue()

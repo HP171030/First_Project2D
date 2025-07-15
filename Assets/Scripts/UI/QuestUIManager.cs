@@ -109,6 +109,7 @@ public class QuestUIManager : Singleton<QuestUIManager>
     }
     public void HandleNewData()
     {
+        Manager.inven.itemsList.Clear();
         QuestLists.Clear();
         questSlotEvent?.Invoke();
     }

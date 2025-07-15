@@ -12,8 +12,6 @@ public class TutorialQuestNPC : QuestNPC
     protected override void SpecificNPCFunc()
     {
         Debug.Log("Load specific");
-       
-            
         if ( curNpc == NPCState.Talk )
         {
             Debug.Log("continue level is clear level, npc changed talk state");
@@ -58,13 +56,8 @@ public class TutorialQuestNPC : QuestNPC
             }
         }
     }
-
     protected override void OnSpc( InputValue value )
     {
-
-       
-
-
         if ( curQuestProcess == 2&& quest [curQuestLevel].isCompleted )  //if(진행중 레벨(2)인지, 완료했는지,
         {
             Debug.Log("complete Quest");

@@ -2,24 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Linq;
-using UnityEditor.PackageManager.Requests;
 
 public class QuestNPC : NPCScript
 {
 
-  public int curQuestLevel = 0;
-  protected  Dictionary<int, Quest> questDic = new Dictionary<int, Quest>();                 // 해당 npc의 퀘스트 틀 <차례,해당 퀘스트>
- [SerializeField] protected Quest [] quest;                                                //해당 npc의 퀘스트 내용
-   [SerializeField] protected int curQuestProcess;
-    private void Awake()
-    {
-        
-    }
+    public int curQuestLevel = 0;
+    protected Dictionary<int, Quest> questDic = new Dictionary<int, Quest>();                 // 해당 npc의 퀘스트 틀 <차례,해당 퀘스트>
+    [SerializeField] protected Quest [] quest;                                                  //해당 npc의 퀘스트 내용
+    [SerializeField] protected int curQuestProcess;
+    private void Awake() { }
     protected override void Start()
     {
-       
-        foreach(Quest quests in quest )
+
+        foreach ( Quest quests in quest )
         {
             quests.npcID = NPCID;
         }
@@ -28,21 +23,12 @@ public class QuestNPC : NPCScript
         curQuestProcess = 1;
         AddQuest();
         Debug.Log("AddIn");
-     
-
-
-
 
     }
-
-
     ///<summary>
     /// 특정 npc에게 활용되는 함수
     ///</summary>
-    protected virtual void SpecificNPCFunc()
-    {
-
-    }
+    protected virtual void SpecificNPCFunc() { }
     public void InitQuest()
     {
 
@@ -58,15 +44,15 @@ public class QuestNPC : NPCScript
             else
             {
 
-                Debug.Log($"completeQuest is none - current num : {Manager.Quest.completedQuestList[i].npcID}");
-                
+                Debug.Log($"completeQuest is none - current num : {Manager.Quest.completedQuestList [i].npcID}");
+
             }
         }
         foreach ( Quest quest in Manager.Quest.QuestLists )
         {
             if ( quest.npcID == NPCID )
             {
-      
+
                 curQuestProcess = quest.npcCurQuestProcess;
                 Debug.Log($"curLevel : {curQuestLevel}");
                 this.quest [curQuestLevel] = quest;
@@ -76,15 +62,14 @@ public class QuestNPC : NPCScript
                 Debug.Log("isNot NPCID2");
             }
         }
-        
-        if ( quest.Length-1 < curQuestLevel)
+
+        if ( quest.Length - 1 < curQuestLevel )
         {
-           
+
             curNpc = NPCState.Talk;
         }
         SpecificNPCFunc();
     }
-
     public void AddQuest()
     {
         for ( int i = 0; i < quest.Length; i++ )
@@ -92,9 +77,6 @@ public class QuestNPC : NPCScript
             questDic.Add(i, quest [i]);
         }
     }
-
-
-
     private Queue<string> TalkDataEnqueue( string [] talkData )
     {
         Queue<string> strings = new Queue<string>(talkData.Length);
@@ -104,8 +86,6 @@ public class QuestNPC : NPCScript
         }
         return strings;
     }
-
-
     public void TalkProcess( string [] talkStrings )
     {
 
@@ -158,14 +138,8 @@ public class QuestNPC : NPCScript
             }
         }
     }
-
-
     protected override void OnSpc( InputValue value )
     {
-       
-
-
-
         if ( curQuestProcess == 2 && quest [curQuestLevel].isCompleted )  //if(진행중 레벨(2)인지, 완료했는지,
         {
             Debug.Log("complete Quest");
@@ -188,7 +162,7 @@ public class QuestNPC : NPCScript
                     case 1:                                     // 시작
                         TalkProcess(questDic [curQuestLevel].startQuest);
                         Manager.Quest.AddQuest(questDic [curQuestLevel]);
-                        
+
                         curQuestProcess++;
                         foreach ( Quest quest in Manager.Quest.QuestLists )
                         {
@@ -202,7 +176,7 @@ public class QuestNPC : NPCScript
                             }
                             else
                             {
-                                
+
                             }
                         }
 
@@ -227,17 +201,17 @@ public class QuestNPC : NPCScript
 
                         TalkProcess(questDic [curQuestLevel].ClearQuest);
                         Debug.Log("isClear");
-                        if ( questDic.ContainsKey(curQuestLevel+1))
+                        if ( questDic.ContainsKey(curQuestLevel + 1) )
                         {
-                            Debug.Log(questDic [curQuestLevel+1]);
+                            Debug.Log(questDic [curQuestLevel + 1]);
                             curQuestLevel++;
-                            curQuestProcess = 1;             
+                            curQuestProcess = 1;
                         }
                         else
                         {
                             curNpc = NPCState.Talk;             //모든퀘스트 완료 => talk로
                         }
-                        
+
 
                         break;
 
@@ -255,6 +229,4 @@ public class QuestNPC : NPCScript
         }
 
     }
-
-
 }
