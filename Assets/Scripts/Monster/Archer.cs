@@ -32,7 +32,6 @@ public class Archer : Monster
             transform.localScale = new Vector3(-localX, localY, 1);
 
 
-
         }
         else if ( moveDir.x > 0 && !onBossAtk )
         {

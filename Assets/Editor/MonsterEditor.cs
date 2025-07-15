@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class MonsterEditor : EditorWindow
     ScrollView scrollView;
     [SerializeField] VisualTreeAsset _monsterDetailUxml;
     [SerializeField] StyleSheet _monsterDetailUss;
+    EditorSetting _EditorSettings;
 
 
     readonly string PATH = $"Assets/Resources/Monster";
@@ -22,13 +24,22 @@ public class MonsterEditor : EditorWindow
     public static void ShowWindow()
     {
         var window = GetWindow<MonsterEditor>("몬스터 에디터");
-        window._monsterDetailUxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MonsterDetail.uxml");
-        window._monsterDetailUss = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/MonsterDetail.uss");
     }
-
+    [OnOpenAsset]
+    public static bool OnOpenAsset( int instanceID, int line )
+    {
+        if ( Selection.activeObject is MonsterData data )
+        {
+            ShowWindow();
+            return true;
+        }
+        return false;
+    }
 
     private void CreateGUI()
     {
+        InitializeSetting();
+
         rootVisualElement.style.flexDirection = FlexDirection.Row;
         ///몬스터 리스트 레이아웃
         var leftPanel = new VisualElement();
@@ -50,7 +61,6 @@ public class MonsterEditor : EditorWindow
 
         UpdateLeftPanel();
 
-        ///
         /// 우측 레이아웃
         _rightPanel = new VisualElement();
         _rightPanel.style.width = 200;
@@ -67,8 +77,7 @@ public class MonsterEditor : EditorWindow
         _detailDisplayArea.style.marginTop = 10;
         _detailDisplayArea.style.backgroundColor = new Color(0.15f, 0.15f, 0.15f); // 상세 정보 영역 배경색
 
-        /// 
-
+        ///루트 레이아웃에 다 추가
         rootVisualElement.Add(leftPanel);
         rootVisualElement.Add(_detailDisplayArea);
         rootVisualElement.Add(_rightPanel);
@@ -76,7 +85,14 @@ public class MonsterEditor : EditorWindow
 
         UpdateRightPanel();
     }
+    void InitializeSetting()
+    {
+        _EditorSettings = EditorSetting.GetOrCreateSettings();
 
+        _EditorSettings.behaviourTreeXml.CloneTree(rootVisualElement);
+        rootVisualElement.styleSheets.Add(_EditorSettings.behaviourTreeStyle);
+
+    }
     #region Update Left Panel
     private void UpdateLeftPanel()
     {
@@ -93,23 +109,21 @@ public class MonsterEditor : EditorWindow
         separator.style.marginBottom = 20;
         scrollView.Add(separator);
 
-        var guids = AssetDatabase.FindAssets("t:ScriptableObject", new [] { PATH });
-        foreach ( var guid in guids )
-        {
-            string path = AssetDatabase.GUIDToAssetPath(guid);
-            MonsterData asset = AssetDatabase.LoadAssetAtPath<MonsterData>(path);
+        var scriptableObjDatas = Extension.LoadAssets<ScriptableObject>(PATH);
 
-            var button = new Button(() =>
+        var monsterButtonContainer = new VisualElement();
+        monsterButtonContainer.style.flexDirection = FlexDirection.Column; // 세로로 생성
+        monsterButtonContainer.style.alignItems = Align.Center; // 가운데 정렬
+        foreach ( var data in scriptableObjDatas )
+        {
+            CreateButton($"{data.name}", () =>
             {
-                Debug.Log($"Clicked {asset.name}");
-                _selectedMonsterType = asset;
+                _selectedMonsterType = data;
                 UpdateRightPanel();
-            })
-            {
-                text = asset.name
-            };
-            scrollView.Add(button);
+            }, (150, 20), monsterButtonContainer);
         }
+        scrollView.Add(monsterButtonContainer);
+
     }
     #endregion
 
@@ -206,7 +220,7 @@ public class MonsterEditor : EditorWindow
         _detailDisplayArea.Add(saveButton);
     }
     #endregion
-    void DisplayBehaviourTree( VisualElement panel, ScriptableObject data = null)
+    void DisplayBehaviourTree( VisualElement panel, ScriptableObject data = null )
     {
         panel.Clear();
 
@@ -218,7 +232,7 @@ public class MonsterEditor : EditorWindow
             return;
         }
 
-        var _btGraph = new BehaviourTree();
+        var _btGraph = new BehaviourTreeView();
         panel.Add(_btGraph);
 
     }
@@ -256,13 +270,17 @@ public class MonsterEditor : EditorWindow
     }
     #endregion
 
-    public class BehaviourTree : GraphView
+    public class BehaviourTreeView : GraphView
     {
-        public new class UxmlFactory : UxmlFactory<BehaviourTree, UxmlTraits> { }
-        public BehaviourTree()
-        {
-            Debug.Log("BT 호출");
+        public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> { }
+        public ScriptTemplate [] scriptFileAssets = {
 
+            new ScriptTemplate{ templateFile=EditorSetting.GetOrCreateSettings().scriptTemplateActionNode, defaultFileName="NewActionNode.cs", subFolder="Actions" },
+            new ScriptTemplate{ templateFile=EditorSetting.GetOrCreateSettings().scriptTemplateCompositeNode, defaultFileName="NewCompositeNode.cs", subFolder="Composites" },
+            new ScriptTemplate{ templateFile=EditorSetting.GetOrCreateSettings().scriptTemplateDecoratorNode, defaultFileName="NewDecoratorNode.cs", subFolder="Decorators" },
+        };
+        public BehaviourTreeView()
+        {
             style.flexGrow = 1;
             style.flexShrink = 1;
 
@@ -270,6 +288,7 @@ public class MonsterEditor : EditorWindow
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+            this.AddManipulator(new DoubleClickOnNode());
 
 
             var grid = new GridBackground();
@@ -277,17 +296,30 @@ public class MonsterEditor : EditorWindow
             Insert(0, grid);
             grid.StretchToParentSize();
 
-            StyleSheet ss = (StyleSheet)EditorGUIUtility.Load("GridBackground_uss.uss");
+            StyleSheet ss = EditorSetting.GetOrCreateSettings().grapthViewBackgroundStyle;
             if ( ss != null )
-            {
-                Debug.Log("스타일시트 추가");
                 styleSheets.Add(ss);
-            }
             else
-            {
-                Debug.LogWarning("Editor_uss.uss stylesheet not found. Ensure it's in a Resources folder or specified path.");
-            }
+                Debug.LogWarning("Stylesheet not found");
 
+            InitializeGraph();
+
+
+        }
+
+        public void InitializeGraph()
+        {
+
+        }
+        public NodeView FindNodeView( Node node )
+        {
+            return GetNodeByGuid(node.guid) as NodeView;
+        }
+        public struct ScriptTemplate
+        {
+            public TextAsset templateFile;
+            public string defaultFileName;
+            public string subFolder;
         }
     }
 

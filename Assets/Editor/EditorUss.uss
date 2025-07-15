@@ -1,0 +1,9 @@
+Label {
+    font-size: 12px;
+    -unity-font: url('project://database/Assets/Imports/Font/8bitWonder.ttf?fileID=12800000&guid=bbb29d9b1d893fc4db81b87afbcbee7e&type=3#8bitWonder');
+    -unity-font-style: bold;
+}
+
+* {
+    font-size: 12px;
+}
