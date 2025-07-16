@@ -1,4 +1,3 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Editor/EditorUss.uss?fileID=7433441132597879392&amp;guid=f52dfea912ea3d14e8ee254ff5a7b16c&amp;type=3#EditorUss" />
-    <ui:Label tabindex="-1" text="asdfasdf" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font: url(&apos;project://database/Assets/TextMesh%20Pro/Examples%20&amp;%20Extras/Fonts/Anton.ttf?fileID=12800000&amp;guid=997a43b767814dd0a7642ec9b78cba41&amp;type=3#Anton&apos;); font-size: 15px; color: rgb(0, 0, 0); -unity-font-style: bold; -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-text-outline-width: 0;" />
 </ui:UXML>

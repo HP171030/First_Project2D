@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
@@ -93,6 +96,7 @@ public class MonsterEditor : EditorWindow
         rootVisualElement.styleSheets.Add(_EditorSettings.behaviourTreeStyle);
 
     }
+
     #region Update Left Panel
     private void UpdateLeftPanel()
     {
@@ -220,6 +224,8 @@ public class MonsterEditor : EditorWindow
         _detailDisplayArea.Add(saveButton);
     }
     #endregion
+
+    #region Display Graph Panel
     void DisplayBehaviourTree( VisualElement panel, ScriptableObject data = null )
     {
         panel.Clear();
@@ -236,6 +242,7 @@ public class MonsterEditor : EditorWindow
         panel.Add(_btGraph);
 
     }
+    #endregion
 
     #region Create New Monster Data
     private void CreateNewPrototype( Type monsterType )
@@ -302,14 +309,86 @@ public class MonsterEditor : EditorWindow
             else
                 Debug.LogWarning("Stylesheet not found");
 
+            RegistKeyEvent();
+
             InitializeGraph();
 
 
         }
+        NodeView CreateNodeView(Node node,string name = "")
+        {
+            NodeView nodeView = new(node);
 
+            nodeView.SetNodeName(name);
+
+            switch ( name )
+            {
+                case START_NODE:
+                    nodeView.SetPosition(new Rect(0, 0, 150, 50));
+                    nodeView.inputContainer.Clear();
+                    break;
+                case END_NODE:
+                    nodeView.SetPosition(new Rect(0, 500, 150, 50));
+                    nodeView.outputContainer.Clear();
+                    break;
+            }
+
+                nodeView.SetContainerColor(Color.gray);
+            nodeView.SetBoarderColor(Color.black);
+
+            AddElement(nodeView);
+
+            return nodeView;
+        }
+  
+        void RegistKeyEvent()
+        {
+            RegisterCallback<KeyDownEvent>(OnKeyDown);
+        }
+        void OnKeyDown(KeyDownEvent evt)
+        {
+            if ( evt.ctrlKey )
+            {
+                switch ( evt.keyCode )
+                {
+                    case KeyCode.C:
+                        CopySelect();
+                        break;
+                    case KeyCode.Y:
+                        PasteSelect();
+                        break;
+                }
+            }
+        }
+        void CopySelect()
+        {
+            foreach(var ele in selection )
+            {
+                if( ele is NodeView node )
+                {
+                    Debug.Log($"{node.name} copy");
+                }
+                
+            }
+        }
+        void PasteSelect()
+        {
+            foreach ( var ele in selection )
+            {
+                if ( ele is NodeView node )
+                {
+                    Debug.Log($"{node.name} paste");
+                }
+
+            }
+        }
+        const string START_NODE = "Start Node";
+        const string END_NODE = "End Node";
         public void InitializeGraph()
         {
-
+            Node node = new();
+            CreateNodeView(node, START_NODE);
+            CreateNodeView(node, END_NODE);
         }
         public NodeView FindNodeView( Node node )
         {
@@ -320,6 +399,14 @@ public class MonsterEditor : EditorWindow
             public TextAsset templateFile;
             public string defaultFileName;
             public string subFolder;
+        }
+
+        public override List<Port> GetCompatiblePorts( Port startPort, NodeAdapter nodeAdapter )
+        {
+            return ports.ToList()!.Where(endPort =>
+            endPort.direction != startPort.direction &&
+            endPort.node != startPort.node &&
+            endPort.portType == startPort.portType).ToList();
         }
     }
 

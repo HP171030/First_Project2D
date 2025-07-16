@@ -7,7 +7,7 @@ public class BehaviourTree : MonoBehaviour
     // Start is called before the first frame update
     public static void Traverse( Node node, System.Action<Node> visiter )
     {
-        if ( node )
+        if (node != null)
         {
             visiter.Invoke(node);
             var children = GetChildren(node);

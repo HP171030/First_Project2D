@@ -52,5 +52,15 @@ public static class Extension
         return assets;
     }
 
-
+    public static List<string> GetAssetPaths<T>() where T : UnityEngine.Object
+    {
+        string [] assetIds = AssetDatabase.FindAssets($"t:{typeof(T).Name}");
+        List<string> paths = new List<string>();
+        foreach ( var assetId in assetIds )
+        {
+            string path = AssetDatabase.GUIDToAssetPath(assetId);
+            paths.Add(path);
+        }
+        return paths;
+    }
 }
