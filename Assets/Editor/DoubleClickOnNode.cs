@@ -13,6 +13,8 @@ public class DoubleClickOnNode : MouseManipulator
     public DoubleClickOnNode()
     {
         time = EditorApplication.timeSinceStartup;
+
+
     }
     protected override void RegisterCallbacksOnTarget()
     {
@@ -26,13 +28,15 @@ public class DoubleClickOnNode : MouseManipulator
 
     void OnMouseDown(MouseDownEvent evt )
     {
-        var graphView = target as BehaviourTreeView;
-        if ( graphView == null )
+        Debug.Log("Mouse Down");
+        var nodeView = target as NodeView;
+        if ( nodeView == null )
             return;
 
         double duration = EditorApplication.timeSinceStartup - time;
         if ( duration < validInterval )
         {
+            Debug.Log("Double Click");
             SelectChildren(evt);
         }
 

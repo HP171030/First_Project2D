@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
@@ -13,11 +12,12 @@ using UnityEngine.UIElements;
 public class MonsterEditor : EditorWindow
 {
     ScriptableObject _selectedMonsterType; // 현재 선택된 몬스터 타입을 저장
-    VisualElement _rightPanel; // 우측 패널 참조
+    public static VisualElement _rightPanel; // 우측 패널 참조
     VisualElement _detailDisplayArea; // 정보패널 디스플레이
     ScrollView scrollView;
     [SerializeField] VisualTreeAsset _monsterDetailUxml;
     [SerializeField] StyleSheet _monsterDetailUss;
+
     EditorSetting _EditorSettings;
 
 
@@ -91,7 +91,6 @@ public class MonsterEditor : EditorWindow
     void InitializeSetting()
     {
         _EditorSettings = EditorSetting.GetOrCreateSettings();
-
         _EditorSettings.behaviourTreeXml.CloneTree(rootVisualElement);
         rootVisualElement.styleSheets.Add(_EditorSettings.behaviourTreeStyle);
 
@@ -286,6 +285,7 @@ public class MonsterEditor : EditorWindow
             new ScriptTemplate{ templateFile=EditorSetting.GetOrCreateSettings().scriptTemplateCompositeNode, defaultFileName="NewCompositeNode.cs", subFolder="Composites" },
             new ScriptTemplate{ templateFile=EditorSetting.GetOrCreateSettings().scriptTemplateDecoratorNode, defaultFileName="NewDecoratorNode.cs", subFolder="Decorators" },
         };
+        VisualTreeAsset _nodeDetailUxml;
         public BehaviourTreeView()
         {
             style.flexGrow = 1;
@@ -295,19 +295,13 @@ public class MonsterEditor : EditorWindow
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
-            this.AddManipulator(new DoubleClickOnNode());
-
 
             var grid = new GridBackground();
 
             Insert(0, grid);
             grid.StretchToParentSize();
 
-            StyleSheet ss = EditorSetting.GetOrCreateSettings().grapthViewBackgroundStyle;
-            if ( ss != null )
-                styleSheets.Add(ss);
-            else
-                Debug.LogWarning("Stylesheet not found");
+            ApplyUSS();
 
             RegistKeyEvent();
 
@@ -315,7 +309,14 @@ public class MonsterEditor : EditorWindow
 
 
         }
-        NodeView CreateNodeView(Node node,string name = "")
+
+        void ApplyUSS()
+        {
+            StyleSheet bgSS = EditorSetting.GetOrCreateSettings().grapthViewBackgroundStyle;
+            if ( bgSS != null )
+                styleSheets.Add(bgSS);
+        }
+        NodeView CreateNodeView( Node node, string name = "" )
         {
             NodeView nodeView = new(node);
 
@@ -333,28 +334,37 @@ public class MonsterEditor : EditorWindow
                     break;
             }
 
-                nodeView.SetContainerColor(Color.gray);
-            nodeView.SetBoarderColor(Color.black);
+
+            nodeView.onSelectedNode += ( _ ) =>
+            {
+                _rightPanel.Clear(); // 기존UI 제거
+
+                _rightPanel.Add(_nodeDetailUxml.CloneTree());
+                var nameLabel = _rightPanel.Q<Label>("NodeNameLabel");
+                nameLabel.text = $"{nodeView.title}";
+            };
+            nodeView.SetContainerColor(Color.gray);
 
             AddElement(nodeView);
 
             return nodeView;
         }
-  
+
         void RegistKeyEvent()
         {
             RegisterCallback<KeyDownEvent>(OnKeyDown);
         }
-        void OnKeyDown(KeyDownEvent evt)
+        void OnKeyDown( KeyDownEvent evt )
         {
             if ( evt.ctrlKey )
             {
+                Debug.Log("Press Ctrl");
                 switch ( evt.keyCode )
                 {
                     case KeyCode.C:
                         CopySelect();
                         break;
-                    case KeyCode.Y:
+                    case KeyCode.V:
                         PasteSelect();
                         break;
                 }
@@ -362,13 +372,13 @@ public class MonsterEditor : EditorWindow
         }
         void CopySelect()
         {
-            foreach(var ele in selection )
+            foreach ( var ele in selection )
             {
-                if( ele is NodeView node )
+                if ( ele is NodeView node )
                 {
                     Debug.Log($"{node.name} copy");
                 }
-                
+
             }
         }
         void PasteSelect()
@@ -386,9 +396,10 @@ public class MonsterEditor : EditorWindow
         const string END_NODE = "End Node";
         public void InitializeGraph()
         {
-            Node node = new();
-            CreateNodeView(node, START_NODE);
-            CreateNodeView(node, END_NODE);
+            _nodeDetailUxml = EditorSetting.GetOrCreateSettings().nodeXml;
+
+            CreateNodeView(CreateNode(), START_NODE);
+            CreateNodeView(CreateNode(), END_NODE);
         }
         public NodeView FindNodeView( Node node )
         {
@@ -400,6 +411,12 @@ public class MonsterEditor : EditorWindow
             public string defaultFileName;
             public string subFolder;
         }
+        Node CreateNode()
+        {
+            Node node = new();
+
+            return node;
+        }
 
         public override List<Port> GetCompatiblePorts( Port startPort, NodeAdapter nodeAdapter )
         {
@@ -407,6 +424,24 @@ public class MonsterEditor : EditorWindow
             endPort.direction != startPort.direction &&
             endPort.node != startPort.node &&
             endPort.portType == startPort.portType).ToList();
+        }
+
+        public override void BuildContextualMenu( ContextualMenuPopulateEvent evt )
+        {
+            evt.menu.AppendAction($"노드 추가", OnContextMenuNodeCreate);
+            evt.menu.AppendSeparator();
+            evt.menu.AppendAction($"노드 추가2", OnContextMenuNodeCreate);
+        }
+
+        void OnContextMenuNodeCreate( DropdownMenuAction d )
+        {
+            Node node = new();
+
+            var mousePos = d.eventInfo.localMousePosition;
+            var localPos = contentContainer.WorldToLocal(mousePos);
+            node.position = localPos;
+
+            CreateNodeView(node, $"pos : {node.position}, localMousePos : {d.eventInfo.localMousePosition}");
         }
     }
 

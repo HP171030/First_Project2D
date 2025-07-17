@@ -8,10 +8,11 @@ using UnityEngine.UIElements;
 public class NodeView : UnityEditor.Experimental.GraphView.Node
 {
     public Action<NodeView> onSelectedNode;
+    public Action<NodeView> onUnSelectedNode;
     public Node node;
     public Port input;
     public Port output;
-    
+
     public NodeView NodeParent
     {
         get
@@ -42,18 +43,19 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     }
 
 
-    public NodeView( Node node ) : base(/*AssetDatabase.GetAssetPath(EditorSetting.GetOrCreateSettings().nodeXml)*/)
+    public NodeView( Node node ) : base()
     {
-        
+        AddToClassList("node-default");
         this.node = node;
         viewDataKey = node.guid;
+
+        node.AddEventFunc(SetColorByState);
 
         style.left = node.position.x;
         style.top = node.position.y;
         style.minWidth = new StyleLength(StyleKeyword.Auto);
         style.minHeight = new StyleLength(StyleKeyword.Auto);
-
-        input = InstantiatePort(Orientation.Horizontal,Direction.Input,Port.Capacity.Multi,typeof(bool));
+        input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
         input.portColor = SetPortColor(input.connected);
         output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
         output.portName = $"{output.connected}";
@@ -64,12 +66,45 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         SetupClasses();
         SetupDataBinding();
         RefreshExpandedState();
+
+
+        AddEvent();
     }
-    public void SetNodeName(string nodeName )
+    void AddEvent()
+    {
+
+        this.AddManipulator(new DoubleClickOnNode());
+
+
+        onSelectedNode = ( nodeView ) =>
+        {
+            node.SetStatus(Node.NodeState.Selected);
+        };
+        onUnSelectedNode = ( nodeView ) =>
+        {
+            node.SetStatus(Node.NodeState.Default);
+        };
+    }
+    public override void OnSelected()
+    {
+        base.OnSelected();
+        if ( onSelectedNode != null )
+        {
+            onSelectedNode.Invoke(this);
+            Debug.Log($"Selected node: {this.node.guid}");
+        }
+    }
+    public override void OnUnselected()
+    {
+        base.OnUnselected();
+        onUnSelectedNode.Invoke(this);
+
+    }
+    public void SetNodeName( string nodeName )
     {
         title = nodeName;
     }
-    Color SetPortColor(bool connect)
+    Color SetPortColor( bool connect )
     {
         if ( connect )
         {
@@ -94,6 +129,27 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         style.borderBottomWidth = width;
         style.borderLeftWidth = width;
         style.borderRightWidth = width;
+    }
+    void SetColorByState( Node.NodeState state )
+    {
+        switch ( state )
+        {
+            case Node.NodeState.Run:
+                SetBoarderColor(Color.green);
+                break;
+            case Node.NodeState.Fail:
+                SetBoarderColor(Color.red);
+                break;
+            case Node.NodeState.Success:
+                SetBoarderColor(Color.blue);
+                break;
+            case Node.NodeState.Selected:
+                SetBoarderColor(Color.cyan, 10);
+                break;
+            case Node.NodeState.Default:
+                SetBoarderColor(Color.black);
+                break;
+        }
     }
     void UpdateNodeData()
     {
@@ -129,15 +185,45 @@ public class Node
     {
         Run,
         Fail,
-        Success
+        Success,
+        Selected,
+        Default
     }
-    public string guid = GUID.Generate().ToString();
+    public NodeState State { get => _state; set => SetStatus(value); }
+    NodeState _state;
+    public string guid;
     public Vector2 position;
     public List<Node> children;
 
+    Action<NodeState> onChangeNodeState;
+
+    public Node()
+    {
+        _state = NodeState.Default;
+        guid = GUID.Generate().ToString();
+        position = Vector2.zero;
+        children = new List<Node>();
 
 
+
+    }
+
+    public void AddEventFunc( Action<NodeState> eventFunc )
+    {
+        onChangeNodeState += eventFunc;
+    }
+    public void RemoveEventFunc( Action<NodeState> eventFunc )
+    {
+        onChangeNodeState -= eventFunc;
+    }
+    public void SetStatus( Node.NodeState State )
+    {
+        _state = State;
+        onChangeNodeState.Invoke(State);
+
+    }
 }
+
 public enum PortStatus
 {
 

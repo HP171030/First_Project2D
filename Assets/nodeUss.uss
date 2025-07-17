@@ -1,0 +1,18 @@
+.node-default {
+    background-color: rgb(44, 44, 44);
+    border-radius: 6px;
+    border-width: 2px;
+    border-color: rgb(76, 175, 80);
+    padding: 8px;
+    font-size: 13px;
+    color: white;
+    padding-top: 3px;
+    padding-right: 3px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+}
+
+.node-warning {
+    background-color: rgb(85, 51, 51);
+    border-color: rgb(255, 68, 68);
+}
