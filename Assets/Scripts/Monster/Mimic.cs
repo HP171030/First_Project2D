@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Mimic : Monster
 {
-    protected override IEnumerator AttackPlayer()
+    public override IEnumerator AttackPlayer()
     {
         if ( !atkDelayOn )
         {

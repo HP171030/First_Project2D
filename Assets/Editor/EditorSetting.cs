@@ -3,7 +3,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-class EditorSetting : ScriptableObject
+public class EditorSetting : ScriptableObject
 {
     public VisualTreeAsset behaviourTreeXml;
     public StyleSheet behaviourTreeStyle;

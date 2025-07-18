@@ -262,6 +262,7 @@ GameObject:
   - component: {fileID: 447919135614299130}
   - component: {fileID: -2638430739128470967}
   - component: {fileID: -1988049453572935914}
+  - component: {fileID: 4158267066720956621}
   m_Layer: 8
   m_Name: Mimic
   m_TagString: Untagged
@@ -442,14 +443,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6379233055840216801}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 16969ec1ad4287d45b188e5bd4c037fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
   colliders: []
   spriteRenderer: {fileID: 0}
+  moveDir: {x: 0, y: 0}
+  MoveOn: 0
+  CRSwitch: 0
+  thisCollider: {fileID: 0}
+  atkDir: {x: 0, y: 0}
+  atkDelayOn: 0
+  player: {fileID: 0}
+  Obstacle:
+    serializedVersion: 2
+    m_Bits: 0
   rb: {fileID: 0}
+  hitWall: {fileID: 0}
+  flipXed: 0
   damagedEffect: {fileID: 7493631519212315503}
   damagedEffectPos: {fileID: 7559759152338386044}
   playerLayer:
@@ -457,5 +471,23 @@ MonoBehaviour:
     m_Bits: 128
   monsterPool: {fileID: 0}
   monsterData: {fileID: 11400000, guid: 1acfee2e44633944fa8bcd71c265560f, type: 2}
+  localX: 0
+  localY: 0
+  onBossAtk: 0
+  thisMonsterHP: 0
+  thisMonsterMaxHp: 0
+  parent: {fileID: 0}
   dropItem: {fileID: 308354900947512561}
   curState: 0
+--- !u!114 &4158267066720956621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6379233055840216801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 552b64ef40d31114f9457a5a193eaeef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

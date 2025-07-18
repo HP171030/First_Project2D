@@ -6,38 +6,38 @@ using UnityEngine;
 public class Monster : MonoBehaviour, Idamagable
 {
 
-    protected Animator animator;
-    [SerializeField] protected Collider2D [] colliders;
+    public Animator animator;
+    [SerializeField] public Collider2D [] colliders;
     protected Vector3 playerPos;
     [SerializeField] public SpriteRenderer spriteRenderer;
-    protected Vector2 moveDir;
-    protected bool MoveOn;
-    protected bool CRSwitch;
-    protected Collider2D thisCollider;
-    protected Vector2 atkDir;
-    protected bool atkDelayOn;
+    public Vector2 moveDir;
+    public bool MoveOn;
+    public bool CRSwitch;
+    public Collider2D thisCollider;
+    public Vector2 atkDir;
+    public bool atkDelayOn;
 
-    protected Collider2D player;
-    [SerializeField] protected LayerMask Obstacle;
-    [SerializeField] protected Rigidbody2D rb;
-    protected Collider2D hitWall;
-    protected bool flipXed;
-    [SerializeField] protected Animator damagedEffect;
-    [SerializeField] protected Transform damagedEffectPos;
+    public Collider2D player;
+    [SerializeField] public LayerMask Obstacle;
+    [SerializeField] public Rigidbody2D rb;
+    public Collider2D hitWall;
+    public bool flipXed;
+    [SerializeField] public Animator damagedEffect;
+    [SerializeField] public Transform damagedEffectPos;
 
-    [SerializeField] protected LayerMask playerLayer;
-    [SerializeField] protected PooledObject monsterPool;
+    [SerializeField] public LayerMask playerLayer;
+    [SerializeField] public PooledObject monsterPool;
     [SerializeField] public MonsterData monsterData;
     bool dead = false;
-    protected float localX;
-    protected float localY;
-    protected bool onBossAtk = false;
+    public float localX;
+    public float localY;
+    public bool onBossAtk = false;
     [SerializeField] public float thisMonsterHP;
     [SerializeField] public float thisMonsterMaxHp;
 
-    [SerializeField] protected GameObject parent;
+    [SerializeField] public GameObject parent;
 
-    [SerializeField] protected GameObject dropItem;
+    [SerializeField] public GameObject dropItem;
     protected virtual void Start()
     {
         ChangeState(MonsterState.Idle);
@@ -194,12 +194,12 @@ public class Monster : MonoBehaviour, Idamagable
         }
 
     }
-    protected virtual IEnumerator AttackPlayer()
+    public virtual IEnumerator AttackPlayer()
     {
         MoveOn = false;
         yield return null;
     }
-    protected virtual IEnumerator ThisDestroy()
+    public virtual IEnumerator ThisDestroy()
     {
 
         Manager.Sound.PlaySFX(monsterData.soundMonsterDead);

@@ -27,6 +27,11 @@ public class MonsterData : ScriptableObject
     public AudioClip soundAttack;
     public AudioClip soundMonsterDead;
 
+    [Header("BT")]
+    public Node _btrootNode;
+
+    public Node BehaviorTreeRootNode => _btrootNode;
+
     public void OnDiedEvent( string name )
     {
         monsterOnDied?.Invoke(name);

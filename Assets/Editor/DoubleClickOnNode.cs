@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static MonsterEditor;
 
 public class DoubleClickOnNode : MouseManipulator
 {
@@ -37,34 +34,8 @@ public class DoubleClickOnNode : MouseManipulator
         if ( duration < validInterval )
         {
             Debug.Log("Double Click");
-            SelectChildren(evt);
         }
 
         time = EditorApplication.timeSinceStartup;
-    }
-
-    private void SelectChildren( MouseDownEvent evt )
-    {
-        var graphView = target as BehaviourTreeView;
-        if ( graphView == null )
-            return;
-
-        if ( !CanStopManipulation(evt) )
-            return;
-
-        NodeView clickedElement = evt.target as NodeView;
-        if ( clickedElement == null )
-        {
-            var ve = evt.target as VisualElement;
-            clickedElement = ve.GetFirstAncestorOfType<NodeView>();
-            if ( clickedElement == null )
-                return;
-        }
-        
-        
-         BehaviourTree.Traverse(clickedElement.node, node => {
-            var view = graphView.FindNodeView(node);
-            graphView.AddToSelection(view);
-        });
     }
 }

@@ -170,7 +170,7 @@ public class FireBoss : Monster
         }
 
     }
-    protected override IEnumerator AttackPlayer()
+    public override IEnumerator AttackPlayer()
     {
         int pattern = 0;
 

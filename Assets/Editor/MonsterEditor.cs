@@ -8,20 +8,32 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class MonsterEditor : EditorWindow
 {
-    ScriptableObject _selectedMonsterType; // 현재 선택된 몬스터 타입을 저장
-    public static VisualElement _rightPanel; // 우측 패널 참조
+
     VisualElement _detailDisplayArea; // 정보패널 디스플레이
+    VisualTreeAsset _monsterDetailUxml;
+
     ScrollView scrollView;
-    [SerializeField] VisualTreeAsset _monsterDetailUxml;
-    [SerializeField] StyleSheet _monsterDetailUss;
+
+    StyleSheet _monsterDetailUss;
 
     EditorSetting _EditorSettings;
 
 
     readonly string PATH = $"Assets/Resources/Monster";
+
+    private static ScriptableObject _selectedMonsterType;
+
+    public static ScriptableObject SelectedMonsterType
+    {
+        get => _selectedMonsterType;
+        set => _selectedMonsterType = value;
+    }
+
+    public static VisualElement _rightPanel;
 
     [MenuItem("에디터/몬스터에디터")]
     public static void ShowWindow()
@@ -112,7 +124,7 @@ public class MonsterEditor : EditorWindow
         separator.style.marginBottom = 20;
         scrollView.Add(separator);
 
-        var scriptableObjDatas = Extension.LoadAssets<ScriptableObject>(PATH);
+        var scriptableObjDatas = EditorExtension.LoadAssets<ScriptableObject>(PATH);
 
         var monsterButtonContainer = new VisualElement();
         monsterButtonContainer.style.flexDirection = FlexDirection.Column; // 세로로 생성
@@ -286,6 +298,8 @@ public class MonsterEditor : EditorWindow
             new ScriptTemplate{ templateFile=EditorSetting.GetOrCreateSettings().scriptTemplateDecoratorNode, defaultFileName="NewDecoratorNode.cs", subFolder="Decorators" },
         };
         VisualTreeAsset _nodeDetailUxml;
+        Dictionary<string, Node> _nodeMap = new();
+        BehaviourTreeAsset _currentTree;
         public BehaviourTreeView()
         {
             style.flexGrow = 1;
@@ -295,6 +309,20 @@ public class MonsterEditor : EditorWindow
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+
+            var toolbar = new Toolbar();
+            Add(toolbar);
+
+            toolbar.style.position = Position.Absolute;
+            toolbar.style.top = 0;
+            toolbar.style.left = 0;
+            toolbar.style.right = 0;
+            toolbar.style.height = 20;
+            toolbar.style.backgroundColor = new Color(0.15f, 0.15f, 0.15f, 0.8f);
+
+            // 저장 버튼 추가
+            CreateButton("저장", SaveCurrentGraphData, (70, 20), toolbar);
+
 
             var grid = new GridBackground();
 
@@ -307,30 +335,265 @@ public class MonsterEditor : EditorWindow
 
             InitializeGraph();
 
+            this.graphViewChanged += OnChangeConnectNode;
 
         }
 
+        private GraphViewChange OnChangeConnectNode( GraphViewChange graphViewChange )
+        {
+            if( graphViewChange.edgesToCreate != null )
+            {
+                EdgeToCreateUpdate(graphViewChange);
+            }
+
+            if(graphViewChange.elementsToRemove != null )
+            {
+                EdgeToRemoveUpdate(graphViewChange);
+            }
+
+            return graphViewChange;
+        }
+
+        void EdgeToCreateUpdate( GraphViewChange g)
+        {
+            List<Edge> temp = new();
+
+            foreach ( var edge in g.edgesToCreate )
+            {
+                NodeView parentNodeView = edge.output.node as NodeView;
+                NodeView childNodeView = edge.input.node as NodeView;
+
+                if ( parentNodeView != null && childNodeView != null )
+                {
+                    Node parentNodeData = parentNodeView.node;
+                    Node childNodeData = childNodeView.node;
+
+                    if ( IsCircularReference(parentNodeData, childNodeData) )
+                    {
+                        Debug.LogWarning($"it is circulation ref can't add '{childNodeData.name}' to '{parentNodeData.name}'");
+                        temp.Add(edge);
+                        continue; // 다음 엣지
+                    }
+
+                    //단일 자식 제한
+                    if ( parentNodeData is DecoratorNode && parentNodeData.ChildrenGUIDs.Count >= 1 )
+                    {
+                        Debug.LogWarning($"DecoratorNode Can't add to '{parentNodeData.name}'");
+                        g.edgesToCreate.Remove(edge);
+                        continue;
+
+
+                    }
+                    if ( parentNodeData != null && childNodeData != null )
+                    {
+                        if ( !parentNodeData.ChildrenGUIDs.Contains(childNodeData.guid) )
+                        {
+                            parentNodeData.ChildrenGUIDs.Add(childNodeData.guid);
+                            EditorUtility.SetDirty(parentNodeData);
+                            Debug.Log($"Connect edge: {parentNodeData.name} -> {childNodeData.name}");
+                        }
+                    }
+                }
+            }
+
+            //순환 참조 리스트 삭제
+            foreach(var e in temp )
+            {
+                g.edgesToCreate.Remove(e);
+            }
+
+        }
+
+        void EdgeToRemoveUpdate( GraphViewChange g)
+        {
+            foreach ( var element in g.elementsToRemove )
+            {
+                if ( element is Edge edge )
+                {
+                    NodeView parentNodeView = edge.output.node as NodeView;
+                    NodeView childNodeView = edge.input.node as NodeView;
+
+                    if ( parentNodeView != null && childNodeView != null )
+                    {
+                        Node parentNodeData = parentNodeView.node;
+                        Node childNodeData = childNodeView.node;
+
+                        if ( parentNodeData != null && childNodeData != null )
+                        {
+                            if ( parentNodeData.ChildrenGUIDs.Remove(childNodeData.guid) )
+                            {
+                                EditorUtility.SetDirty(parentNodeData);
+                                Debug.Log($"Remove Edge: {parentNodeData.name} -x-> {childNodeData.name}");
+                            }
+                        }
+                    }
+                }
+                else if ( element is NodeView nodeView )
+                {
+                    if ( nodeView.node != null && _currentTree!= null )
+                    {
+                        AssetDatabase.RemoveObjectFromAsset(nodeView.node);
+                        EditorUtility.SetDirty(_currentTree); 
+                        Debug.Log($"Delete Node: {nodeView.node.name}");
+                    }
+                    _nodeMap?.Remove(nodeView.node.guid);
+                }
+            }
+        }
+
+        public void LoadGraph( BehaviourTreeAsset loadedAsset )
+        {
+            ClearGraphView(); // 기존 그래프 뷰 내용 초기화
+
+            if ( loadedAsset == null )
+            {
+                Debug.LogError("로드할 BehaviorTreeAsset이 null입니다.");
+                return;
+            }
+
+            _currentTree = loadedAsset; 
+            _nodeMap = new Dictionary<string, Node>(); 
+
+
+            var allNodesInAsset = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(loadedAsset))
+                                   .OfType<Node>() // Node 타입을 상속받는 모든 객체 필터링
+                                   .ToList();
+
+            foreach ( var node in allNodesInAsset )
+            {
+                if ( node != null && !string.IsNullOrEmpty(node.guid) )
+                {
+                    _nodeMap [node.guid] = node;
+                }
+            }
+
+            if ( loadedAsset.rootNode != null && _nodeMap.ContainsKey(loadedAsset.rootNode.guid) )
+            {
+                DrawNodeViewsRecursive(loadedAsset.rootNode);
+            }
+            else if ( loadedAsset.rootNode == null && allNodesInAsset.Any() )
+            {
+
+                Debug.LogWarning("BehaviorTreeAsset에 rootNode가 설정되어 있지 않지만, 다른 노드가 존재합니다. 첫 번째 노드를 루트로 간주합니다.");
+                DrawNodeViewsRecursive(allNodesInAsset.First());
+            }
+            else
+            {
+                Debug.Log("로드된 BehaviorTreeAsset에 노드가 없습니다. 새 트리를 만드세요.");
+            }
+
+            ConnectEdgesFromData();
+        }
+
+        private void DrawNodeViewsRecursive( Node currentNode )
+        {
+            // 이미 그려진 노드 뷰이거나, 유효하지 않은 노드 데이터면 중복 생성 방지
+            if ( currentNode == null || GetNodeByGuid(currentNode.guid) != null ) return;
+
+            NodeView nodeView = CreateNodeView(currentNode);
+
+            foreach ( string childGuid in currentNode.ChildrenGUIDs )
+            {
+                if ( _nodeMap.TryGetValue(childGuid, out Node childNodeData) )
+                {
+                    DrawNodeViewsRecursive(childNodeData);
+                }
+                else
+                {
+                    Debug.LogWarning($"자식 노드 GUID '{childGuid}'못찾겠음 ");
+                }
+            }
+        }
+
+        private NodeView GetNodeViewByGuid( string guid )
+        {
+            return this.contentViewContainer.Query<NodeView>().Where(v => v.node.guid == guid).First();
+        }
+
+        private void ConnectEdgesFromData()
+        {
+            foreach ( var nodeView in this.contentViewContainer.Query<NodeView>().ToList() )
+            {
+                Node parentNodeData = nodeView.node;
+                if ( parentNodeData == null ) continue;
+
+                foreach ( string childGuid in parentNodeData.ChildrenGUIDs )
+                {
+
+                    NodeView childNodeView = GetNodeViewByGuid(childGuid);
+
+                    if ( childNodeView != null )
+                    {
+                        Port outputPort = nodeView.outputContainer.Query<Port>().First();
+                        Port inputPort = childNodeView.inputContainer.Query<Port>().First();
+
+                        if ( outputPort != null && inputPort != null )
+                        {
+
+                            if ( !outputPort.Contains(inputPort) )
+                            {
+                                Edge edge = outputPort.ConnectTo(inputPort); 
+                                AddElement(edge); 
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"엣지 연결을 위한 자식 노드 뷰 '{childGuid}'를 찾을 수 없습니다.");
+                    }
+                }
+            }
+        }
+
+
+        private void ClearGraphView()
+        {
+
+            this.DeleteElements(this.graphElements.ToList());
+            _nodeMap?.Clear(); 
+            _currentTree = null;  
+        }
+        void SaveCurrentGraphData()
+        {
+
+            foreach ( var nodeData in _nodeMap.Values )
+            {
+                Debug.Log($"save {nodeData.Type}");
+                EditorUtility.SetDirty(nodeData);
+            }
+
+            EditorUtility.SetDirty(_currentTree);
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            Debug.Log($"Save Graph '{_currentTree.name}.asset' ");
+
+        }
         void ApplyUSS()
         {
             StyleSheet bgSS = EditorSetting.GetOrCreateSettings().grapthViewBackgroundStyle;
             if ( bgSS != null )
                 styleSheets.Add(bgSS);
         }
-        NodeView CreateNodeView( Node node, string name = "" )
+        NodeView CreateNodeView( Node node)
         {
+            
             NodeView nodeView = new(node);
 
-            nodeView.SetNodeName(name);
+            nodeView.SetNodeName(node.nodeName);
 
-            switch ( name )
+            //TODO : 재구성 할 필요 있을듯
+            switch (node.nodeName)
             {
-                case START_NODE:
+                case ROOT:
                     nodeView.SetPosition(new Rect(0, 0, 150, 50));
-                    nodeView.inputContainer.Clear();
-                    break;
-                case END_NODE:
-                    nodeView.SetPosition(new Rect(0, 500, 150, 50));
-                    nodeView.outputContainer.Clear();
+                    _currentTree.rootNode = node;
+                    AssetDatabase.AddObjectToAsset(node, _currentTree);
+                    EditorUtility.SetDirty(_currentTree.rootNode);
+                    EditorUtility.SetDirty(_currentTree);
+                    AssetDatabase.SaveAssets();
+
+                    AssetDatabase.Refresh();
                     break;
             }
 
@@ -340,9 +603,12 @@ public class MonsterEditor : EditorWindow
                 _rightPanel.Clear(); // 기존UI 제거
 
                 _rightPanel.Add(_nodeDetailUxml.CloneTree());
-                var nameLabel = _rightPanel.Q<Label>("NodeNameLabel");
-                nameLabel.text = $"{nodeView.title}";
+
+                UpdateNodeContents(nodeView, _rightPanel);
+
             };
+
+            nodeView.RegisterCallback<GeometryChangedEvent, NodeView>(UpdateNodeOnDrag, nodeView);
             nodeView.SetContainerColor(Color.gray);
 
             AddElement(nodeView);
@@ -350,6 +616,40 @@ public class MonsterEditor : EditorWindow
             return nodeView;
         }
 
+        void UpdateNodeOnDrag( GeometryChangedEvent evt, NodeView nodeView )
+        {
+            if ( evt.oldRect.position == evt.newRect.position ) return;
+
+            Node node = nodeView.node;
+            if ( node != null )
+            {
+                node.position = nodeView.GetPosition().position;
+                EditorUtility.SetDirty( node ); 
+            }
+        }
+
+
+        void UpdateNodeContents( NodeView nodeView, VisualElement panel )
+        {
+            var nameLabel = panel.Q<Label>("NodeNameLabel");
+            var nodeType = panel.Q<DropdownField>("NodeType");
+            var conditionList = panel.Q<DropdownField>("ConditionList");
+            var actionList = panel.Q<DropdownField>("ActionList");
+
+            //TODO : 컨디션,액션 리스트는 노드에 맞는 컨디션이 추가되도록 나중에 데이터화 
+            List<string> nodeTypes = new() { typeof(SelectorNode).Name, typeof(SequenceNode).Name, typeof(DecoratorNode).Name };
+            List<string> conditions = new() { "Always", "In Range", "Out Range" };
+            List<string> actions = new() { "Idle", "Patrol", "Trace", "Attack", "Return", "Death" };
+
+            nodeType.choices = nodeTypes;
+            conditionList.choices = conditions;
+            actionList.choices = actions;
+
+
+
+            nodeType.value = nodeView.node.GetType().Name;
+            nameLabel.text = $"{nodeView.title}";
+        }
         void RegistKeyEvent()
         {
             RegisterCallback<KeyDownEvent>(OnKeyDown);
@@ -392,14 +692,65 @@ public class MonsterEditor : EditorWindow
 
             }
         }
-        const string START_NODE = "Start Node";
-        const string END_NODE = "End Node";
+        const string ROOT = "ROOT";
         public void InitializeGraph()
         {
             _nodeDetailUxml = EditorSetting.GetOrCreateSettings().nodeXml;
 
-            CreateNodeView(CreateNode(), START_NODE);
-            CreateNodeView(CreateNode(), END_NODE);
+            var assetPath = $"Assets/Resources/MonsterPattern/{_selectedMonsterType}.asset";
+
+            var asset =  AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(assetPath);
+            if(asset != null )
+            {
+                _currentTree = asset;
+                LoadGraph(asset);
+            }
+            else
+            {
+
+                var newBTAsset = CreateInstance<BehaviourTreeAsset>();
+                AssetDatabase.CreateAsset(newBTAsset, assetPath);
+                _currentTree = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(assetPath);
+
+                var node = CreateStartNode();
+                CreateNodeView(node);
+                _nodeMap.Add(node.guid, node);
+            }
+
+        }
+        private bool IsCircularReference( Node potentialParent, Node potentialChild )
+        {
+            if ( potentialParent.guid == potentialChild.guid ) return true;
+
+            Node current = potentialParent;
+            Queue<Node> queue = new Queue<Node>();
+            queue.Enqueue(current);
+
+            //bfs
+            Queue<Node> q = new Queue<Node>();
+            HashSet<string> visited = new HashSet<string>();
+
+            q.Enqueue(potentialChild);
+            visited.Add(potentialChild.guid);
+
+            while ( q.Count > 0 )
+            {
+                Node node = q.Dequeue();
+                if ( node.guid == potentialParent.guid )
+                {
+                    return true;
+                }
+
+                foreach ( string childGuid in node.ChildrenGUIDs )
+                {
+                    if ( _nodeMap.TryGetValue(childGuid, out Node childNode) && !visited.Contains(childGuid) )
+                    {
+                        q.Enqueue(childNode);
+                        visited.Add(childGuid);
+                    }
+                }
+            }
+            return false;
         }
         public NodeView FindNodeView( Node node )
         {
@@ -411,9 +762,11 @@ public class MonsterEditor : EditorWindow
             public string defaultFileName;
             public string subFolder;
         }
-        Node CreateNode()
+        Node CreateStartNode()
         {
-            Node node = new();
+
+            Node node = CreateInstance<SelectorNode>();
+            node.nodeName = ROOT;
 
             return node;
         }
@@ -428,20 +781,36 @@ public class MonsterEditor : EditorWindow
 
         public override void BuildContextualMenu( ContextualMenuPopulateEvent evt )
         {
-            evt.menu.AppendAction($"노드 추가", OnContextMenuNodeCreate);
-            evt.menu.AppendSeparator();
-            evt.menu.AppendAction($"노드 추가2", OnContextMenuNodeCreate);
+            evt.menu.AppendAction($"{Node.NodeType.Selector.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Selector) ));
+            evt.menu.AppendAction($"{Node.NodeType.Sequence.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Sequence) ));
+            evt.menu.AppendAction($"{Node.NodeType.Decorator.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Decorator) ));
         }
 
-        void OnContextMenuNodeCreate( DropdownMenuAction d )
+        void OnContextMenuNodeCreate( DropdownMenuAction d, Node.NodeType type )
         {
-            Node node = new();
+            Node node = CreateInstance<Node>();
+            switch ( type )
+            {
+                case Node.NodeType.Selector:
+                    node = CreateInstance<SelectorNode>();
+                    break;
+                case Node.NodeType.Sequence:
+                    node = CreateInstance<SequenceNode>();
+                    break;
+                case Node.NodeType.Decorator:
+                    node = CreateInstance<DecoratorNode>();
+                    break;
+            }
+
 
             var mousePos = d.eventInfo.localMousePosition;
             var localPos = contentContainer.WorldToLocal(mousePos);
             node.position = localPos;
 
-            CreateNodeView(node, $"pos : {node.position}, localMousePos : {d.eventInfo.localMousePosition}");
+            node.nodeName = d.name;
+            CreateNodeView(node);
+            _nodeMap.Add(node.guid, node);
+            AssetDatabase.AddObjectToAsset(node, _currentTree);
         }
     }
 
@@ -452,7 +821,7 @@ public class MonsterEditor : EditorWindow
         return infoData;
 
     }
-    Button CreateButton( string _text, Action func, (float x, float y) size, VisualElement panel )
+    public static Button CreateButton( string _text, Action func, (float x, float y) size, VisualElement panel )
     {
         var _button = new Button(func)
         {
@@ -475,4 +844,8 @@ public class MonsterEditor : EditorWindow
         panel.Add(label);
         return label;
     }
+
+
+
 }
+

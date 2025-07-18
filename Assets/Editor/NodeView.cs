@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -55,11 +56,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         style.top = node.position.y;
         style.minWidth = new StyleLength(StyleKeyword.Auto);
         style.minHeight = new StyleLength(StyleKeyword.Auto);
-        input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
-        input.portColor = SetPortColor(input.connected);
-        output = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(bool));
-        output.portName = $"{output.connected}";
-        output.portColor = SetPortColor(output.connected);
+        input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
+        output = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool));
+
+        input.portName = $"";
+        output.portName = $"";
+
 
         CreateInputPorts();
         CreateOutputPorts();
@@ -91,7 +93,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         if ( onSelectedNode != null )
         {
             onSelectedNode.Invoke(this);
-            Debug.Log($"Selected node: {this.node.guid}");
+            Debug.Log($"Selected node: {node.guid}");
         }
     }
     public override void OnUnselected()
@@ -177,71 +179,11 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
     }
 }
 
-[System.Serializable]
-public class Node
-{
-
-    public enum NodeState
-    {
-        Run,
-        Fail,
-        Success,
-        Selected,
-        Default
-    }
-    public NodeState State { get => _state; set => SetStatus(value); }
-    NodeState _state;
-    public string guid;
-    public Vector2 position;
-    public List<Node> children;
-
-    Action<NodeState> onChangeNodeState;
-
-    public Node()
-    {
-        _state = NodeState.Default;
-        guid = GUID.Generate().ToString();
-        position = Vector2.zero;
-        children = new List<Node>();
-
-
-
-    }
-
-    public void AddEventFunc( Action<NodeState> eventFunc )
-    {
-        onChangeNodeState += eventFunc;
-    }
-    public void RemoveEventFunc( Action<NodeState> eventFunc )
-    {
-        onChangeNodeState -= eventFunc;
-    }
-    public void SetStatus( Node.NodeState State )
-    {
-        _state = State;
-        onChangeNodeState.Invoke(State);
-
-    }
-}
-
 public enum PortStatus
 {
 
 }
-public class DecoratorNode : Node
-{
-    public Node child;
-}
 
-public class RootNode : Node
-{
-    public Node child;
-}
-public class CompositeNode : Node
-{
-    public Node child;
-}
 
-public abstract class ActionNode : Node { }
-public abstract class ConditionNode : Node { }
+
 

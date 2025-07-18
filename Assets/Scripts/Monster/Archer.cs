@@ -73,7 +73,7 @@ public class Archer : Monster
                 break;
         }
     }
-    protected override IEnumerator AttackPlayer()
+    public override IEnumerator AttackPlayer()
     {
         base.AttackPlayer();
         if ( !atkDelayOn )
