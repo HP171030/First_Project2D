@@ -583,19 +583,6 @@ public class MonsterEditor : EditorWindow
             nodeView.SetNodeName(node.nodeName);
 
             //TODO : 재구성 할 필요 있을듯
-            switch (node.nodeName)
-            {
-                case ROOT:
-                    nodeView.SetPosition(new Rect(0, 0, 150, 50));
-                    _currentTree.rootNode = node;
-                    AssetDatabase.AddObjectToAsset(node, _currentTree);
-                    EditorUtility.SetDirty(_currentTree.rootNode);
-                    EditorUtility.SetDirty(_currentTree);
-                    AssetDatabase.SaveAssets();
-
-                    AssetDatabase.Refresh();
-                    break;
-            }
 
 
             nodeView.onSelectedNode += ( _ ) =>
@@ -713,8 +700,7 @@ public class MonsterEditor : EditorWindow
                 _currentTree = AssetDatabase.LoadAssetAtPath<BehaviourTreeAsset>(assetPath);
 
                 var node = CreateStartNode();
-                CreateNodeView(node);
-                _nodeMap.Add(node.guid, node);
+
             }
 
         }
@@ -768,6 +754,17 @@ public class MonsterEditor : EditorWindow
             Node node = CreateInstance<SelectorNode>();
             node.nodeName = ROOT;
 
+            var nodeView = CreateNodeView(node);
+
+            nodeView.SetPosition(new Rect(0, 0, 150, 50));
+            _currentTree.rootNode = node;
+            AssetDatabase.AddObjectToAsset(node, _currentTree);
+            EditorUtility.SetDirty(_currentTree.rootNode);
+            EditorUtility.SetDirty(_currentTree);
+            AssetDatabase.SaveAssets();
+
+            AssetDatabase.Refresh();
+            _nodeMap.Add(node.guid, node);
             return node;
         }
 
