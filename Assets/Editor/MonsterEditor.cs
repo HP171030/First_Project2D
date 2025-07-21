@@ -316,20 +316,20 @@ public class MonsterEditor : EditorWindow
 
     #region Update Node Logic
 
-    public static void UpdateRootNodeInInfomation( Node rootNode )
-    {
-        var monsterData = SelectedMonsterType as MonsterData;
-        if ( monsterData != null )
-        {
-            monsterData.BehaviorTreeRootNode = rootNode;
-        }
-        else
-        {
-            Debug.Log("MonsterData Null");
-        }
-            EditorUtility.SetDirty(monsterData);
-        AssetDatabase.SaveAssets();
-    }
+    /* public static void UpdateRootNodeInInfomation( Node rootNode )
+     {
+         var monsterData = SelectedMonsterType as MonsterData;
+         if ( monsterData != null )
+         {
+             monsterData.BehaviorTreeRootNode = rootNode;
+         }
+         else
+         {
+             Debug.Log("MonsterData Null");
+         }
+             EditorUtility.SetDirty(monsterData);
+         AssetDatabase.SaveAssets();
+     }*/
     #endregion
 
     public class BehaviourTreeView : GraphView
@@ -428,13 +428,15 @@ public class MonsterEditor : EditorWindow
                     }
                     if ( parentNodeData != null && childNodeData != null )
                     {
-                        if ( !parentNodeData.Children.ContainsKey(childNodeData.guid))
+                        if ( !parentNodeData.Children.ContainsKey(childNodeData.guid) )
                         {
-                            parentNodeData.Children[childNodeData.guid] = childNodeData;
+                            parentNodeData.Children [childNodeData.guid] = childNodeData;
                             EditorUtility.SetDirty(parentNodeData);
                         }
                     }
                 }
+
+
             }
 
             //순환 참조 리스트 삭제
@@ -442,7 +444,7 @@ public class MonsterEditor : EditorWindow
             {
                 g.edgesToCreate.Remove(e);
             }
-
+            AssetDatabase.SaveAssets();
         }
 
         void EdgeToRemoveUpdate( GraphViewChange g )
@@ -511,13 +513,13 @@ public class MonsterEditor : EditorWindow
             if ( loadedAsset.rootNode != null && _nodeMap.ContainsKey(loadedAsset.rootNode.guid) )
             {
                 DrawNodeViewsRecursive(loadedAsset.rootNode);
-                UpdateRootNodeInInfomation(loadedAsset.rootNode);
+                // UpdateRootNodeInInfomation(loadedAsset.rootNode);
             }
             else if ( loadedAsset.rootNode == null && allNodesInAsset.Any() )
             {
                 var first = allNodesInAsset.First();
                 DrawNodeViewsRecursive(first);
-                UpdateRootNodeInInfomation(first);
+                // UpdateRootNodeInInfomation(first);
                 Debug.LogWarning($"it hasn't rootNode Set root {first} Node");
             }
             else
@@ -533,6 +535,7 @@ public class MonsterEditor : EditorWindow
 
         private void DrawNodeViewsRecursive( Node currentNode )
         {
+            Debug.Log($"Load Draw {currentNode.nodeName}");
             // 이미 그려진 노드뷰나 유효하지 않은 노드 데이터면 중복 생성 방지
             if ( currentNode == null || GetNodeByGuid(currentNode.guid) != null ) return;
 

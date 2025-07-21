@@ -70,7 +70,7 @@ public class Node : ScriptableObject
     [HideInInspector] public NodeType Type;
     [HideInInspector] public string guid = Guid.NewGuid().ToString();
     [HideInInspector] public Vector2 position = Vector2.zero;
-    [HideInInspector] public Dictionary<string, Node> Children = new();
+    public Dictionary<string, Node> Children = new();
     [HideInInspector] public string nodeName;
 
     public enum NodeState
@@ -129,23 +129,27 @@ public abstract class LogicRunner : NodeRunner
 public class ActionNodeRunner : LogicRunner
 {
     Node _node;
+    Monster _monster;
     public ActionNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
         _node = node;
+        _monster = monster;
     }
     public override IEnumerator<bool> Execute()
     {
-        Debug.Log($"Action {_node.nodeName} Excute ");
-        yield return false;
+        Debug.Log($"Temp Action {_node.nodeName} Excute true ");
+        yield return true;
     }
 }
 [NodeRunnerFor(typeof(ConditionNode))]
 public class ConditionNodeRunner : LogicRunner
 {
     Node _node;
+    Monster _monster;
     public ConditionNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
         _node = node;
+        _monster = monster;
     }
     public override IEnumerator<bool> Execute()
     {
@@ -157,23 +161,57 @@ public class ConditionNodeRunner : LogicRunner
 public class SelectorNodeRunner : FlowNodeRunner
 {
     Node _node;
+    Monster _monster;
     public SelectorNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
         _node = node;
+        _monster = monster;
     }
     public override IEnumerator<bool> Execute()
     {
-        Debug.Log($"Selector {_node.nodeName} Excute ");
-        yield return false;
+        Queue<NodeRunner> nodeRunnerQueue = new Queue<NodeRunner>();
+
+        foreach ( Node childNode in _node.Children.Values )
+        {
+            NodeRunner childRunner = NodeRunnerFactory.Instance.Create(childNode, _monster); 
+            if ( childRunner != null )
+            {
+                nodeRunnerQueue.Enqueue(childRunner);
+            }
+        }
+
+        while ( nodeRunnerQueue.Count > 0 )
+        {
+            var currentRunner = nodeRunnerQueue.Dequeue();
+
+            IEnumerator<bool> childExecution = currentRunner.Execute();
+            bool childResult = false;
+
+            while ( childExecution.MoveNext() )
+            {
+                childResult = childExecution.Current;
+                if ( childResult ) 
+                {
+                    yield return true;
+                    yield break;
+                }
+                yield return false;
+            }
+        }
+
+        yield return false; // Selector 노드 실패
     }
 }
 [NodeRunnerFor(typeof(SequenceNode))]
 public class SequenceRunner : FlowNodeRunner
 {
     Node _node;
+    Monster _monster;
+
     public SequenceRunner( Node node, Monster monster ) : base(node, monster)
     {
         _node = node;
+        _monster = monster;
     }
     public override IEnumerator<bool> Execute()
     {
@@ -186,9 +224,11 @@ public class SequenceRunner : FlowNodeRunner
 public class DecoratorNodeRunner : FlowNodeRunner
 {
     Node _node;
+    Monster _monster;
     public DecoratorNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
         _node = node;
+        _monster = monster;
     }
     public override IEnumerator<bool> Execute()
     {
@@ -199,12 +239,12 @@ public class DecoratorNodeRunner : FlowNodeRunner
 }
 public abstract class NodeRunner
 {
-    public Node NodeData { get; private set; }
+    public Node Node { get; private set; }
     public List<NodeRunner> Children { get; private set; } = new();
 
     public NodeRunner( Node node )
     {
-        NodeData = node;
+        Node = node;
     }
 
     public abstract IEnumerator<bool> Execute();

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DecoratorNode : Node
 {
-    public Node child;
 
     public DecoratorNode()
     {

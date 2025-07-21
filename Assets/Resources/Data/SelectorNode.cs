@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SelectorNode : Node
 {
-    public List<Node> children;
 
     public SelectorNode()
     {
