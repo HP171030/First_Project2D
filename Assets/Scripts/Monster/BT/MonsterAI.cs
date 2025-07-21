@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class MonsterAI : MonoBehaviour
@@ -12,18 +14,20 @@ public class MonsterAI : MonoBehaviour
     NodeRunner _nodeRunner;
     NodeRunnerFactory _nodeRunnerFactory;
 
+
+
     private void Awake()
     {
         _nodeRunnerFactory = new NodeRunnerFactory();
         _monster = GetComponent<Monster>();
 
     }
-    public void Start()
+    public IEnumerator Start()
     {
         if ( _monster == null )
         {
             Debug.LogError("Monster Component is null");
-            return;
+            yield return null;
         }
 
         _rootNode = _monster.monsterData.BehaviorTreeRootNode;
@@ -31,9 +35,12 @@ public class MonsterAI : MonoBehaviour
         if ( _rootNode == null )
         {
             Debug.LogWarning($"{_monster.monsterData.name} data is null ");
-            return;
+           yield return null;
 
         }
+
+        yield return new WaitUntil(() => _nodeRunnerFactory.Complete = true);
+
         _nodeRunner = _nodeRunnerFactory.Create(_rootNode,_monster);
         StartCoroutine(_nodeRunner.Execute());
         
@@ -43,10 +50,11 @@ public class MonsterAI : MonoBehaviour
 public class NodeRunnerFactory
 {
     Dictionary<Type, ConstructorInfo> _constructors = new();
-
+    public bool Complete = false;
     public NodeRunnerFactory()
     {
         RegistAll();
+        Complete = false;
     }
     void RegistAll()
     {
@@ -63,15 +71,18 @@ public class NodeRunnerFactory
             var ctor = runnerType.GetConstructor(new Type [] { attr.NodeType, typeof(Monster) });
             if ( ctor == null )
             {
-                Debug.LogWarning($"{runnerType.Name} : 컨스트럭터가 없음");
+                Debug.LogWarning($"{attr.NodeType.Name} arg1 {runnerType.Name} : ctor 없음");
                 continue;
             }
 
             _constructors [attr.NodeType] = ctor;
         }
+
+        Complete = true;
     }
     public NodeRunner Create( Node node, Monster monster )
     {
+
         var nodeType = node.GetType();
         if ( _constructors.TryGetValue(nodeType, out var ctor) )
         {
@@ -86,6 +97,12 @@ public class NodeRunnerForAttribute : Attribute
     public Type NodeType { get; }
     public NodeRunnerForAttribute( Type nodeType )
     {
+        if ( nodeType == null || !typeof(Node).IsAssignableFrom(nodeType) )
+        {
+            Debug.LogError($"Except : {nodeType?.Name ?? "null"} 타입은 노드 상속해야함");
+            throw new ArgumentException($"NodeType must inherit from Node. Invalid type: {nodeType?.Name}", nameof(nodeType));
+        }
+
         NodeType = nodeType;
     }
 }

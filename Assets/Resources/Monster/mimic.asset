@@ -29,7 +29,9 @@ MonoBehaviour:
     effects: {fileID: 0}
     itemColor: {r: 1, g: 1, b: 1, a: 1}
   dropGold: 1
+  attackPatterns: []
   soundPlayerDamaged: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
   soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}
   soundAttack: {fileID: 8300000, guid: edd73e3973a792d4ca342f322b8cbef3, type: 3}
   soundMonsterDead: {fileID: 8300000, guid: dd8149c4fbb5a1a439b4a0851934fa66, type: 3}
+  _btrootNode: {fileID: 1372761698481755556, guid: e3b52d16fde34e94da985ab6a435016d, type: 2}

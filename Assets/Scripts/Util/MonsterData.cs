@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 //[CreateAssetMenu(fileName = "Monster", menuName = "monsterData/data")]
@@ -30,7 +31,7 @@ public class MonsterData : ScriptableObject
     [Header("BT")]
     public Node _btrootNode;
 
-    public Node BehaviorTreeRootNode => _btrootNode;
+    public Node BehaviorTreeRootNode { get => _btrootNode; set => _btrootNode = value; }
 
     public void OnDiedEvent( string name )
     {

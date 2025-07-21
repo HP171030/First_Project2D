@@ -11,7 +11,6 @@ public class TutorialQuestNPC : QuestNPC
     [SerializeField] GameObject Last;
     protected override void SpecificNPCFunc()
     {
-        Debug.Log("Load specific");
         if ( curNpc == NPCState.Talk )
         {
             Debug.Log("continue level is clear level, npc changed talk state");
@@ -28,7 +27,6 @@ public class TutorialQuestNPC : QuestNPC
                 Debug.Log("current Progress is not spawning level");
             }
 
-            Debug.Log($"is not clear yet {curNpc}");
         }
     }
     private IEnumerator SpawnMimicsRoutine()

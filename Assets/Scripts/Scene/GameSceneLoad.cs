@@ -49,7 +49,6 @@ public class GameSceneLoad : BaseScene
 
     public override IEnumerator OnStartScene()
     {
-        Debug.Log("Onstart");
         Manager.Game.hitdam.gameObject.SetActive(false);
         yield return new WaitForSeconds(0.3f);
         animator.gameObject.SetActive(true);

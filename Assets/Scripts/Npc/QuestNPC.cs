@@ -22,7 +22,6 @@ public class QuestNPC : NPCScript
         curNpc = NPCState.Quest;
         curQuestProcess = 1;
         AddQuest();
-        Debug.Log("AddIn");
 
     }
     ///<summary>
@@ -31,9 +30,6 @@ public class QuestNPC : NPCScript
     protected virtual void SpecificNPCFunc() { }
     public void InitQuest()
     {
-
-        Debug.Log("startInit");
-        Debug.Log(Manager.Quest.completedQuestList.Count);
         for ( int i = 0; i < Manager.Quest.completedQuestList.Count; i++ )
         {
             if ( Manager.Quest.completedQuestList [i].npcID == NPCID )

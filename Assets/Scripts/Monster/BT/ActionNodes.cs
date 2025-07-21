@@ -1,6 +1,4 @@
-using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,68 +8,56 @@ public class ActionNodes
 }
 
 
-[NodeRunnerFor(typeof(SequenceNode))]
-public class AttackNode : ActionNodeRunner
+public class AttackNode
 {
     private Monster _monster;
 
-    public AttackNode( SequenceNode node, Monster monster ) : base(node, monster)
-    {
-        _monster = monster;
-    }
-
-    public override IEnumerator Execute()
-    {
-        _monster.MoveOn = false;
-
-        if ( !_monster.atkDelayOn )
+    /*    public AttackNode( SequenceNode node, Monster monster ) : base(node, monster)
         {
-            Vector2 prePos = _monster.transform.position;
-            Vector2 targetPos = prePos + _monster.atkDir * 2f;
-            float t = 0f;
-            float duration = 0.5f;
+            _monster = monster;
+        }*/
 
-            _monster.atkDelayOn = true;
-            Manager.Sound.PlaySFX(_monster.monsterData.soundAttack);
-            _monster.animator.Play("AttackMonster");
+    /*    public override IEnumerator Execute()
+        {
+            _monster.MoveOn = false;
 
-            while ( t < 1f )
+            if ( !_monster.atkDelayOn )
             {
-                _monster.transform.position = Vector2.Lerp(prePos, targetPos, t);
-                t += Time.deltaTime / duration;
-                yield return null;
+                Vector2 prePos = _monster.transform.position;
+                Vector2 targetPos = prePos + _monster.atkDir * 2f;
+                float t = 0f;
+                float duration = 0.5f;
+
+                _monster.atkDelayOn = true;
+                Manager.Sound.PlaySFX(_monster.monsterData.soundAttack);
+                _monster.animator.Play("AttackMonster");
+
+                while ( t < 1f )
+                {
+                    _monster.transform.position = Vector2.Lerp(prePos, targetPos, t);
+                    t += Time.deltaTime / duration;
+                    yield return null;
+                }
+
+                Collider2D player = Physics2D.OverlapCircle(_monster.transform.position, _monster.monsterData.attackRange, _monster.playerLayer);
+                if ( player != null )
+                {
+                    SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
+                    Manager.Game.HpEvent -= _monster.monsterData.atk;
+                    Manager.Game.ShakeCam();
+                    spriteRenderer.material.color = Color.red;
+                    spriteRenderer.material.DOColor(Color.white, 1f);
+                    Manager.Sound.PlaySFX(_monster.monsterData.soundPlayerDamaged);
+                }
+
+                _monster.ChangeState(Monster.MonsterState.Idle);
+                _monster.animator.SetBool("Move", false);
+                yield return new WaitForSeconds(_monster.monsterData.atkDelay);
+                _monster.atkDelayOn = false;
             }
-
-            Collider2D player = Physics2D.OverlapCircle(_monster.transform.position, _monster.monsterData.attackRange, _monster.playerLayer);
-            if ( player != null )
-            {
-                SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
-                Manager.Game.HpEvent -= _monster.monsterData.atk;
-                Manager.Game.ShakeCam();
-                spriteRenderer.material.color = Color.red;
-                spriteRenderer.material.DOColor(Color.white, 1f);
-                Manager.Sound.PlaySFX(_monster.monsterData.soundPlayerDamaged);
-            }
-
-            _monster.ChangeState(Monster.MonsterState.Idle);
-            _monster.animator.SetBool("Move", false);
-            yield return new WaitForSeconds(_monster.monsterData.atkDelay);
-            _monster.atkDelayOn = false;
-        }
-    }
+        }*/
 
 
-}
-
-public class MoveNode : ActionNodeRunner
-{
-    object target;
-    public MoveNode( SequenceNode node, Monster target ) : base(node, target) { this.target = target; }
-
-    public override IEnumerator Execute()
-    {
-        throw new System.NotImplementedException();
-    }
 }
 
 
@@ -80,12 +66,12 @@ public class Node : ScriptableObject
     NodeState _state = NodeState.Default;
     Action<NodeState> onChangeNodeState;
 
-    public NodeState State { get => _state; set => SetStatus(value); }
-    public NodeType Type;
-    public string guid = Guid.NewGuid().ToString();
-    public Vector2 position = Vector2.zero;
-    public List<string> ChildrenGUIDs = new();
-    public string nodeName;
+    [HideInInspector] public NodeState State { get => _state; set => SetStatus(value); }
+    [HideInInspector] public NodeType Type;
+    [HideInInspector] public string guid = Guid.NewGuid().ToString();
+    [HideInInspector] public Vector2 position = Vector2.zero;
+    [HideInInspector] public Dictionary<string, Node> Children = new();
+    [HideInInspector] public string nodeName;
 
     public enum NodeState
     {
@@ -93,13 +79,16 @@ public class Node : ScriptableObject
         Fail,
         Success,
         Selected,
-        Default
+        Default,
+        Root
     }
     public enum NodeType
     {
         Selector,
         Sequence,
-        Decorator
+        Decorator,
+        Condition,
+        Action
     }
 
 
@@ -119,56 +108,95 @@ public class Node : ScriptableObject
     }
 
 }
-public class SequenceNode : Node
+
+public abstract class FlowNodeRunner : NodeRunner
 {
-    public List<Node> children;
-    public SequenceNode()
+    Node _node;
+    public FlowNodeRunner( Node node, Monster monster ) : base(node)
     {
-        Type = NodeType.Sequence;
-    }
-
-}
-public class DecoratorNode : Node
-{
-    public Node child;
-
-    public DecoratorNode()
-    {
-        Type = NodeType.Decorator;
-    }
-
-}
-public class SelectorNode : Node
-{
-    public List<Node> children;
-
-    public SelectorNode()
-    {
-        Type = NodeType.Selector;
+        _node = node;
     }
 }
-
+public abstract class LogicRunner : NodeRunner
+{
+    Node _node;
+    public LogicRunner( Node node, Monster monster ) : base(node)
+    {
+        _node = node;
+    }
+}
+[NodeRunnerFor(typeof(ActionNode))]
+public class ActionNodeRunner : LogicRunner
+{
+    Node _node;
+    public ActionNodeRunner( Node node, Monster monster ) : base(node, monster)
+    {
+        _node = node;
+    }
+    public override IEnumerator<bool> Execute()
+    {
+        Debug.Log($"Action {_node.nodeName} Excute ");
+        yield return false;
+    }
+}
+[NodeRunnerFor(typeof(ConditionNode))]
+public class ConditionNodeRunner : LogicRunner
+{
+    Node _node;
+    public ConditionNodeRunner( Node node, Monster monster ) : base(node, monster)
+    {
+        _node = node;
+    }
+    public override IEnumerator<bool> Execute()
+    {
+        Debug.Log($"Condition {_node.nodeName} Excute ");
+        yield return false;
+    }
+}
+[NodeRunnerFor(typeof(SelectorNode))]
+public class SelectorNodeRunner : FlowNodeRunner
+{
+    Node _node;
+    public SelectorNodeRunner( Node node, Monster monster ) : base(node, monster)
+    {
+        _node = node;
+    }
+    public override IEnumerator<bool> Execute()
+    {
+        Debug.Log($"Selector {_node.nodeName} Excute ");
+        yield return false;
+    }
+}
 [NodeRunnerFor(typeof(SequenceNode))]
-public abstract class ActionNodeRunner : NodeRunner
+public class SequenceRunner : FlowNodeRunner
 {
-    SequenceNode _node;
-    public ActionNodeRunner( SequenceNode node, Monster monster ) : base(node)
+    Node _node;
+    public SequenceRunner( Node node, Monster monster ) : base(node, monster)
     {
         _node = node;
     }
-}
-
-[NodeRunnerFor(typeof(ConditionNodeRunner))]
-public abstract class ConditionNodeRunner : NodeRunner
-{
-    SelectorNode _node;
-    public ConditionNodeRunner( SelectorNode node, Monster monster ) : base(node)
+    public override IEnumerator<bool> Execute()
     {
-        _node = node;
+        Debug.Log($"Sequence {_node.nodeName} Excute ");
+        yield return false;
     }
 
 }
+[NodeRunnerFor(typeof(DecoratorNode))]
+public class DecoratorNodeRunner : FlowNodeRunner
+{
+    Node _node;
+    public DecoratorNodeRunner( Node node, Monster monster ) : base(node, monster)
+    {
+        _node = node;
+    }
+    public override IEnumerator<bool> Execute()
+    {
+        Debug.Log($"Decorator {_node.nodeName} Excute ");
+        yield return false;
+    }
 
+}
 public abstract class NodeRunner
 {
     public Node NodeData { get; private set; }
@@ -179,5 +207,5 @@ public abstract class NodeRunner
         NodeData = node;
     }
 
-    public abstract IEnumerator Execute();
+    public abstract IEnumerator<bool> Execute();
 }

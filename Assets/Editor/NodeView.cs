@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class NodeView : UnityEditor.Experimental.GraphView.Node
+public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
 {
     public Action<NodeView> onSelectedNode;
     public Action<NodeView> onUnSelectedNode;
@@ -52,13 +50,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
 
         node.AddEventFunc(SetColorByState);
 
-        style.left = node.position.x;
-        style.top = node.position.y;
-        style.minWidth = new StyleLength(StyleKeyword.Auto);
-        style.minHeight = new StyleLength(StyleKeyword.Auto);
+
+        SetPosition(new Rect(node.position.x,node.position.y, 200,150));
+
         input = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
         output = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool));
-
+        
         input.portName = $"";
         output.portName = $"";
 
@@ -93,7 +90,6 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
         if ( onSelectedNode != null )
         {
             onSelectedNode.Invoke(this);
-            Debug.Log($"Selected node: {node.guid}");
         }
     }
     public override void OnUnselected()
@@ -146,10 +142,13 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node
                 SetBoarderColor(Color.blue);
                 break;
             case Node.NodeState.Selected:
-                SetBoarderColor(Color.cyan, 10);
+                SetBoarderColor(Color.cyan, 5);
                 break;
             case Node.NodeState.Default:
                 SetBoarderColor(Color.black);
+                break;
+            case Node.NodeState.Root:
+                SetBoarderColor(Color.magenta);
                 break;
         }
     }
