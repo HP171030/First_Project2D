@@ -48,7 +48,7 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
         this.node = node;
         viewDataKey = node.guid;
 
-        node.AddEventFunc(SetColorByState);
+        node.AddEventFunc(SetColorViewByState);
 
 
         SetPosition(new Rect(node.position.x,node.position.y, 200,150));
@@ -77,11 +77,11 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
 
         onSelectedNode = ( nodeView ) =>
         {
-            node.SetStatus(Node.NodeState.Selected);
+            node.SetStatus(Node.NodeViewState.Selected);
         };
         onUnSelectedNode = ( nodeView ) =>
         {
-            node.SetStatus(Node.NodeState.Default);
+            node.SetStatus(Node.NodeViewState.Default);
         };
     }
     public override void OnSelected()
@@ -128,26 +128,17 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
         style.borderLeftWidth = width;
         style.borderRightWidth = width;
     }
-    void SetColorByState( Node.NodeState state )
+    void SetColorViewByState( Node.NodeViewState state )
     {
         switch ( state )
         {
-            case Node.NodeState.Run:
-                SetBoarderColor(Color.green);
-                break;
-            case Node.NodeState.Fail:
-                SetBoarderColor(Color.red);
-                break;
-            case Node.NodeState.Success:
-                SetBoarderColor(Color.blue);
-                break;
-            case Node.NodeState.Selected:
+            case Node.NodeViewState.Selected:
                 SetBoarderColor(Color.cyan, 5);
                 break;
-            case Node.NodeState.Default:
+            case Node.NodeViewState.Default:
                 SetBoarderColor(Color.black);
                 break;
-            case Node.NodeState.Root:
+            case Node.NodeViewState.Root:
                 SetBoarderColor(Color.magenta);
                 break;
         }

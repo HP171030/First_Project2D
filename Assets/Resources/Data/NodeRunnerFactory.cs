@@ -21,12 +21,12 @@ public class NodeRunnerFactory
         }
     }
 
-    Dictionary<Type, ConstructorInfo> _constructors = new();
+    Dictionary<(Type,string), ConstructorInfo> _constructors = new();
     public bool Complete = false;
     public NodeRunnerFactory()
     {
-        RegistAll();
         Complete = false;
+        RegistAll();
     }
     void RegistAll()
     {
@@ -46,35 +46,71 @@ public class NodeRunnerFactory
                 Debug.LogWarning($"{attr.NodeType.Name} arg1 {runnerType.Name} : ctor 없음");
                 continue;
             }
+            var key = (attr.NodeType, attr.RunnerKey ?? "");
+            _constructors [key] = ctor;
 
-            _constructors [attr.NodeType] = ctor;
         }
 
         Complete = true;
     }
     public NodeRunner Create( Node node, Monster monster )
     {
+        string runnerKey = node.RunnerType;
 
-        var nodeType = node.GetType();
-        if ( _constructors.TryGetValue(nodeType, out var ctor) )
+        var key = (node.GetType(), runnerKey);
+
+        if ( !_constructors.TryGetValue(key, out var ctor) )
         {
-            return ( NodeRunner )ctor.Invoke(new object [] { node, monster });
+            if ( string.IsNullOrEmpty(runnerKey))
+            {
+                var found = _constructors
+                    .Where(kv => kv.Key.Item1 == node.GetType())
+                    .ToList();
+
+                if ( found.Count == 1 )
+                {
+                    ctor = found [0].Value;
+                }
+                else
+                {
+                    throw new Exception($"러너를 찾을 수 없습니다: NodeType={node.GetType().Name}, RunnerKey='{runnerKey}'");
+                }
+            }
+            else
+            {
+                throw new Exception($"러너를 찾을 수 없습니다: NodeType={node.GetType().Name}, RunnerKey='{runnerKey}'");
+            }
         }
-        throw new Exception($"러너에 없는 노드타입임 :  {nodeType.Name}");
+        var runner = ( NodeRunner )ctor.Invoke(new object [] { node, monster });
+        runner.ParseFieldToDictionary();
+        return runner;
+
     }
+
 }
 [AttributeUsage(AttributeTargets.Class)]
 public class NodeRunnerForAttribute : Attribute
 {
     public Type NodeType { get; }
-    public NodeRunnerForAttribute( Type nodeType )
+    public string RunnerKey { get; }
+    public NodeRunnerForAttribute( Type nodeType ,string runnerKey ="")
     {
         if ( nodeType == null || !typeof(Node).IsAssignableFrom(nodeType) )
         {
-            Debug.LogError($"Except : {nodeType?.Name ?? "null"} 타입은 노드 상속해야함");
-            throw new ArgumentException($"NodeType must inherit from Node. Invalid type: {nodeType?.Name}", nameof(nodeType));
+            throw new ArgumentException($"NodeType must inherit from Node {nodeType?.Name}", nameof(nodeType));
         }
 
         NodeType = nodeType;
+        RunnerKey = runnerKey ?? "";
+    }
+}
+
+[AttributeUsage(AttributeTargets.Class,Inherited =false)]
+public class NodeNameAttribute : Attribute
+{
+    public string Name { get; set; }
+    public NodeNameAttribute(string name )
+    {
+        Name = name;
     }
 }

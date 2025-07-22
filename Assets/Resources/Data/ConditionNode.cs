@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ConditionNode : Node
 {
+
     public ConditionNode()
     {
         Type = NodeType.Condition;

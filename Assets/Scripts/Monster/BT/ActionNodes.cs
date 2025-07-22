@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,76 +9,27 @@ public class ActionNodes
 }
 
 
-public class AttackNode
-{
-    private Monster _monster;
-
-    /*    public AttackNode( SequenceNode node, Monster monster ) : base(node, monster)
-        {
-            _monster = monster;
-        }*/
-
-    /*    public override IEnumerator Execute()
-        {
-            _monster.MoveOn = false;
-
-            if ( !_monster.atkDelayOn )
-            {
-                Vector2 prePos = _monster.transform.position;
-                Vector2 targetPos = prePos + _monster.atkDir * 2f;
-                float t = 0f;
-                float duration = 0.5f;
-
-                _monster.atkDelayOn = true;
-                Manager.Sound.PlaySFX(_monster.monsterData.soundAttack);
-                _monster.animator.Play("AttackMonster");
-
-                while ( t < 1f )
-                {
-                    _monster.transform.position = Vector2.Lerp(prePos, targetPos, t);
-                    t += Time.deltaTime / duration;
-                    yield return null;
-                }
-
-                Collider2D player = Physics2D.OverlapCircle(_monster.transform.position, _monster.monsterData.attackRange, _monster.playerLayer);
-                if ( player != null )
-                {
-                    SpriteRenderer spriteRenderer = player.GetComponent<SpriteRenderer>();
-                    Manager.Game.HpEvent -= _monster.monsterData.atk;
-                    Manager.Game.ShakeCam();
-                    spriteRenderer.material.color = Color.red;
-                    spriteRenderer.material.DOColor(Color.white, 1f);
-                    Manager.Sound.PlaySFX(_monster.monsterData.soundPlayerDamaged);
-                }
-
-                _monster.ChangeState(Monster.MonsterState.Idle);
-                _monster.animator.SetBool("Move", false);
-                yield return new WaitForSeconds(_monster.monsterData.atkDelay);
-                _monster.atkDelayOn = false;
-            }
-        }*/
-
-
-}
-
-
 public class Node : ScriptableObject
 {
-    NodeState _state = NodeState.Default;
-    Action<NodeState> onChangeNodeState;
+    NodeViewState _state = NodeViewState.Default;
+    Action<NodeViewState> onChangeNodeState;
 
-    [HideInInspector] public NodeState State { get => _state; set => SetStatus(value); }
+    [HideInInspector] public NodeViewState State { get => _state; set => SetStatus(value); }
     [HideInInspector] public NodeType Type;
     [HideInInspector] public string guid = Guid.NewGuid().ToString();
     [HideInInspector] public Vector2 position = Vector2.zero;
-    public Dictionary<string, Node> Children = new();
     [HideInInspector] public string nodeName;
 
-    public enum NodeState
+    [SerializedDictionary]
+    public SerializedDictionary<string, Node> Children = new();
+
+    public string BlackBoardKey;
+
+    public string RunnerType;
+    
+
+    public enum NodeViewState
     {
-        Run,
-        Fail,
-        Success,
         Selected,
         Default,
         Root
@@ -92,15 +44,15 @@ public class Node : ScriptableObject
     }
 
 
-    public void AddEventFunc( Action<NodeState> eventFunc )
+    public void AddEventFunc( Action<NodeViewState> eventFunc )
     {
         onChangeNodeState += eventFunc;
     }
-    public void RemoveEventFunc( Action<NodeState> eventFunc )
+    public void RemoveEventFunc( Action<NodeViewState> eventFunc )
     {
         onChangeNodeState -= eventFunc;
     }
-    public void SetStatus( Node.NodeState State )
+    public void SetStatus( Node.NodeViewState State )
     {
         _state = State;
         onChangeNodeState.Invoke(State);
@@ -111,67 +63,47 @@ public class Node : ScriptableObject
 
 public abstract class FlowNodeRunner : NodeRunner
 {
-    Node _node;
     public FlowNodeRunner( Node node, Monster monster ) : base(node)
     {
-        _node = node;
     }
 }
 public abstract class LogicRunner : NodeRunner
 {
-    Node _node;
     public LogicRunner( Node node, Monster monster ) : base(node)
     {
-        _node = node;
     }
 }
-[NodeRunnerFor(typeof(ActionNode))]
-public class ActionNodeRunner : LogicRunner
+
+public abstract class ActionNodeRunner : LogicRunner
 {
-    Node _node;
-    Monster _monster;
+    protected Monster Monster;
     public ActionNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
-        _node = node;
-        _monster = monster;
-    }
-    public override IEnumerator<bool> Execute()
-    {
-        Debug.Log($"Temp Action {_node.nodeName} Excute true ");
-        yield return true;
+        Monster = monster;
     }
 }
 [NodeRunnerFor(typeof(ConditionNode))]
-public class ConditionNodeRunner : LogicRunner
+public abstract class ConditionNodeRunner : LogicRunner
 {
-    Node _node;
-    Monster _monster;
+    protected Monster Monster;
     public ConditionNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
-        _node = node;
-        _monster = monster;
-    }
-    public override IEnumerator<bool> Execute()
-    {
-        Debug.Log($"Condition {_node.nodeName} Excute ");
-        yield return false;
+        Monster = monster;
     }
 }
 [NodeRunnerFor(typeof(SelectorNode))]
 public class SelectorNodeRunner : FlowNodeRunner
 {
-    Node _node;
     Monster _monster;
     public SelectorNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
-        _node = node;
         _monster = monster;
     }
-    public override IEnumerator<bool> Execute()
+    public override IEnumerator<NodeState> Execute()
     {
         Queue<NodeRunner> nodeRunnerQueue = new Queue<NodeRunner>();
 
-        foreach ( Node childNode in _node.Children.Values )
+        foreach ( Node childNode in Node.Children.Values )
         {
             NodeRunner childRunner = NodeRunnerFactory.Instance.Create(childNode, _monster); 
             if ( childRunner != null )
@@ -184,68 +116,116 @@ public class SelectorNodeRunner : FlowNodeRunner
         {
             var currentRunner = nodeRunnerQueue.Dequeue();
 
-            IEnumerator<bool> childExecution = currentRunner.Execute();
-            bool childResult = false;
+            IEnumerator<NodeState> childExecution = currentRunner.Execute();
 
             while ( childExecution.MoveNext() )
             {
-                childResult = childExecution.Current;
-                if ( childResult ) 
+                switch ( childExecution.Current ) 
                 {
-                    yield return true;
-                    yield break;
+                    case NodeState.True:
+                        yield return NodeState.True;
+                        yield break;
+                    case NodeState.Fail:
+                        break;
+                    case NodeState.Running:
+                        yield return NodeState.Running;
+                        break;
                 }
-                yield return false;
+                yield return NodeState.Fail;
             }
         }
 
-        yield return false; // Selector 노드 실패
+        yield return NodeState.Fail;
     }
 }
 [NodeRunnerFor(typeof(SequenceNode))]
 public class SequenceRunner : FlowNodeRunner
 {
-    Node _node;
     Monster _monster;
 
     public SequenceRunner( Node node, Monster monster ) : base(node, monster)
     {
-        _node = node;
         _monster = monster;
     }
-    public override IEnumerator<bool> Execute()
+    public override IEnumerator<NodeState> Execute()
     {
-        Debug.Log($"Sequence {_node.nodeName} Excute ");
-        yield return false;
+        Debug.Log("시퀀스 시작");
+        Queue<NodeRunner> queue = new Queue<NodeRunner>();
+        foreach(var child in Node.Children.Values )
+        {
+           var runner = NodeRunnerFactory.Instance.Create(child, _monster);
+            if(runner != null)
+                queue.Enqueue( runner );
+
+            while(queue.Count > 0 )
+            {
+                var target = queue.Dequeue();
+                Debug.Log($"{target.Node.nodeName} 시작");
+                var evaluate = target.Execute();
+
+                while ( evaluate.MoveNext() )
+                {
+                    switch ( evaluate.Current )
+                    {
+                        case NodeState.Fail :
+                            Debug.Log($"{target.Node.nodeName} 실패");
+                            yield return NodeState.Fail;
+                            yield break;
+                        case NodeState.True:
+                            Debug.Log($"{target.Node.nodeName} 성공");
+                            foreach ( var item in target.Node.Children.Values )
+                            {
+                                var childRunner = NodeRunnerFactory.Instance.Create(item, _monster);
+                                queue.Enqueue(childRunner);
+                            }
+                            
+                            break;
+                        case NodeState.Running:
+                            Debug.Log($"{target.Node.nodeName} 유지");
+                            yield return NodeState.Running;
+                            break;
+                    }
+                }
+            }
+        }
+
+        yield return NodeState.Fail;
     }
 
 }
 [NodeRunnerFor(typeof(DecoratorNode))]
 public class DecoratorNodeRunner : FlowNodeRunner
 {
-    Node _node;
     Monster _monster;
     public DecoratorNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
-        _node = node;
         _monster = monster;
     }
-    public override IEnumerator<bool> Execute()
+    public override IEnumerator<NodeState> Execute()
     {
-        Debug.Log($"Decorator {_node.nodeName} Excute ");
-        yield return false;
+        Debug.Log($"Decorator {Node.nodeName} Excute ");
+        yield return NodeState.Fail;
     }
 
 }
 public abstract class NodeRunner
 {
+    public enum NodeState
+    {
+        True,
+        Fail,
+        Running
+    }
     public Node Node { get; private set; }
-    public List<NodeRunner> Children { get; private set; } = new();
 
-    public NodeRunner( Node node )
+    public NodeRunner(Node node )
     {
         Node = node;
     }
 
-    public abstract IEnumerator<bool> Execute();
+    public void ParseFieldToDictionary()
+    {
+/*        Node.blackboard.SetValue()*/
+    }
+    public abstract IEnumerator<NodeState> Execute();
 }

@@ -1,11 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
+using static NodeRunner;
 
 public class MonsterAI : MonoBehaviour
 {
@@ -13,13 +8,12 @@ public class MonsterAI : MonoBehaviour
     Node _rootNode;
 
     NodeRunner _nodeRunner;
-
-
+    bool _isRunning;
 
     private void Awake()
     {
         _monster = GetComponent<Monster>();
-
+       
     }
     public IEnumerator Start()
     {
@@ -38,15 +32,30 @@ public class MonsterAI : MonoBehaviour
         if ( _rootNode == null )
         {
             Debug.LogWarning($"{_monster.monsterData.name} data is null ");
-           yield return null;
+            yield return null;
 
         }
-
         yield return new WaitUntil(() => NodeRunnerFactory.Instance.Complete = true);
+        _nodeRunner = NodeRunnerFactory.Instance.Create(_rootNode, _monster);
 
-        _nodeRunner = NodeRunnerFactory.Instance.Create(_rootNode,_monster);
-        StartCoroutine(_nodeRunner.Execute());
-        
+
+    }
+    private void Update()
+    {
+        if ( _isRunning || _nodeRunner == null )
+            return;
+
+        StartCoroutine(RunBT());
+    }
+
+    private IEnumerator RunBT()
+    {
+        Debug.Log("Run BT");
+        _isRunning = true;
+
+        yield return _nodeRunner.Execute();
+
+        _isRunning = false;
     }
 
 }

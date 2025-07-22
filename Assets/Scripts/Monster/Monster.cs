@@ -38,6 +38,10 @@ public class Monster : MonoBehaviour, Idamagable
     [SerializeField] public GameObject parent;
 
     [SerializeField] public GameObject dropItem;
+
+
+
+
     protected virtual void Start()
     {
         ChangeState(MonsterState.Idle);
@@ -100,7 +104,7 @@ public class Monster : MonoBehaviour, Idamagable
         {
 
 
-            transform.Translate(moveDir * monsterData.speed / 100);
+           // transform.Translate(moveDir * monsterData.speed / 100);
         }
     }
     protected virtual void Update()
@@ -133,7 +137,7 @@ public class Monster : MonoBehaviour, Idamagable
                 break;
 
             case MonsterState.Chase:
-                ChasePattern();
+                /*ChasePattern();
                 player = Physics2D.OverlapCircle(transform.position, monsterData.attackRange, playerLayer);
                 if ( player != null )
                 {
@@ -142,7 +146,7 @@ public class Monster : MonoBehaviour, Idamagable
                     MoveOn = false;
                     break;
                 }
-                break;
+                break;*/
 
             case MonsterState.Attack:
 

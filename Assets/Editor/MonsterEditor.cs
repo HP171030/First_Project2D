@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
@@ -668,42 +669,176 @@ public class MonsterEditor : EditorWindow
         void UpdateNodeContents( NodeView nodeView, VisualElement panel )
         {
             var nameLabel = panel.Q<Label>("NodeNameLabel");
-            nameLabel.text = $"{nodeView.title}";
-            var nodeType = panel.Q<DropdownField>("NodeType");
-            var conditionList = panel.Q<DropdownField>("ConditionList");
-            var actionList = panel.Q<DropdownField>("ActionList");
-            nodeType.SetEnabled(false);
-            conditionList.SetEnabled(false);
-            actionList.SetEnabled(false);
+            nameLabel.text = nodeView.title;
 
-            if ( nodeView.node.GetType() == typeof(ConditionNode) )
+            var nodeTypeDropdown = panel.Q<DropdownField>("NodeType");
+            var conditionDropdown = panel.Q<DropdownField>("ConditionList");
+            var conditionItemPanel = panel.Q<ScrollView>("ConditionItems");
+            var actionDropdown = panel.Q<DropdownField>("ActionList");
+
+            DisableAllDropdowns(nodeTypeDropdown, conditionDropdown, actionDropdown);
+
+            switch ( nodeView.node )
             {
-                List<string> conditions = new() { "Always", "In Range", "Out Range" };
-                conditionList.SetEnabled(true);
-                conditionList.choices = conditions;
-                return;
-            }
+                case ConditionNode:
+                    SetupDropdown(
+                        dropdown: conditionDropdown,
+                        types: typeof(ConditionNodeRunner).GetTypeList(),
+                        node: nodeView.node,
+                        onChange: value => nodeView.node.RunnerType = value,
+                        panel: conditionItemPanel
+                    );
+                    return;
 
-            if ( nodeView.node.GetType() == typeof(ActionNode) )
+                case ActionNode:
+                    SetupDropdown(
+                        dropdown: actionDropdown,
+                        types: typeof(ActionNodeRunner).GetTypeList(),
+                        node: nodeView.node,
+                        onChange: value => nodeView.node.RunnerType = value,
+                        panel: conditionItemPanel
+                    );
+                    return;
+
+                default:
+                    SetupDropdown(
+                        dropdown: nodeTypeDropdown,
+                        types: new List<Type> { typeof(SelectorNode), typeof(SequenceNode), typeof(DecoratorNode) },
+                        node: nodeView.node,
+                        onChange: null, // 선택 불가
+                        readOnly: true,
+                        panel: conditionItemPanel
+                    );
+                    return;
+            }
+        }
+
+        void DisableAllDropdowns( params DropdownField [] dropdowns )
+        {
+            foreach ( var dd in dropdowns )
             {
-                List<string> actions = new() { "Idle", "Patrol", "Trace", "Attack", "Return", "Death" };
-                actionList.SetEnabled(true);
-                actionList.choices = actions;
-                return;
+                dd.SetEnabled(false);
+                dd.choices = new List<string>();
+                dd.UnregisterValueChangedCallback(_ => { });
             }
+        }
+        void SetupDropdown( DropdownField dropdown, List<Type> types, Node node, Action<string> onChange, VisualElement panel, bool readOnly = false )
+        {
+            dropdown.choices = types.Select(t => t.GetTypeNodeName()).ToList();
+            dropdown.SetEnabled(!readOnly);
+
+            dropdown.UnregisterValueChangedCallback(_ => { });
+
+            dropdown.value = node.RunnerType ?? dropdown.choices.FirstOrDefault();
+
+            if ( onChange != null )
+            {
+                dropdown.RegisterValueChangedCallback(evt =>
+                {
+                    DrawTypeField(evt.newValue, panel,node);
+                    onChange(evt.newValue);
+                });
+            }
+        }
+
+        void DrawTypeField( string typeName, VisualElement panel,Node node)
+        {
+            var type = AppDomain.CurrentDomain.GetAssemblies()
+                        .SelectMany(a => a.GetTypes())
+                        .FirstOrDefault(t => t.Name == typeName);
+
+            if ( type != null )
+            {
+                var fields = type.GetFields();
+
+                foreach ( var field in fields )
+                {
+                    VisualElement inputField = null;
+
+                    var fieldType = field.FieldType;
+                    var fieldName = field.Name;
+                    var curMonsterBoard = ( SelectedMonsterType as MonsterData ).Blackboard;
+
+                    var label = new Label(fieldName);
+                    label.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
+                    var keyField = new TextField("Key");
 
 
-            nodeType.SetEnabled(true);
-            List<string> nodeTypes = new() { typeof(SelectorNode).Name, typeof(SequenceNode).Name, typeof(DecoratorNode).Name };
-            nodeType.choices = nodeTypes;
+                    if ( fieldType == typeof(int) )
+                    {
+                        var intField = new IntegerField("Value");
+                        intField.RegisterValueChangedCallback(evt =>
+                        {
+                            curMonsterBoard.Set(keyField.value, intField.value);
+                            node.BlackBoardKey = keyField.value;
+                        });
+
+                        inputField = intField;
+                    }
+                    else if ( fieldType == typeof(float) )
+                    {
+                        var floatField = new FloatField("Value");
+                        floatField.RegisterValueChangedCallback(evt =>
+                        {
+                            curMonsterBoard.Set(keyField.value, floatField.value);
+                            node.BlackBoardKey = keyField.value;
+                        });
+                        inputField = floatField;
+
+                    }
+                    else if ( fieldType == typeof(bool) )
+                    {
+                        var toggle = new Toggle("Value");
+                        toggle.RegisterValueChangedCallback(evt =>
+                        {
+                            curMonsterBoard.Set(keyField.value, toggle.value);
+                            node.BlackBoardKey = keyField.value;
+                        });
+                        inputField = toggle;
+                    }
+                    else if ( fieldType == typeof(string) )
+                    {
+                        var textFieldValue = new TextField("Value");
+                        keyField.RegisterValueChangedCallback(evt =>
+                        {
+                            curMonsterBoard.Set(keyField.value, textFieldValue.value);
+                            node.BlackBoardKey = keyField.value;
+                        });
+                    }
 
 
 
+                    inputField.style.flexGrow = 1;
+                    if ( inputField != null )
+                    {
+                        panel.Add(label);
+                        panel.Add(keyField);
+
+                        // 키 기본값
+                        keyField.value = node.BlackBoardKey;
+
+                        // Blackboard에 저장된 값이 있으면 가져와서 inputField 초기화
+                        if ( !string.IsNullOrEmpty(node.BlackBoardKey) && curMonsterBoard.Contain(node.BlackBoardKey) )
+                        {
+                            object storedValue = curMonsterBoard.Get<object>(node.BlackBoardKey);
+
+                            if ( inputField is IntegerField intField && storedValue is int intVal )
+                                intField.SetValueWithoutNotify(intVal);
+                            else if ( inputField is FloatField floatField && storedValue is float floatVal )
+                                floatField.SetValueWithoutNotify(floatVal);
+                            else if ( inputField is Toggle toggle && storedValue is bool boolVal )
+                                toggle.SetValueWithoutNotify(boolVal);
+                            else if ( inputField is TextField textField && storedValue is string strVal )
+                                textField.SetValueWithoutNotify(strVal);
+                        }
+
+                        panel.Add(inputField);
+                    }
 
 
 
-            nodeType.value = nodeView.node.GetType().Name;
-
+                }
+            }
         }
         void RegistKeyEvent()
         {

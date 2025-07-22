@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1589528170894955696
+--- !u!114 &-216623988332849156
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,13 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4c809e936870134e9b3f77d8615937d, type: 3}
+  m_Script: {fileID: 11500000, guid: 16ddbc4a2b1d50740baf2c2182708188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 4
-  guid: 58ed5048-a217-48de-a4c4-4a39bf5df4b9
-  position: {x: -84, y: 198.40001}
-  nodeName: ActionNode
+  Type: 1
+  guid: 0f66b4c3-ecb7-4030-9b7f-4974376e94ce
+  position: {x: -27.199997, y: 137.6}
+  nodeName: SequenceNode
+  Children:
+    _serializedList:
+    - Key: cbdfbc6c-49d9-4c97-bd96-7478b8034a4c
+      Value: {fileID: 7415356911743980134}
+    - Key: 2a1e771a-63a4-4e22-851c-03601e0cb301
+      Value: {fileID: 1831135911328736258}
+  BlackBoardKey: 
+  RunnerType: 
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28,8 +36,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb73676a3e1a5ec4d8a29146d09c0849, type: 3}
   m_Name: Mimic (MonsterData)
   m_EditorClassIdentifier: 
-  rootNode: {fileID: 1765651363200846795}
---- !u!114 &350634075343906272
+  rootNode: {fileID: 4857260918603041592}
+--- !u!114 &1831135911328736258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9064551b13557048907bed365c5f393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 3
+  guid: 2a1e771a-63a4-4e22-851c-03601e0cb301
+  position: {x: -193.6, y: 214.40001}
+  nodeName: ConditionNode
+  Children:
+    _serializedList:
+    - Key: 17a6b361-47aa-4b0d-a8db-6394ff2afea7
+      Value: {fileID: 5944149371309317285}
+  BlackBoardKey: AttackRange
+  RunnerType: InRangeCondition
+--- !u!114 &4857260918603041592
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,22 +72,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
-  guid: b79a2193-f3a6-4358-92db-de7fb9163420
-  position: {x: 23.199997, y: 81.600006}
-  nodeName: SelectorNode
---- !u!114 &1765651363200846795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16245f182d04f2c4aa045dcf87489de3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 0
-  guid: 33641126-7ad7-4542-87ad-74610317a35b
-  position: {x: 0, y: 0}
+  guid: f93d7398-2291-45ec-971e-63256be56570
+  position: {x: 0, y: -0.80000114}
   nodeName: ROOT
+  Children:
+    _serializedList:
+    - Key: 0f66b4c3-ecb7-4030-9b7f-4974376e94ce
+      Value: {fileID: -216623988332849156}
+  BlackBoardKey: 
+  RunnerType: 
+--- !u!114 &5944149371309317285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c809e936870134e9b3f77d8615937d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 4
+  guid: 17a6b361-47aa-4b0d-a8db-6394ff2afea7
+  position: {x: -221.6, y: 320}
+  nodeName: ActionNode
+  Children:
+    _serializedList: []
+  BlackBoardKey: 
+  RunnerType: AttackNode
+--- !u!114 &7415356911743980134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c809e936870134e9b3f77d8615937d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 4
+  guid: cbdfbc6c-49d9-4c97-bd96-7478b8034a4c
+  position: {x: 145.6, y: 214.40001}
+  nodeName: ActionNode
+  Children:
+    _serializedList: []
+  BlackBoardKey: 
+  RunnerType: IdleNode

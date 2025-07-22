@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 public static class Extension
 {
@@ -11,7 +11,7 @@ public static class Extension
         return ( ( 1 << layer ) & layerMask ) != 0;
     }
 
-    public static List<Type> GetTypeList( Type type )
+    public static List<Type> GetTypeList( this Type type )
     {
         List<Type> results = new();
 
@@ -26,4 +26,46 @@ public static class Extension
         return results;
     }
 
+    public static string GetTypeNodeName(this Type type )
+    {
+
+        var attr = type.GetCustomAttribute<NodeNameAttribute>();
+        return attr?.Name ?? type.Name;
+
+    }
+
+
+}
+public static class RunnerTypeRegistry
+{
+    public static Dictionary<string, Type> DisplayNameToType = new();
+
+    [RuntimeInitializeOnLoadMethod]
+    public static void Initialize()
+    {
+        var types = typeof(LogicRunner).Assembly.GetTypes()
+            .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(LogicRunner)));
+
+        foreach ( var type in types )
+        {
+            var attr = type.GetCustomAttribute<NodeNameAttribute>();
+            var displayName = attr?.Name ?? type.Name;
+            DisplayNameToType [displayName] = type;
+        }
+    }
+
+    public static Type GetRunnerType( this string name )
+    {
+        return DisplayNameToType.TryGetValue(name, out var type) ? type : null;
+    }
+}
+[AttributeUsage(AttributeTargets.Field)]
+public class BlackBoardFieldAttribute : Attribute
+{
+    public string keyName;
+
+    public BlackBoardFieldAttribute(string keyName )
+    {
+        this.keyName = keyName;
+    }
 }

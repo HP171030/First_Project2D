@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Mimic : Monster
 {
-    public override IEnumerator AttackPlayer()
+   /* public override IEnumerator AttackPlayer()
     {
         if ( !atkDelayOn )
         {
@@ -42,6 +42,6 @@ public class Mimic : Monster
             yield return new WaitForSeconds(monsterData.atkDelay);
             atkDelayOn = false;
         }
-    }
+    }*/
 
 }
