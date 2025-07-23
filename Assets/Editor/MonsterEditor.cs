@@ -628,7 +628,7 @@ public class MonsterEditor : EditorWindow
         NodeView CreateNodeView( Node node )
         {
 
-            NodeView nodeView = new(node);
+            NodeView nodeView = new(node,this);
 
             nodeView.SetNodeName(node.nodeName);
 
@@ -691,7 +691,7 @@ public class MonsterEditor : EditorWindow
         void UpdateNodeContents( NodeView nodeView, VisualElement panel )
         {
             var nameLabel = panel.Q<Label>("NodeNameLabel");
-            nameLabel.text = nodeView.title;
+            nameLabel.text = nodeView.node.nodeName;
 
             var nodeTypeDropdown = panel.Q<DropdownField>("NodeType");
             var conditionDropdown = panel.Q<DropdownField>("ConditionList");

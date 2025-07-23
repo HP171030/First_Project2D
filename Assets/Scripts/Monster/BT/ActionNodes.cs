@@ -19,7 +19,7 @@ public class Node : ScriptableObject
     [HideInInspector] public NodeType Type;
     [HideInInspector] public string guid = Guid.NewGuid().ToString();
     [HideInInspector] public Vector2 position = Vector2.zero;
-    [HideInInspector] public string nodeName;
+    public string nodeName;
 
     [SerializedDictionary]
     public SerializedDictionary<string, Node> Children = new();

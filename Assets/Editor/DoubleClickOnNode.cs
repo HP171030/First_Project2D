@@ -1,4 +1,5 @@
 
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,11 +8,11 @@ public class DoubleClickOnNode : MouseManipulator
 {
     double time;
     double validInterval = 0.3f;
-    public DoubleClickOnNode()
+    Action _onDoubleClick;
+    public DoubleClickOnNode( System.Action onDoubleClick )
     {
         time = EditorApplication.timeSinceStartup;
-
-
+        _onDoubleClick = onDoubleClick;
     }
     protected override void RegisterCallbacksOnTarget()
     {
@@ -26,14 +27,18 @@ public class DoubleClickOnNode : MouseManipulator
     void OnMouseDown(MouseDownEvent evt )
     {
         Debug.Log("Mouse Down");
-        var nodeView = target as NodeView;
-        if ( nodeView == null )
-            return;
+
+        foreach ( var child in target.Children() )
+        {
+            Debug.Log($"{child.name} : {child.GetType()}");
+        }
+
 
         double duration = EditorApplication.timeSinceStartup - time;
         if ( duration < validInterval )
         {
-            Debug.Log("Double Click");
+            _onDoubleClick.Invoke();
+
         }
 
         time = EditorApplication.timeSinceStartup;

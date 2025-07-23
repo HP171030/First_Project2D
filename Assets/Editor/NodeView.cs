@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,6 +13,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
     public Node node;
     public Port input;
     public Port output;
+
+    GraphView graphPanel;
 
     public NodeView NodeParent
     {
@@ -43,12 +46,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
     }
 
 
-    public NodeView( Node node ) : base()
+    public NodeView( Node node ,GraphView graphPanel) : base()
     {
         AddToClassList("node-default");
         this.node = node;
         viewDataKey = node.guid;
-
+        this.graphPanel = graphPanel;
         node.AddEventFunc(SetColorViewByState);
 
 
@@ -61,9 +64,9 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
         output.portName = $"";
 
 
+
         CreateInputPorts();
         CreateOutputPorts();
-        SetupClasses();
         SetupDataBinding();
         RefreshExpandedState();
 
@@ -74,7 +77,21 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
     void AddEvent()
     {
 
-        this.AddManipulator(new DoubleClickOnNode());
+        //TODO : 노드 더블클릭시
+        //this.AddManipulator(new DoubleClickOnNode());
+
+        if ( titleContainer != null )
+        {
+            var titleLabel = titleContainer.Q<Label>("title-label");
+            if ( titleLabel != null )
+            {
+                titleContainer.AddManipulator(new DoubleClickOnNode(() =>
+                {
+                    StartRename(titleLabel);
+                }));
+            }
+        }
+
 
 
         onSelectedNode = ( nodeView ) =>
@@ -86,6 +103,36 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
             node.SetStatus(Node.NodeViewState.Default);
         };
     }
+    void StartRename( Label label )
+    {
+        var textField = new TextField { value = label.text };
+        textField.style.flexGrow = 1;
+        textField.RegisterCallback<FocusOutEvent>(( _ ) =>
+        {
+            label.text = textField.value;
+            label.style.display = DisplayStyle.Flex;
+            SetNodeName(label.text);
+            textField.RemoveFromHierarchy();
+            graphPanel.ClearSelection();
+        });
+
+        textField.RegisterCallback<KeyDownEvent>(( evt ) =>
+        {
+            if ( evt.keyCode == KeyCode.Return )
+            {
+                label.text = textField.value;
+                label.style.display = DisplayStyle.Flex;
+                SetNodeName(label.text);
+                textField.RemoveFromHierarchy();
+                graphPanel.ClearSelection();
+            }
+        });
+
+        label.style.display = DisplayStyle.None;
+        label.parent.Add(textField);
+        textField.Focus();
+    }
+
     public override void OnSelected()
     {
         base.OnSelected();
@@ -103,6 +150,8 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
     public void SetNodeName( string nodeName )
     {
         title = nodeName;
+        node.nodeName = nodeName;
+        Debug.Log($"{node.nodeName}");
     }
     Color SetPortColor( bool connect )
     {
@@ -145,19 +194,12 @@ public class NodeView : UnityEditor.Experimental.GraphView.Node, ISelectable
                 break;
         }
     }
-    void UpdateNodeData()
-    {
-
-    }
     private void SetupDataBinding()
     {
 
     }
 
-    private void SetupClasses()
-    {
-
-    }
+ 
 
     private void CreateOutputPorts()
     {
