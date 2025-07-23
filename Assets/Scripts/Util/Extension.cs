@@ -33,7 +33,15 @@ public static class Extension
         return attr?.Name ?? type.Name;
 
     }
+    public static List<Node> GetSortedChildren(this Node node )
+    {
+        var sorted = node.Children.Values
+            .OrderBy(child => child.position.y)
+            .ThenBy(child => child.position.x)
+            .ToList();
 
+        return sorted;
+    }
 
 }
 public static class RunnerTypeRegistry

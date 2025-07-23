@@ -11,18 +11,31 @@ public class ChaseNode : ActionNodeRunner
 
     public override IEnumerator<NodeState> Execute()
     {
-        var player = Physics2D.OverlapCircle(Monster.transform.position, Monster.monsterData.attackRange, Monster.playerLayer);
+        Debug.Log("Chase");
+        var player = Physics2D.OverlapCircle(Monster.transform.position, Monster.monsterData.Blackboard.Get<float>("Chase"), Monster.playerLayer);
 
         if ( player == null )
         {
-            yield return NodeState.True;
+            yield return NodeState.Success;
             yield break;
         }
 
-        var targetDir = ( player.transform.position - Monster.transform.position ).normalized;
-        Monster.transform.Translate(targetDir * Monster.monsterData.speed / 100f);
 
-        yield return NodeState.Running;
+        var elapsed = 0f;
+        var duration = Monster.monsterData.chaseDuration;
+        var startPos = Monster.transform.position;
+        var targetPos = player.transform.position;
+
+        while ( elapsed < duration )
+        {
+            float t = elapsed / duration;
+            Monster.transform.position = Vector2.Lerp(startPos, targetPos, t);
+            elapsed += Time.deltaTime;
+            yield return NodeState.Running;
+        }
+
+        yield return NodeState.Success;
+        yield break;
     }
 
 

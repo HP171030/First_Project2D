@@ -1,6 +1,7 @@
 using AYellowpaper.SerializedCollections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ActionNodes
@@ -26,7 +27,7 @@ public class Node : ScriptableObject
     public string BlackBoardKey;
 
     public string RunnerType;
-    
+
 
     public enum NodeViewState
     {
@@ -42,6 +43,22 @@ public class Node : ScriptableObject
         Condition,
         Action
     }
+
+
+    public IEnumerable<Node> DFSProcess(bool includeSelf)
+    {
+        if(includeSelf)
+        yield return this;
+
+        foreach ( var child in this.GetSortedChildren() )
+        {
+
+            foreach ( var node in child.DFSProcess(true) )
+                yield return node;
+        }
+    }
+
+
 
 
     public void AddEventFunc( Action<NodeViewState> eventFunc )
@@ -82,15 +99,7 @@ public abstract class ActionNodeRunner : LogicRunner
         Monster = monster;
     }
 }
-[NodeRunnerFor(typeof(ConditionNode))]
-public abstract class ConditionNodeRunner : LogicRunner
-{
-    protected Monster Monster;
-    public ConditionNodeRunner( Node node, Monster monster ) : base(node, monster)
-    {
-        Monster = monster;
-    }
-}
+
 [NodeRunnerFor(typeof(SelectorNode))]
 public class SelectorNodeRunner : FlowNodeRunner
 {
@@ -101,42 +110,40 @@ public class SelectorNodeRunner : FlowNodeRunner
     }
     public override IEnumerator<NodeState> Execute()
     {
-        Queue<NodeRunner> nodeRunnerQueue = new Queue<NodeRunner>();
 
-        foreach ( Node childNode in Node.Children.Values )
+
+        foreach ( var node in _Node.GetSortedChildren())
         {
-            NodeRunner childRunner = NodeRunnerFactory.Instance.Create(childNode, _monster); 
-            if ( childRunner != null )
+            Debug.Log($"{node.nodeName} : 셀렉터 시작");
+            var runner = NodeRunnerFactory.Instance.Create(node, _monster);
+            var eval = runner.Execute();
+
+            while ( eval.MoveNext() )
             {
-                nodeRunnerQueue.Enqueue(childRunner);
-            }
-        }
-
-        while ( nodeRunnerQueue.Count > 0 )
-        {
-            var currentRunner = nodeRunnerQueue.Dequeue();
-
-            IEnumerator<NodeState> childExecution = currentRunner.Execute();
-
-            while ( childExecution.MoveNext() )
-            {
-                switch ( childExecution.Current ) 
+                var state = eval.Current;
+                if ( state == NodeState.Success )
                 {
-                    case NodeState.True:
-                        yield return NodeState.True;
-                        yield break;
-                    case NodeState.Fail:
-                        break;
-                    case NodeState.Running:
-                        yield return NodeState.Running;
-                        break;
+                    Debug.Log($"{node.nodeName} 셀렉터 성공");
+                    yield return NodeState.Success;
+                    yield break;
                 }
-                yield return NodeState.Fail;
+                else if ( state == NodeState.Running )
+                {
+                    Debug.Log($"{node.nodeName} 셀렉터 러닝");
+                    yield return NodeState.Running;
+                }
+                else if ( state == NodeState.Fail )
+                {
+                    Debug.Log($"{node.nodeName} 셀렉터 실패");
+                    break;
+                }
             }
         }
 
+        Debug.Log("셀렉터 최종 실패");
         yield return NodeState.Fail;
     }
+
 }
 [NodeRunnerFor(typeof(SequenceNode))]
 public class SequenceRunner : FlowNodeRunner
@@ -150,46 +157,38 @@ public class SequenceRunner : FlowNodeRunner
     public override IEnumerator<NodeState> Execute()
     {
         Debug.Log("시퀀스 시작");
-        Queue<NodeRunner> queue = new Queue<NodeRunner>();
-        foreach(var child in Node.Children.Values )
+
+        foreach ( var node in _Node.GetSortedChildren() )
         {
-           var runner = NodeRunnerFactory.Instance.Create(child, _monster);
-            if(runner != null)
-                queue.Enqueue( runner );
+            var runner = NodeRunnerFactory.Instance.Create(node, _monster);
+            var eval = runner.Execute();
 
-            while(queue.Count > 0 )
+            while ( eval.MoveNext() )
             {
-                var target = queue.Dequeue();
-                Debug.Log($"{target.Node.nodeName} 시작");
-                var evaluate = target.Execute();
-
-                while ( evaluate.MoveNext() )
+                var state = eval.Current;
+                if ( state == NodeState.Success )
                 {
-                    switch ( evaluate.Current )
-                    {
-                        case NodeState.Fail :
-                            Debug.Log($"{target.Node.nodeName} 실패");
-                            yield return NodeState.Fail;
-                            yield break;
-                        case NodeState.True:
-                            Debug.Log($"{target.Node.nodeName} 성공");
-                            foreach ( var item in target.Node.Children.Values )
-                            {
-                                var childRunner = NodeRunnerFactory.Instance.Create(item, _monster);
-                                queue.Enqueue(childRunner);
-                            }
-                            
-                            break;
-                        case NodeState.Running:
-                            Debug.Log($"{target.Node.nodeName} 유지");
-                            yield return NodeState.Running;
-                            break;
-                    }
+                    Debug.Log($"{node.nodeName} 시퀀스 성공");
+                    break;
+                    
+                }
+                else if ( state == NodeState.Running )
+                {
+                    Debug.Log($"{node.nodeName} 시퀀스 러닝");
+                    yield return NodeState.Running;
+                }
+                else if ( state == NodeState.Fail )
+                {
+                    Debug.Log($"{node.nodeName} 시퀀스 실패");
+                    yield return NodeState.Fail;
+                    yield break;
+                    
                 }
             }
         }
 
-        yield return NodeState.Fail;
+        Debug.Log("시퀀스 최종 성공");
+        yield return NodeState.Success;
     }
 
 }
@@ -199,12 +198,47 @@ public class DecoratorNodeRunner : FlowNodeRunner
     Monster _monster;
     public DecoratorNodeRunner( Node node, Monster monster ) : base(node, monster)
     {
+        
         _monster = monster;
+    }
+    public virtual bool CheckCondition()
+    {
+        Debug.Log("Check");
+        return true;
     }
     public override IEnumerator<NodeState> Execute()
     {
-        Debug.Log($"Decorator {Node.nodeName} Excute ");
-        yield return NodeState.Fail;
+        
+        if ( !CheckCondition() )
+        {
+            Debug.Log($"{_Node.nodeName} : 데코 실패");
+            yield return NodeState.Fail;
+            yield break;
+        }   
+
+        //밑에 또 뭐 있으면 없으면 반환
+        if ( _Node.Children.Count == 0 )
+        {
+            yield return NodeState.Success;
+            yield break;
+        }
+
+        Debug.Log("데코레이터 컨디션 통과");
+        //있으면 실행
+        var childRunner = NodeRunnerFactory.Instance.Create(_Node.Children.First().Value, _monster);
+
+        if ( childRunner == null )
+        {
+            yield return NodeState.Fail;
+            yield break;
+            throw new System.Exception($"올바르지 않은 노드형식 : {_Node.nodeName}");
+        }
+
+        var childExecute = childRunner.Execute();
+        while ( childExecute.MoveNext() )
+        {
+            yield return childExecute.Current;
+        }
     }
 
 }
@@ -212,20 +246,20 @@ public abstract class NodeRunner
 {
     public enum NodeState
     {
-        True,
+        Success,
         Fail,
         Running
     }
-    public Node Node { get; private set; }
+    public Node _Node { get; private set; }
 
-    public NodeRunner(Node node )
+    public NodeRunner( Node node )
     {
-        Node = node;
+        _Node = node;
     }
 
     public void ParseFieldToDictionary()
     {
-/*        Node.blackboard.SetValue()*/
+        /*        Node.blackboard.SetValue()*/
     }
     public abstract IEnumerator<NodeState> Execute();
 }

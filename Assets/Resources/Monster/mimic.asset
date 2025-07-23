@@ -20,8 +20,8 @@ MonoBehaviour:
   speed: 1
   attackRange: 1
   visionRange: 5
-  idleTime: 3
-  atkDelay: 3
+  idleTime: 1
+  atkDelay: 1
   moveDelay: 2
   dropItem:
     itemType: 3
@@ -31,9 +31,10 @@ MonoBehaviour:
     effects: {fileID: 0}
     itemColor: {r: 1, g: 1, b: 1, a: 1}
   dropGold: 1
+  chaseDuration: 5
   attackPatterns: []
   soundPlayerDamaged: {fileID: 8300000, guid: af28e565264a34c4a8d872efe94791a5, type: 3}
   soundMonsterDamaged: {fileID: 8300000, guid: 37d703592addea1418b5b856c26a2739, type: 3}
   soundAttack: {fileID: 8300000, guid: edd73e3973a792d4ca342f322b8cbef3, type: 3}
   soundMonsterDead: {fileID: 8300000, guid: dd8149c4fbb5a1a439b4a0851934fa66, type: 3}
-  _btrootNode: {fileID: 0}
+  links: []

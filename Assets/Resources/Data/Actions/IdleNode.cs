@@ -21,7 +21,7 @@ public class IdleNode : ActionNodeRunner
             yield return NodeState.Running;
         }
         Debug.Log("Idle Exit");
-        yield return NodeState.True;
+        yield return NodeState.Success;
         yield break;
     }
 

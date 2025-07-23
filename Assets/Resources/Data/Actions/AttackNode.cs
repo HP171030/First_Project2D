@@ -17,9 +17,12 @@ public class AttackNode : ActionNodeRunner
     public override IEnumerator<NodeState> Execute()
     {
         Monster.MoveOn = false;
+        Monster.atkDir = ( Monster.Target.transform.position - Monster.transform.position ).normalized;
+
+
 
         Vector2 prePos = Monster.transform.position;
-        Vector2 targetPos = prePos + Monster.atkDir * 2f;
+        Vector2 targetPos = prePos + Monster.atkDir;
 
         //TODO : 에디터에서 공격속도도 가져올 수 있도록 변경할것
         float duration = 0.5f;
@@ -63,6 +66,6 @@ public class AttackNode : ActionNodeRunner
         }
 
 
-        yield return NodeState.True; 
+        yield return NodeState.Success; 
     }
 }

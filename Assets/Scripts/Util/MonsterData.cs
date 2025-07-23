@@ -20,6 +20,7 @@ public class MonsterData : ScriptableObject
     public event UnityAction<string> monsterOnDied;
     public Item dropItem;
     public int dropGold;
+    public float chaseDuration;
 
     public List<AttackPattern> attackPatterns;
 
@@ -29,11 +30,6 @@ public class MonsterData : ScriptableObject
     public AudioClip soundMonsterDamaged;
     public AudioClip soundAttack;
     public AudioClip soundMonsterDead;
-
-    [Header("BT")]
-    public Node _btrootNode;
-
-    public Node BehaviorTreeRootNode { get => _btrootNode; set => _btrootNode = value; }
 
     public Blackboard Blackboard { get; private set; } = new();
 

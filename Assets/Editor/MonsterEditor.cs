@@ -605,9 +605,9 @@ public class MonsterEditor : EditorWindow
         }
         void SaveCurrentGraphData()
         {
-
             foreach ( var nodeData in _nodeMap.Values )
             {
+                
                 Debug.Log($"save {nodeData.Type}");
                 EditorUtility.SetDirty(nodeData);
             }
@@ -664,7 +664,29 @@ public class MonsterEditor : EditorWindow
                 EditorUtility.SetDirty(node);
             }
         }
+        List<Node> GetAllDescendantsOrdered( NodeView root )
+        {
+            var result = new List<Node>();
 
+            void DFS( NodeView current )
+            {
+                var children = current.output.connections
+                    .Select(edge => edge.input.node as NodeView)
+                    .OrderBy(view => view.GetPosition().y)
+                    .ThenBy(view => view.GetPosition().x);
+
+                foreach ( var child in children )
+                {
+                    result.Add(child.node);
+                    DFS(child);
+                }
+            }
+
+            result.Add(root.node);
+            DFS(root);
+
+            return result;
+        }
 
         void UpdateNodeContents( NodeView nodeView, VisualElement panel )
         {
@@ -680,10 +702,10 @@ public class MonsterEditor : EditorWindow
 
             switch ( nodeView.node )
             {
-                case ConditionNode:
+                case DecoratorNode:
                     SetupDropdown(
                         dropdown: conditionDropdown,
-                        types: typeof(ConditionNodeRunner).GetTypeList(),
+                        types: typeof(DecoratorNodeRunner).GetTypeList(),
                         node: nodeView.node,
                         onChange: value => nodeView.node.RunnerType = value,
                         panel: conditionItemPanel
@@ -703,10 +725,10 @@ public class MonsterEditor : EditorWindow
                 default:
                     SetupDropdown(
                         dropdown: nodeTypeDropdown,
-                        types: new List<Type> { typeof(SelectorNode), typeof(SequenceNode), typeof(DecoratorNode) },
+                        types: new List<Type> { typeof(SelectorNode), typeof(SequenceNode) },
                         node: nodeView.node,
-                        onChange: null, // 선택 불가
-                        readOnly: true,
+                        readOnly : true,
+                        onChange: null,
                         panel: conditionItemPanel
                     );
                     return;
@@ -741,104 +763,134 @@ public class MonsterEditor : EditorWindow
             }
         }
 
-        void DrawTypeField( string typeName, VisualElement panel,Node node)
+        void DrawTypeField( string typeName, VisualElement panel, Node node )
         {
             var type = AppDomain.CurrentDomain.GetAssemblies()
                         .SelectMany(a => a.GetTypes())
                         .FirstOrDefault(t => t.Name == typeName);
 
-            if ( type != null )
+            if ( type == null ) return;
+
+            var fields = type.GetFields();
+            var curBoard = ( SelectedMonsterType as MonsterData ).Blackboard;
+
+            foreach ( var field in fields )
             {
-                var fields = type.GetFields();
+                var fieldType = field.FieldType;
+                var fieldName = field.Name;
 
-                foreach ( var field in fields )
+                var label = new Label(fieldName)
                 {
-                    VisualElement inputField = null;
+                    style = { backgroundColor = new Color(0.5f, 0.5f, 0.5f) }
+                };
 
-                    var fieldType = field.FieldType;
-                    var fieldName = field.Name;
-                    var curMonsterBoard = ( SelectedMonsterType as MonsterData ).Blackboard;
+                var keyField = new TextField("Key") { value = node.BlackBoardKey };
 
-                    var label = new Label(fieldName);
-                    label.style.backgroundColor = new Color(0.5f, 0.5f, 0.5f);
-                    var keyField = new TextField("Key");
+                VisualElement inputField = null;
 
-
-                    if ( fieldType == typeof(int) )
-                    {
-                        var intField = new IntegerField("Value");
-                        intField.RegisterValueChangedCallback(evt =>
-                        {
-                            curMonsterBoard.Set(keyField.value, intField.value);
-                            node.BlackBoardKey = keyField.value;
-                        });
-
-                        inputField = intField;
-                    }
-                    else if ( fieldType == typeof(float) )
-                    {
-                        var floatField = new FloatField("Value");
-                        floatField.RegisterValueChangedCallback(evt =>
-                        {
-                            curMonsterBoard.Set(keyField.value, floatField.value);
-                            node.BlackBoardKey = keyField.value;
-                        });
-                        inputField = floatField;
-
-                    }
-                    else if ( fieldType == typeof(bool) )
-                    {
-                        var toggle = new Toggle("Value");
-                        toggle.RegisterValueChangedCallback(evt =>
-                        {
-                            curMonsterBoard.Set(keyField.value, toggle.value);
-                            node.BlackBoardKey = keyField.value;
-                        });
-                        inputField = toggle;
-                    }
-                    else if ( fieldType == typeof(string) )
-                    {
-                        var textFieldValue = new TextField("Value");
-                        keyField.RegisterValueChangedCallback(evt =>
-                        {
-                            curMonsterBoard.Set(keyField.value, textFieldValue.value);
-                            node.BlackBoardKey = keyField.value;
-                        });
-                    }
-
-
-
-                    inputField.style.flexGrow = 1;
-                    if ( inputField != null )
-                    {
-                        panel.Add(label);
-                        panel.Add(keyField);
-
-                        // 키 기본값
-                        keyField.value = node.BlackBoardKey;
-
-                        // Blackboard에 저장된 값이 있으면 가져와서 inputField 초기화
-                        if ( !string.IsNullOrEmpty(node.BlackBoardKey) && curMonsterBoard.Contain(node.BlackBoardKey) )
-                        {
-                            object storedValue = curMonsterBoard.Get<object>(node.BlackBoardKey);
-
-                            if ( inputField is IntegerField intField && storedValue is int intVal )
-                                intField.SetValueWithoutNotify(intVal);
-                            else if ( inputField is FloatField floatField && storedValue is float floatVal )
-                                floatField.SetValueWithoutNotify(floatVal);
-                            else if ( inputField is Toggle toggle && storedValue is bool boolVal )
-                                toggle.SetValueWithoutNotify(boolVal);
-                            else if ( inputField is TextField textField && storedValue is string strVal )
-                                textField.SetValueWithoutNotify(strVal);
-                        }
-
-                        panel.Add(inputField);
-                    }
-
-
-
+                if ( fieldType == typeof(int) )
+                {
+                    var createdField = CreateField<int>(keyField, node, curBoard) as BaseField<int>;
+                    if ( field != null && curBoard.Contain(node.BlackBoardKey) )
+                        SetFieldValue(createdField, curBoard.Get<int>(node.BlackBoardKey));
+                    inputField = createdField;
                 }
+                else if ( fieldType == typeof(float) )
+                {
+                    var createdField = CreateField<float>(keyField, node, curBoard) as BaseField<float>;
+                    if ( field != null && curBoard.Contain(node.BlackBoardKey) )
+                        SetFieldValue(createdField, curBoard.Get<float>(node.BlackBoardKey));
+                    inputField = createdField;
+                }
+                else if ( fieldType == typeof(bool) )
+                {
+                    var createdField = CreateField<bool>(keyField, node, curBoard) as BaseField<bool>;
+                    if ( field != null && curBoard.Contain(node.BlackBoardKey) )
+                        SetFieldValue(createdField, curBoard.Get<bool>(node.BlackBoardKey));
+                    inputField = createdField;
+                }
+                else if ( fieldType == typeof(string) )
+                {
+                    var createdField = CreateField<string>(keyField, node, curBoard) as BaseField<string>;
+                    if ( field != null && curBoard.Contain(node.BlackBoardKey) )
+                        SetFieldValue(createdField, curBoard.Get<string>(node.BlackBoardKey));
+                    inputField = createdField;
+                }
+
+                if ( inputField == null ) continue;
+
+                inputField.style.flexGrow = 1;
+
+                panel.Add(label);
+                panel.Add(keyField);
+                panel.Add(inputField);
             }
+        }
+
+
+        VisualElement CreateField<T>( TextField keyField, Node node, Blackboard board )
+        {
+            BaseField<T> valueField;
+
+            if ( typeof(T) == typeof(int) )
+                valueField = new IntegerField("Value") as BaseField<T>;
+            else if ( typeof(T) == typeof(float) )
+                valueField = new FloatField("Value") as BaseField<T>;
+            else if ( typeof(T) == typeof(bool) )
+                valueField = new Toggle("Value") as BaseField<T>;
+            else if ( typeof(T) == typeof(string) )
+                valueField = new TextField("Value") as BaseField<T>;
+            else
+                return null;
+
+            var key = node.BlackBoardKey;
+            T value = default;
+
+            if ( !string.IsNullOrEmpty(key) && board.Contain(key) )
+                value = board.Get<T>(key);
+            else if ( !string.IsNullOrEmpty(key) )
+                board.Set(key, value); // 초기값 저장
+
+            valueField.SetValueWithoutNotify(value);
+
+            valueField.RegisterValueChangedCallback(evt =>
+            {
+                var curKey = keyField.value;
+                board.Set(curKey, evt.newValue);
+                node.BlackBoardKey = curKey;
+            });
+
+            keyField.RegisterValueChangedCallback(evt =>
+            {
+                node.BlackBoardKey = evt.newValue;
+                board.Set(evt.newValue, valueField.value);
+            });
+
+            return valueField;
+        }
+
+        void SetFieldValue( VisualElement inputField, object value )
+        {
+            switch ( inputField )
+            {
+                case IntegerField intField when value is int intVal:
+                    intField.SetValueWithoutNotify(intVal);
+                    break;
+                case FloatField floatField when value is float floatVal:
+                    floatField.SetValueWithoutNotify(floatVal);
+                    break;
+                case Toggle toggle when value is bool boolVal:
+                    toggle.SetValueWithoutNotify(boolVal);
+                    break;
+                case TextField textField when value is string strVal:
+                    textField.SetValueWithoutNotify(strVal);
+                    break;
+            }
+        }
+
+        void SetBlackBoard()
+        {
+
         }
         void RegistKeyEvent()
         {
@@ -954,6 +1006,9 @@ public class MonsterEditor : EditorWindow
             }
             return false;
         }
+
+
+
         public NodeView FindNodeView( Node node )
         {
             return GetNodeByGuid(node.guid) as NodeView;

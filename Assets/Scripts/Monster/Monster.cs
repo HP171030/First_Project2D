@@ -16,6 +16,8 @@ public class Monster : MonoBehaviour, Idamagable
     public Collider2D thisCollider;
     public Vector2 atkDir;
     public bool atkDelayOn;
+    
+
 
     public Collider2D player;
     [SerializeField] public LayerMask Obstacle;
@@ -32,14 +34,14 @@ public class Monster : MonoBehaviour, Idamagable
     public float localX;
     public float localY;
     public bool onBossAtk = false;
-    [SerializeField] public float thisMonsterHP;
-    [SerializeField] public float thisMonsterMaxHp;
+    public float thisMonsterHP;
+    public float thisMonsterMaxHp;
+    public GameObject parent;
+    public GameObject dropItem;
+    public GameObject Target { get => target; }
 
-    [SerializeField] public GameObject parent;
-
-    [SerializeField] public GameObject dropItem;
-
-
+    GameObject target;
+    
 
 
     protected virtual void Start()
@@ -57,6 +59,7 @@ public class Monster : MonoBehaviour, Idamagable
         localX = transform.localScale.x;
         localY = transform.localScale.y;
 
+       
     }
 
     public void ChasePattern()
@@ -65,7 +68,8 @@ public class Monster : MonoBehaviour, Idamagable
         Targeting();
         Moving();
     }
-
+    public void SetTarget(GameObject target) => this.target = target;
+    
 
     protected virtual void Targeting()
     {
@@ -298,5 +302,9 @@ public class Monster : MonoBehaviour, Idamagable
         }
     }
 
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, monsterData.Blackboard.Get<float>("range"));
+    }
 }

@@ -1,6 +1,28 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-216623988332849156
+--- !u!114 &-3885429877430936561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3bf1e28e326a1342919ebf5ecaf9ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
+  guid: 7ecde01f-6daa-4686-8c70-3422343698b7
+  position: {x: -141.6, y: 173.6}
+  nodeName: DecoratorNode
+  Children:
+    _serializedList:
+    - Key: 787c4e2f-d162-4335-ad80-ffe5c0b5bdc3
+      Value: {fileID: 8251613692544162725}
+  BlackBoardKey: Chase
+  RunnerType: InRangeCondition
+--- !u!114 &-1009326729607690524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -13,17 +35,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 1
-  guid: 0f66b4c3-ecb7-4030-9b7f-4974376e94ce
-  position: {x: -27.199997, y: 137.6}
+  guid: 51a8ceaf-ef69-467e-81cf-b9425faf725e
+  position: {x: -78.4, y: 81.600006}
   nodeName: SequenceNode
   Children:
     _serializedList:
-    - Key: cbdfbc6c-49d9-4c97-bd96-7478b8034a4c
-      Value: {fileID: 7415356911743980134}
-    - Key: 2a1e771a-63a4-4e22-851c-03601e0cb301
-      Value: {fileID: 1831135911328736258}
+    - Key: 7ecde01f-6daa-4686-8c70-3422343698b7
+      Value: {fileID: -3885429877430936561}
   BlackBoardKey: 
   RunnerType: 
+--- !u!114 &-176474744732206051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c809e936870134e9b3f77d8615937d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 4
+  guid: 84f13459-a0c6-4543-8ae5-cf31e65fdfe6
+  position: {x: 96, y: 86.399994}
+  nodeName: ActionNode
+  Children:
+    _serializedList: []
+  BlackBoardKey: 
+  RunnerType: IdleNode
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36,30 +76,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb73676a3e1a5ec4d8a29146d09c0849, type: 3}
   m_Name: Mimic (MonsterData)
   m_EditorClassIdentifier: 
-  rootNode: {fileID: 4857260918603041592}
---- !u!114 &1831135911328736258
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9064551b13557048907bed365c5f393, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 3
-  guid: 2a1e771a-63a4-4e22-851c-03601e0cb301
-  position: {x: -193.6, y: 214.40001}
-  nodeName: ConditionNode
-  Children:
-    _serializedList:
-    - Key: 17a6b361-47aa-4b0d-a8db-6394ff2afea7
-      Value: {fileID: 5944149371309317285}
-  BlackBoardKey: AttackRange
-  RunnerType: InRangeCondition
---- !u!114 &4857260918603041592
+  rootNode: {fileID: 2202135980720976602}
+--- !u!114 &2202135980720976602
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,16 +90,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 0
-  guid: f93d7398-2291-45ec-971e-63256be56570
-  position: {x: 0, y: -0.80000114}
+  guid: 859e944f-7dd7-4a4a-b04e-36b11952c39d
+  position: {x: 0, y: 0}
   nodeName: ROOT
   Children:
     _serializedList:
-    - Key: 0f66b4c3-ecb7-4030-9b7f-4974376e94ce
-      Value: {fileID: -216623988332849156}
+    - Key: 51a8ceaf-ef69-467e-81cf-b9425faf725e
+      Value: {fileID: -1009326729607690524}
+    - Key: 84f13459-a0c6-4543-8ae5-cf31e65fdfe6
+      Value: {fileID: -176474744732206051}
   BlackBoardKey: 
   RunnerType: 
---- !u!114 &5944149371309317285
+--- !u!114 &8251613692544162725
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,30 +114,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 4
-  guid: 17a6b361-47aa-4b0d-a8db-6394ff2afea7
-  position: {x: -221.6, y: 320}
+  guid: 787c4e2f-d162-4335-ad80-ffe5c0b5bdc3
+  position: {x: -145.6, y: 271.19998}
   nodeName: ActionNode
   Children:
     _serializedList: []
   BlackBoardKey: 
-  RunnerType: AttackNode
---- !u!114 &7415356911743980134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4c809e936870134e9b3f77d8615937d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 4
-  guid: cbdfbc6c-49d9-4c97-bd96-7478b8034a4c
-  position: {x: 145.6, y: 214.40001}
-  nodeName: ActionNode
-  Children:
-    _serializedList: []
-  BlackBoardKey: 
-  RunnerType: IdleNode
+  RunnerType: ChaseNode

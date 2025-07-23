@@ -1,7 +1,5 @@
 using AYellowpaper.SerializedCollections;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -27,27 +25,30 @@ public class Blackboard
             bbValue.type = BlackboardValueType.Float;
             bbValue.floatValue = Convert.ToSingle(value);
         }
-        else if (typeof(T) == typeof(bool) )
+        else if ( typeof(T) == typeof(bool) )
         {
             bbValue.type = BlackboardValueType.Bool;
             bbValue.boolValue = Convert.ToBoolean(value);
         }
-        else if (typeof(T) == typeof(string) )
+        else if ( typeof(T) == typeof(string) )
         {
             bbValue.type = BlackboardValueType.String;
             bbValue.stringValue = Convert.ToString(value);
         }
-        else if (typeof(T) == typeof(Vector3) )
+        else if ( typeof(T) == typeof(Vector3) )
         {
             bbValue.type = BlackboardValueType.Vector3;
             bbValue.vector3Value = ( Vector3 )( object )value;
         }
 
     }
-    public bool Contain(string key )
+    public bool Contain( string key )
     {
+        if ( key == null )
+            return false;
+
         return data.ContainsKey(key);
-            
+
     }
     public T Get<T>( string key )
     {
