@@ -557,12 +557,12 @@ public class MonsterEditor : EditorWindow
 
         private NodeView GetNodeViewByGuid( string guid )
         {
-            return this.contentViewContainer.Query<NodeView>().Where(v => v.node.guid == guid).First();
+            return contentViewContainer.Query<NodeView>().Where(v => v.node.guid == guid).First();
         }
 
         private void ConnectEdgesFromData()
         {
-            foreach ( var nodeView in this.contentViewContainer.Query<NodeView>().ToList() )
+            foreach ( var nodeView in contentViewContainer.Query<NodeView>().ToList() )
             {
                 Node parentNodeData = nodeView.node;
                 if ( parentNodeData == null ) continue;
@@ -693,12 +693,12 @@ public class MonsterEditor : EditorWindow
             var nameLabel = panel.Q<Label>("NodeNameLabel");
             nameLabel.text = nodeView.node.nodeName;
 
-            var nodeTypeDropdown = panel.Q<DropdownField>("NodeType");
+            var nodeTypeLabel = panel.Q<Label>("NodeType");
             var conditionDropdown = panel.Q<DropdownField>("ConditionList");
             var conditionItemPanel = panel.Q<ScrollView>("ConditionItems");
             var actionDropdown = panel.Q<DropdownField>("ActionList");
 
-            DisableAllDropdowns(nodeTypeDropdown, conditionDropdown, actionDropdown);
+            DisableAllDropdowns(conditionDropdown, actionDropdown);
 
             switch ( nodeView.node )
             {
@@ -721,18 +721,9 @@ public class MonsterEditor : EditorWindow
                         panel: conditionItemPanel
                     );
                     return;
-
-                default:
-                    SetupDropdown(
-                        dropdown: nodeTypeDropdown,
-                        types: new List<Type> { typeof(SelectorNode), typeof(SequenceNode) },
-                        node: nodeView.node,
-                        readOnly : true,
-                        onChange: null,
-                        panel: conditionItemPanel
-                    );
-                    return;
             }
+
+            nodeTypeLabel.text = nodeView.node.GetType().ToString();
         }
 
         void DisableAllDropdowns( params DropdownField [] dropdowns )
@@ -1055,7 +1046,7 @@ public class MonsterEditor : EditorWindow
             evt.menu.AppendAction($"Flow/{Node.NodeType.Sequence.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Sequence) ));
             evt.menu.AppendAction($"Flow/{Node.NodeType.Decorator.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Decorator) ));
             evt.menu.AppendSeparator();
-            evt.menu.AppendAction($"Logic/{Node.NodeType.Condition.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Condition) ));
+           // evt.menu.AppendAction($"Logic/{Node.NodeType.Condition.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Condition) ));
             evt.menu.AppendAction($"Logic/{Node.NodeType.Action.ToString()}", ( d => OnContextMenuNodeCreate(d, Node.NodeType.Action) ));
 
         }

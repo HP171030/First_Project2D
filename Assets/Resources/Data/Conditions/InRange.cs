@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[NodeRunnerFor(typeof(DecoratorNode), nameof(InRangeCondition))]
-[NodeName(nameof(InRangeCondition))]
-public class InRangeCondition : DecoratorNodeRunner
+[NodeRunnerFor(typeof(DecoratorNode), nameof(InRange))]
+[NodeName(nameof(InRange))]
+public class InRange : DecoratorNodeRunner
 {
     Monster _monster;
 
     //에디터에 해당 필드 이름으로 라벨을 표기함 / 실제 값은 사용자가 블랙보드에 등록한 키로 조회
     public float range;
 
-    public InRangeCondition( Node node, Monster monster ) : base(node, monster)
+    public InRange( Node node, Monster monster ) : base(node, monster)
     {
         _monster = monster;
     }
